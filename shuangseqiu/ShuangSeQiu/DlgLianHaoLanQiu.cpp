@@ -337,19 +337,6 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 			ShaHong.Empty();
 			ShaArray[TempData]++;
 
-		/*	TempData = (*DataList)[Index-1].m_LanQiu*5+2;
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			*/
-
-
-			
             TempData = (*DataList)[Index-1].m_LanQiu;
 			if(TempData /2 == 0)
 				TempData=TempData*2+2;
@@ -434,7 +421,6 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 			ShaArray[TempData]++;
 
 		
-			
 			//°´³öÇòË³ÐòÉ±ºÅ·¨
 		//	if( ShunXuDataList->size() == DataList->size())
 	//		{

@@ -511,6 +511,7 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 			CString LanQiu6;
 			int QiShu = atoi((*DataList)[Index-1].m_QiShu.GetBuffer())%100+(*DataList)[Index-1].m_LanQiu;
 			QiShu=QiShu%10;
+			Temp = QiShu;
 			LanQiu6.Format("ɱ%02d",Temp);
 			if(Index == DataList->size())
 			{
@@ -537,8 +538,11 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 
 
 			CString LanQiu8;
-			Temp = (*DataList)[Index-1].m_LanQiu%10;
-			switch(Temp)
+			Temp = (*DataList)[Index-1].m_LanQiu+5;
+			Temp=Temp%16;
+			LanQiu8.Format("ɱ%02d",Temp);
+
+			/*switch(Temp)
 			{
 			case 1:
 				LanQiu8="ɱ06 10";
@@ -565,7 +569,7 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 				LanQiu8="ɱ09 12 15";
 				break;
 
-			}
+			}*/
 
 
 			if(Index == DataList->size())
