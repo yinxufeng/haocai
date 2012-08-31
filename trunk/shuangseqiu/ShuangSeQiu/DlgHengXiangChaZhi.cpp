@@ -48,6 +48,7 @@ void CDlgHengXiangChaZhi::InitListHeader()
 	m_ListCtrl.InsertColumn(1,_TEXT("¾øÉ±ÁúÍ·"),	LVCFMT_CENTER,	nWidth); 
 	m_ListCtrl.InsertColumn(2,_TEXT("ÁúÍ·µ¥Ë«"),	LVCFMT_CENTER,	nWidth);
 	m_ListCtrl.InsertColumn(3,_TEXT("¾øÉ±·ïÎ²"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(4,_TEXT("¾øÉ±ÁúÍ·2"),	LVCFMT_CENTER,	nWidth);
 	
 }
 
@@ -274,10 +275,25 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 			}
 			else
 				LongTou+="S";
-
 			m_ListCtrl.SetItemText(Index,3,LongTou);
 
-		
+
+			LongTou.Empty();
+			Temp1=(*DataList)[Index-1].m_HongQiu[1]%10 -1;
+			LongTou.Format("%02d",Temp1);
+			if(Index != DataList->size())
+			{
+				CString TempData;
+				TempData.Format("%d",(*DataList)[Index].m_HongQiu[0]);
+				if(LongTou.Find(TempData) == -1)
+					LongTou+="S";
+				else
+					LongTou+="F";
+			}
+			else
+				LongTou+="S";
+
+			m_ListCtrl.SetItemText(Index,4,LongTou);
 
 		}
 		
