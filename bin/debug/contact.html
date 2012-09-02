@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>联系人</title>
+<script type="text/javascript" src="js/log4javascript.js"></script>
+<script type="text/javascript" src="js/json2.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/head.js"></script>
+<script type="text/javascript" src="js/contact.js"></script>
+
+<link href="css/contact.css" rel="stylesheet" type="text/css" />
+<link href="css/icon.css" rel="stylesheet" type="text/css" />
+
+<link href="css/commom.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body bgcolor="#F6FAFB" scroll="no" topmargin="0" leftmargin="0" onselectstart="return false;" onload="loadReferContacts()">
+<iframe name="iframe1" id="iframe1" style="display:none; width:500px; height:200px; position:absolute; top:200px; left:180px; border:#DAEBF5 solid; border-width:1 1 3 1; z-index:2;" scrolling="no" src="ProgressBar.html" frameborder=0></iframe>
+<div id="mask"></div>
+<!-- 新建联系人 -->
+<div id="createContact" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td height="34" colspan="2" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;">
+      <div class="div_dialog_head"><img id="img_new_contact" src="images/contacts/dialog_word_newly-build-contact.png" /></div>
+      <img id="btn_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr style="background:#E9F1F4;">
+      <td width="32%" height="114" align="right" class="dialog_left"><img src="images/contacts/contacts_head.png" width="79" height="92" /></td>
+      <td width="68%" class="dialog_right"><p>姓名：
+        <input type="text" id="contact_name" />
+      </p>
+      <p>分组：
+        <select name="select_group" id="select_group" style="width:152px; border:1px #999 solid;">
+        </select>
+      </p></td>
+    </tr>
+    <tr>
+      <td height="274" colspan="2" style="padding-left:130px; background-color:#FFF" class="dialog_left_right"><p>电话：
+        <select name="select_phone_type" id="select_phone_type" style="width:60px;">
+        	<option>工作</option>
+            <option>住宅</option>
+            <option>公司</option>
+            <option>传真</option>
+            <option>手机</option>
+        </select>
+        <input name="contact_mobile" type="text" id="contact_mobile" size="16" />
+      </p>
+      <p>邮箱：
+        <input type="text" name="contact_email" id="contact_email" size="25" />
+      </p>
+      <p>地址：
+        <input type="text" name="contact_address" id="contact_address" size="25" />
+      </p>
+      <p>公司：
+        <input type="text" name="contact_company" id="contact_company" size="25" />
+      </p>
+      <p>职务：
+        <input type="text" name="contact_duties" id="contact_duties" size="25" />
+        (*需输入公司信息)
+      </p></td>
+    </tr>
+    <tr>
+      <td height="44" colspan="2" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/contacts/dialog_preservation_off.png" width="73" height="29" />&nbsp;&nbsp;<img id="btn_cancel" src="images/contacts/dialog_cancel_off.png" width="73" height="29" /></td>
+    </tr>
+  </table>
+<span id="contact_id" style="display:none"></span>
+</div>
+<table width="910" border="0" cellpadding="0" cellspacing="0">
+<tr>
+	  <td width="13%"><div id="move1" style="width:120px; height:34px; background:url(./images/title_left.png) no-repeat;"></div></td>
+	  <td colspan="3" align="right" style="background:url(images/title_right.png) no-repeat; padding-right:5px;"><div id="move" style="width:717px; height:34px; padding-top:0px; float:left"></div><img id="btn_win_min" src="images/min_off.png" width="34" height="34" /><img id="btn_win_close" src="images/close_off.png" width="34" height="34" /></td>
+  </tr>
+	<tr>
+    	<td colspan="4" background="images/menu_bg.png" class="contact_new">
+        <div id="menu_home_off"></div><div id="menu_download_shop_off"></div><div id="menu_contacts_on"></div><div id="menu_message"></div><div id="menu_file_off"></div>
+        </td>
+    </tr>
+  <tr>
+    <td colspan="2" rowspan="2" class="tableRightStyle" style="border-left:1.5px #307DC1 solid;">
+	<div class="divContact"><img src="images/contacts/contacts_left_list.png" width="98" height="17" /> 
+	</div>     
+	<iframe name="f_contact_left" src="contact_left.html" frameborder="0" scrolling="auto" width="100%" height="485" ></iframe></td>
+    <td height="34" colspan="2" class="window_right" background="images/contacts/bg.png"><div style="float:left;"><img id="contacts_selectall" src="images/contacts/contacts_selectall_off.png" width="71" height="33"   onclick="contact_selectall()" /><img id="contacts_new" src="images/contacts/contacts_new_off.png" width="106" height="33" /><img id="contacts_delete" src="images/contacts/contacts_delete_gray.png" width="70" height="33" /><img id="btn_contacts_import" src="images/contacts/contacts_import_off.png" width="70" height="33" /><img id="contacts_export" src="images/contacts/contacts_export_gray.png" width="70" height="33" /><img id="contacts_reload" src="images/contacts/contacts_reload_off.png" width="70" height="33" onclick="loadContact()" /></div>
+    <div class="div_search">&nbsp;&nbsp;<img src="images/sms/search_icon.png" /><input type="text" id="btn_search" /></div></td>
+  </tr>
+  <tr>
+    <td width="36%" height="485" class="tableRightStyle" valign="top"><iframe name="f_contact" src="contact_middle.html" frameborder="0" scrolling="auto" width="100%" height="499"></iframe></td>
+    <td width="35%" valign="top" class="contact_new_right"><table width="100%" height="382" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="31" bgcolor="#F1F1F3">&nbsp;&nbsp;联系人详情</td>
+      </tr>
+      <tr>
+        <td height="98" align="left">
+		
+		  <table width="100%" height="115" border="0" bgcolor="#E9F1F4">
+            <tr>
+              <td width="104" rowspan="2" align="center"><img src="images/contacts/contacts_head.png" width="79" height="92" /></td>
+              <td width="198" height="52"><p>姓名：<span id="name"></span><br />分组：<span id="group"></span></p></td>
+              </tr>
+            <tr>
+              <td height="51" align="right" valign="top" class="tableRightPadding"><img id="btn_send_message" src="images/contacts/btn_send_message_off.png" /></td>
+              </tr>
+          </table>
+		
+		</td>
+      </tr>
+      <tr>
+        <td height="201"><br/>
+			<div class="divContactDetail">
+			电话(手机):&nbsp;<span id="mobile"></span><hr/>
+			电话(公司):&nbsp;<span id="phone"></span><hr/>
+			邮箱:&nbsp;<span id="email"></span><hr/>
+			地址：&nbsp;<span id="address"></span><hr/>
+			公司：&nbsp;<span id="company"></span><hr/>
+			职务：&nbsp;<span id="job"></span><hr/>
+			</div>
+		</td>
+      </tr>
+      <tr>
+        <td height="35" align="right" class="tableRightPadding"><img id="btn_edit_off" src="images/contacts/btn_edit_off.png" width="106" height="27" /></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+  	<td height="25" colspan="4" align="right" class="contact_new_left" style="background:url(images/window_bottomline.png)"><img src="images/window_drag.png" width="13" height="25" /></td>
+  </tr>
+</table>
+
+
+<!-- 导出 -->
+<div id="contact_export" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;">
+      <div class="div_dialog_head"><img src="images/contacts/dialog_word_export-contacts.png" /></div>
+      <img id="btn_export_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td height="133" bgcolor="#FFFFFF" class="dialog_left_right">
+      	<div class="div_select_pc">
+        <p>你选择导出1个联系人</p>
+        <hr style="margin-right:40px;"/>
+        <p><input name="export_position" type="radio" value="" />导出到移动通信录</p>
+        <p><input name="export_position" type="radio" value="" />导出到电脑
+          <input name="textfield2" type="text" id="textfield2" size="40" />
+          <a href="#">更改</a> </p>
+         <p>选择导出格式：<input name="export_type" type="radio" value="" />CSV <input name="export_type" type="radio" value="" />vcard</p>
+        </div></td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/contacts/dialog_begin-export_off.png" width="94" height="29" />&nbsp;&nbsp;</td>
+    </tr>
+  </table>
+</div>
+
+<!-- 发送短信 -->
+<div id="createMessage" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;"><div class="div_dialog_head"><img src="images/sms/dialog_word_new-message.png" /></div><img id="btn_message_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td height="44" valign="middle" bgcolor="#FFFFFF" class="dialog_left_right">
+      <div style="float:left; padding-left:75px;">发送至：<input name="textfield" type="text" id="textfield" size="35" /></div><div>&nbsp;<img id="btn_icon_contacts" src="images/sms/icon_contacts_off.png" /></div></td>
+    </tr>
+    <tr>
+      <td height="132" align="center" bgcolor="#EAEAEA" class="dialog_left_right"><label for="textarea"></label>
+      <textarea name="textarea" id="textarea" cols="45" rows="5"></textarea>
+      <div align="left" style="padding:5px 0px 0px 75px;">已输入0字,按0条短信发送</div>
+      </td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/sms/dialog_send_gray.png" width="73" height="29" />&nbsp;&nbsp;<img id="btn_message_cancel" src="images/contacts/dialog_close_off.png" width="73" height="29" /></td>
+    </tr>
+  </table>
+
+</div>
+
+<!-- 导入联系人 -->
+<div id="contact_import" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;">
+      <div class="div_dialog_head"><img src="images/sms/dialog_word_inport-sms.png" /></div>
+      <img id="btn_import_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFFF" class="dialog_left_right">
+      	<div class="div_select_pc">
+        	<select>
+            	<option>文件类型</option>
+                <option>文件方式（CSV）</option>
+                <option>目录方式（Vcard）</option>
+            </select>
+        </div>
+        <div align="center" class="div_message_import">
+        	<table width="436" height="143" cellpadding="0" cellspacing="0" class="table_message_import">
+            	<tr class="table_tr_message_import">
+                	<td>姓名</td>
+                    <td align="center">电话</td>
+                    <td align="center">短信摘要</td>
+                </tr>
+                <tr>
+                	<td height="121" colspan="3">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/contacts/dialog_begin-inport_gray.png" width="94" height="29" />&nbsp;&nbsp;</td>
+    </tr>
+  </table>
+
+</div>
+
+<iframe id="frm_contact_choose" src="contact_choose.html" style="z-index:3; position:absolute; display:none; background-color:transparent;" allowtransparency="true" scrolling="no" width="500" height="282"></iframe>
+</body>
+</html>

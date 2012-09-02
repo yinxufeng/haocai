@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	-moz-user-select:none;
+	cursor:default;
+	font-family: "Microsoft YaHei";
+	font-weight:500;
+	color:#666666;
+	font-size:12px;
+}
+
+input[type=text] {
+	border:1px #999 solid;
+	height:18px;
+	line-height:18px;
+}
+
+
+.divScroll{ 
+scrollbar-face-color: #ebebeb;
+scrollbar-shadow-color: #ffffff; 
+scrollbar-highlight-color:#ffffff; 
+scrollbar-3dlight-color: #d8d8d8;  
+scrollbar-darkshadow-color: #d8d8d8; 
+scrollbar-track-color:#ffffff; 
+scrollbar-arrow-color: #686868;
+}
+
+
+.window_left{
+	border-left:1px #307DC1 solid;
+}
+
+.window_right{
+	border-right:1px #307DC1 solid;
+}
+.window_left_right {
+	border-left:1px #307DC1 solid;
+	border-right:1px #307DC1 solid;
+}
+
+
+.tableRightStyle{
+	border-right:1px #999999 solid;
+	
+}
+
+.tableBottomStyle{
+	border-bottom:1px #999999 solid;
+}
+
+.dialog_left_right {
+	border-left:2px #307DC1 solid;
+	border-right:2px #307DC1 solid;
+}
+
+.dialog_left {
+	border-left:2px #307DC1 solid;
+}
+
+.dialog_right {
+	border-right:2px #307DC1 solid;
+}
+
+.div_dialog_head {
+	float:left;
+	padding:8px 0px 0px 10px;
+}
+
+.div_select_pc {
+	padding:10px 0px 10px 30px;
+}
+
+.table_message_import {
+	border:1px #E1E1E1 solid;
+}
+
+.table_tr_message_import{
+	background-color:#C9E0F2;
+}
+	
+
+
+.div_message_import {
+	padding-bottom:10px;
+}
+
+#contact_choose {
+	position:absolute;
+	width:500px;
+	height:auto;
+	z-index:3;
+}
+
+textarea {
+	border:1px #999 solid;
+	color:#CCC;
+}

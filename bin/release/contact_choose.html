@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>选择联系人</title>
+<script type="text/javascript" src="js/json2.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+	
+	
+	$("document").ready(function() {
+		$("#btn_contact_choose_close").mouseover(function() {
+			$(this)[0].src = "images/close_on.png";	
+		});
+		$("#btn_contact_choose_close").mouseout(function() {
+			$(this)[0].src = "images/close_off.png";	
+		});
+		$("#btn_contact_choose_close").click(function() {
+			parent.close_Contact_Choose();
+		});
+	});
+</script>
+
+
+<link type="text/css" rel="stylesheet" href="css/commom.css" />
+<link type="text/css" rel="stylesheet" href="css/icon.css" />
+</head>
+
+<body leftmargin="0" topmargin="0">
+<div id="contact_choose">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;">
+      <div class="div_dialog_head"><img src="images/sms/dialog_word_select-contact.png" /></div>
+      <img id="btn_contact_choose_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFFF" class="dialog_left_right">
+      	<div class="div_select_pc">联第人：
+		  <select>
+            	<option>全部联系人</option>
+               
+          </select>
+        </div>
+        <div align="center" class="div_message_import">
+        	<table width="436" height="152" cellpadding="0" cellspacing="0" class="table_message_import">
+            	<tr class="table_tr_message_import">
+                	<td width="64" height="29">姓名</td>
+                  <td width="185" align="center">&nbsp;</td>
+                    <td width="185" valign="top">
+                    <div class="div_search_contact_choose">&nbsp;&nbsp;<img src="images/sms/search_icon.png" /><input type="text" id="btn_search" /></div>
+                    </td>
+                </tr>
+                <tr>
+                	<td height="121" colspan="3">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/contacts/dialog_begin-inport_gray.png" width="94" height="29" />&nbsp;&nbsp;</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
