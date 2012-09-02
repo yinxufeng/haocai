@@ -1,0 +1,59 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	font-family: "Microsoft YaHei";
+	font-weight:500;
+	color:#666666;
+	font-size:12px;
+}
+
+
+#message_1{
+	padding:10px 10px 10px 10px;	
+	height:auto;
+	word-break:break-all;  
+	dispaly:block;
+	line-height:2;
+	
+}
+
+#message_2{
+	padding:10px 10px 10px 10px;
+	height:auto;
+	background-color:#F2F2F2;
+	word-break:break-all;  
+	dispaly:block;
+	line-height:2;
+	
+}
+.message_warn{
+	padding-top:2px;
+	padding-left:20px;
+	float:left;
+}
+
+#createMessage {
+	position:absolute;
+	top:21px;
+	width:500px;
+	height:auto;
+	z-index:2;
+}
+#message_import {
+	position:absolute;
+	top:21px;
+	width:500px;
+	height:auto;
+	z-index:2;
+}
+
+#message_export {
+	position:absolute;
+	top:21px;
+	width:500px;
+	height:auto;
+	z-index:2;
+}
+
+

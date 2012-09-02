@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>联系人</title>
+<script type="text/javascript" src="js/json2.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/head.js"></script>
+
+<script type="text/javascript" src="js/sms.js" charset="utf-8"></script>
+<link href="css/commom.css" rel="stylesheet" type="text/css" />
+<link href="css/sms.css" rel="stylesheet" type="text/css" />
+<link href="css/icon.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body bgcolor="#F6FAFB" scroll="no" topmargin="0" leftmargin="0" onselectstart="return false;">
+<iframe id="frm_contact_choose" src="contact_choose.html" style="z-index:3; position:absolute; display:none; background-color:transparent;" allowtransparency="true" scrolling="no" width="500" height="282"></iframe>
+
+<table width="910" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+	  <td width="120"><div id="move1" style="width:120px; height:34px; background:url(./images/title_left.png) no-repeat;"></div></td>
+	  <td width="790" align="right" style="background:url(images/title_right.png) no-repeat; padding-right:5px;"><div id="move" style="width:785px; height:34px; padding-top:0px; float:left"><img id="btn_win_min" src="images/min_off.png" width="34" height="34" /><img id="btn_win_close" src="images/close_off.png" width="34" height="34" /></div></td>
+  </tr>
+	<tr>
+    	<td colspan="2" background="images/menu_bg.png" class="window_left_right">
+        <div id="menu_home_off"></div><div id="menu_download_shop_off"></div><div id="menu_contacts_off"></div><div id="menu_message_on"></div><div id="menu_file_off"></div>
+        </td>
+    </tr>
+  <tr>
+      <td height="25" colspan="2" class="window_left_right"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="29%" rowspan="3" class="tableRightStyle">
+          	<div style="border-bottom:1px #999999 solid; height:35px;">
+          	  <div style="float:left; padding:7px 5px 5px 5px;"><input type="checkbox" name="checkbox" id="checkbox" />
+          	全选</div>
+              <div style="float:right; padding:7px 5px 5px 5px;">
+              <select name="">
+                <option>按姓名排序</option>
+              	<option>按时间排序</option>
+                <option>按未读排序</option>
+              </select>
+              </div>
+            </div>     
+			<iframe id="sms_left" name="sms_left" src="sms_left.html" frameborder="0" scrolling="auto" width="100%" height="495" ></iframe>
+    	  </td>
+          <td width="71%" valign="top" background="images/contacts/bg.PNG">
+           	<div id="btn_message_new"></div><div id="btn_message_delete"></div><div id="btn_message_import"></div>
+            <div id="btn_message_export"></div><div id="btn_message_reload" class="btn_message_reload"></div>
+            <div class="div_search">&nbsp;&nbsp;<img src="images/sms/search_icon.png" /><input id="btn_search" type="text" /></div>
+          </td>
+        </tr>
+        <tr>
+        	<td><iframe id="i_message" src="sms_message.html" frameborder="0" scrolling="auto" width="100%" height="370"  ></iframe></td>
+        </tr>
+        <tr>
+          <td height="131" style="background-color:#E4E4E4">
+          	<div align="center"><textarea id="txt_message_content" cols="83" rows="5">回复：</textarea></div>
+            <div class="message_warn">已输入0字，按0条短信发送。</div>
+            <div id="btn_eliminate"></div>
+            <div id="btn_send_message" class="btn_send_message"></div>
+           
+          </td>
+        </tr>
+      </table>
+      </td>
+  </tr>
+  <tr>
+  	<td height="25" colspan="2" align="right" class="window_left" style="background:url(images/window_bottomline.png)"><img src="images/window_drag.png" width="13" height="25" /></td>
+  </tr>
+</table>
+
+<!-- 新建短信 -->
+<div id="createMessage" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;"><div class="div_dialog_head"><img src="images/sms/dialog_word_new-message.png" /></div><img id="btn_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td height="44" valign="middle" bgcolor="#FFFFFF" class="dialog_left_right">
+      <div style="float:left; padding-left:75px;">发送至：<input name="textfield" type="text" id="textfield" size="35" /></div><div>&nbsp;<img id="btn_icon_contacts" src="images/sms/icon_contacts_off.png" /></div></td>
+    </tr>
+    <tr>
+      <td height="132" align="center" bgcolor="#EAEAEA" class="dialog_left_right"><label for="textarea"></label>
+      <textarea name="textarea" id="textarea" cols="45" rows="5"></textarea>
+      <div align="left" style="padding:5px 0px 0px 75px;">已输入0字,按0条短信发送</div>
+      </td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/sms/dialog_send_gray.png" width="73" height="29" />&nbsp;&nbsp;<img id="btn_cancel" src="images/contacts/dialog_close_off.png" width="73" height="29" /></td>
+    </tr>
+  </table>
+
+</div>
+
+<!-- 导入 -->
+<div id="message_import" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;">
+      <div class="div_dialog_head"><img src="images/sms/dialog_word_inport-sms.png" /></div>
+      <img id="btn_import_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFFF" class="dialog_left_right">
+      	<div class="div_select_pc"><input id="btn_select_pc" type="button" value="从电脑中添加"  /></div>
+        <div align="center" class="div_message_import">
+        	<table width="436" height="143" cellpadding="0" cellspacing="0" class="table_message_import">
+            	<tr class="table_tr_message_import">
+                	<td>姓名</td>
+                    <td align="center">电话</td>
+                    <td align="center">短信摘要</td>
+                </tr>
+                <tr>
+                	<td height="121" colspan="3">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/contacts/dialog_begin-inport_gray.png" width="94" height="29" />&nbsp;&nbsp;</td>
+    </tr>
+  </table>
+
+</div>
+
+<!-- 导出 -->
+<div id="message_export" style="display:none;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" height="34" align="right" style="background:url(images/contacts/dialog_on.png) no-repeat; padding-right:5px;">
+      <div class="div_dialog_head"><img src="images/sms/dialog_word_export-sms.png" /></div>
+      <img id="btn_export_close" src="images/close_off.png" width="34" height="34" /></td>
+    </tr>
+    <tr>
+      <td height="133" bgcolor="#FFFFFF" class="dialog_left_right">
+      	<div class="div_select_pc">
+        <p>你选择导出0条短信</p>
+        <p>导出到电脑
+          <input name="textfield2" type="text" id="textfield2" size="40" />
+          <a href="#">更改</a> </p>
+        </div></td>
+    </tr>
+    <tr>
+      <td height="44" align="center" background="images/contacts/dialog_under.png"><img id="btn_save" src="images/contacts/dialog_begin-export_off.png" width="94" height="29" />&nbsp;&nbsp;</td>
+    </tr>
+  </table>
+</div>
+
+<input id="openFile" type="file" style="display:none" />
+
+</body>
+</html>

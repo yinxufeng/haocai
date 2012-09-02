@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" rel="stylesheet" href="css/contact.css" />
+<script type="text/javascript" src="js/log4javascript.js"></script>
+<script type="text/javascript" src="js/json2.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/contact.js"></script>
+
+<script type="text/javascript">
+
+// JavaScript Document
+function fnIsOurCustomBrowser()
+{
+	// 检验是否是自定义浏览器我们只用调用函数
+	// CB_IsOurCustomBrowser看是否可以获得.
+	// 不带()表示属性调用,可以检验函数是否在外部窗口
+	// 返回null表示不是自定义窗口,返回false
+	if(window.external.CB_IsOurCustomBrowser != null)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+	
+// 用一个变量检验是否是自定义浏览器.
+bIsCustomBrowser = fnIsOurCustomBrowser();
+</script>
+<title>无标题文档</title>
+
+</head>
+
+<body bgcolor="#F6FAFB" style="margin-left:0px; margin-right:0px; margin-top:0px;">
+<div id="contact">
+		
+</div>
+</body>
+</html>

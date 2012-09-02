@@ -1,0 +1,146 @@
+/* CSS Document */
+body {
+	-moz-user-select:none;
+	cursor:default;
+}
+
+input[type=text] {
+	border:1.5px #999 solid;
+	height:18px;
+}
+
+
+.divScroll{ 
+scrollbar-face-color: #ebebeb;
+scrollbar-shadow-color: #ffffff; 
+scrollbar-highlight-color:#ffffff; 
+scrollbar-3dlight-color: #d8d8d8;  
+scrollbar-darkshadow-color: #d8d8d8; 
+scrollbar-track-color:#ffffff; 
+scrollbar-arrow-color: #686868;
+}
+
+.divContact {
+	height:30px; 
+	padding-top:18px; 
+	padding-left:18px;
+	border-bottom:1px #999999 solid;
+
+}
+
+#mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: expression(body.scrollWidth);
+	height: expression(body.scrollHeight);
+	background:#CCC;
+	filter: ALPHA(opacity = 60);
+	z-index: 1;
+	visibility: hidden;
+}
+
+#createContact {
+	position:absolute;
+	//left:435px;
+	top:21px;
+	width:500px;
+	height:400px;
+	z-index:2;
+}
+
+.contact_new_left{
+	border-left:1.5px #307DC1 solid;
+}
+
+.contact_new_right{
+	border-right:1.5px #307DC1 solid;
+}
+.contact_new{
+	border-left:1.5px #307DC1 solid;
+	border-right:1.5px #307DC1 solid;
+}
+
+
+.tableRightStyle{
+	border-right:1px #999999 solid;
+	
+}
+
+.tableBottomStyle{
+	border-bottom:1px #999999 solid;
+}
+
+p {
+	line-height:20px;
+}
+
+.divContactDetail{
+	padding-left:20px;
+	padding-right:20px;
+	line-height:12px;
+}
+
+body {
+	font-family: "Microsoft YaHei";
+	font-weight:500;
+	color:#666666;
+	font-size:12px;
+}
+
+.tableRightPadding {
+	padding-right:20px;
+}
+
+.btn_newgroup{
+	padding-left:30px;
+}
+
+.contact_div1 {
+	/*width:326px;*/
+	height:23px;
+	border-bottom:1px #666666 solid;
+	padding-left:13px;
+	padding-top:2px;
+	margin-right:0px;
+	background-color:#EBEBEB;
+}
+
+.contact_div2 {
+	/*width:326px;*/
+	height:23px;
+	border-bottom:1px #666666 solid;
+	padding-left:13px;
+	padding-top:2px;
+	cursor:default;
+	-moz-user-select:none;
+}
+
+
+#moble {
+	position:absolute;
+	left:160px;
+}
+
+#contact_export {
+	position:absolute;
+	top:21px;
+	width:500px;
+	height:auto;
+	z-index:2;
+}
+#createMessage {
+	position:absolute;
+	top:21px;
+	width:500px;
+	height:auto;
+	z-index:2;
+}
+
+#contact_import {
+	position:absolute;
+	top:21px;
+	width:500px;
+	height:auto;
+	z-index:2;
+}

@@ -1,0 +1,441 @@
+// JavaScript Document
+var contact_selectall_flag = true;
+//全靠
+function contact_selectall() {
+	
+	if (contact_selectall_flag) {
+		$("#contacts_selectall")[0].src = "images/contacts/contacts_selectall_on.png";
+		f_contact.window.checked();
+		
+		contact_selectall_flag = false;
+		
+	} else {
+		$("#contacts_selectall")[0].src = "images/contacts/contacts_selectall_off.png";
+		f_contact.window.unchecked();
+		contact_selectall_flag=true;
+		
+	}
+	
+}
+
+
+
+
+
+//关闭
+function closeiframe() {
+	$("#iframe1").hide();
+
+}
+
+//添加html
+function addHtml(s) {
+	$("#contact").html(s);	
+	var checkflag = true;   //是否被选中
+	$("input[name='checkbox2']").each(function(){
+		_this = $(this);
+		_this.click(function(){
+			if(this.checked) {
+				parent.contact_content($(this).val());
+				
+				checkflag = false;
+				$(this).attr("checked", true);
+				
+			} else {
+				checkflag = false;
+				
+				$(this).attr("checked", false);
+			}
+		});
+	});
+	$("#contact").each(function(index, element){
+	
+		$(this).find("div[class='contact_div2']").click(function(){
+			if (checkflag) {
+				$("input[name='checkbox2']").each(function(){this.checked=false;});
+				$("#contact").find("div[class='contact_div2']").css("background-color","#F6FAFB");
+				
+				$(this).find("input").attr("checked", true);
+			}
+			if($(this).find("input").attr("checked") == true) {
+				$(this).css("background-color","#FBE7AC");
+			} else {
+				$(this).css("background-color","#F6FAFB");
+			}
+			
+			checkflag = true;
+		});	
+	});	
+}
+
+//加载联系人
+function loadContact() {
+	if(bIsCustomBrowser) {
+		window.external.CPP_OnRequestContactData();
+	}
+
+}
+
+
+//加载联系人
+function JS_OnRequestContactData(_contact) {
+	
+	var json_contact = _contact;
+	var myE = eval(json_contact);
+	var text = JSON.stringify(myE); 
+	
+	var object = JSON.parse(text);
+	var contact=object;
+	var s="";
+	for(var i =0;i<contact.length;i++)
+	{
+	   switch(contact[i].position){
+		 case 'A':
+		 	s+="<div class=\"contact_div1\">A</div>";
+		 	break;
+		 case 'B':
+			 s+="<div class=\"contact_div1\">B</div>";
+			 break;
+		 case 'C':
+			 s+="<div class=\"contact_div1\">C</div>";
+			 break;
+		 case 'D':
+			 s+="<div class=\"contact_div1\">D</div>";
+			 break;
+		 case 'E':
+		 	s+="<div class=\"contact_div1\">E</div>";
+		 	break;
+		 case 'F':
+			s+="<div class=\"contact_div1\">F</div>";
+			break;
+		 case 'G':
+			s+="<div class=\"contact_div1\">G</div>";
+			break;
+		 case 'H':
+			s+="<div class=\"contact_div1\">H</div>";
+			break;
+		 case 'I':
+		 	s+="<div class=\"contact_div1\">I</div>";
+		 	break;
+		 case 'J':
+			 s+="<div class=\"contact_div1\">B</div>";
+			 break;
+		 case 'K':
+			 s+="<div class=\"contact_div1\">C</div>";
+			 break;
+		 case 'L':
+			 s+="<div class=\"contact_div1\">D</div>";
+			 break;
+		 case 'M':
+		 	s+="<div class=\"contact_div1\">E</div>";
+		 	break;
+		 case 'N':
+			s+="<div class=\"contact_div1\">F</div>";
+			break;
+		 case 'O':
+			s+="<div class=\"contact_div1\">O</div>";
+			break;
+		 case 'P':
+			s+="<div class=\"contact_div1\">P</div>";
+			break;
+		 case 'Q':
+			s+="<div class=\"contact_div1\">Q</div>";
+			break;
+		 case 'R':
+		 	s+="<div class=\"contact_div1\">R</div>";
+		 	break;
+		 case 'S':
+			s+="<div class=\"contact_div1\">S</div>";
+			 break;
+		 case 'T':
+			s+="<div class=\"contact_div1\">T</div>";
+			 break;
+		 case 'U':
+			s+="<div class=\"contact_div1\">U</div>";
+			 break;
+		 case 'V':
+		 	s+="<div class=\"contact_div1\">V</div>";
+		 	break;
+		 case 'W':
+			s+="<div class=\"contact_div1\">W</div>";
+			break;
+		 case 'X':
+			s+="<div class=\"contact_div1\">X</div>";
+			break;
+		 case 'Y':
+			s+="<div class=\"contact_div1\">Y</div>";
+			break;
+		case 'Z':
+			s+="<div class=\"contact_div1\">Z</div>";
+			break;
+	   }
+	   s += "<div class='contact_div2' onselectstart=\"return false;\"><input type='checkbox' name='checkbox2' value=\"person:[{name:'"+contact[i].name+"',mobile:'"+contact[i].mobile+"',group:'40'}]\">" + contact[i].name  + "<span id='moble'>"+contact[i].mobile + "</span></div>";
+			
+	}
+	
+	f_contact.window.addHtml(s);
+		
+}
+
+//进度条
+function JS_ProgressBar(iWidth) {
+	
+	iframe1.window.go(iWidth);	
+}
+
+
+
+$(document).ready(function(){
+		
+	//导入
+	$("#btn_contacts_import").click(function() {
+		$("#iframe1").show();
+		//导入联系人，调用C++内置函数
+		window.external.CPP_Contacts_Import();
+	});
+
+	//loadContact();
+	
+	//新建联系人
+	$("#contacts_new").click(function() {
+		$("#contacts_new")[0].src="images/contacts/contacts_new_on.png";		
+		$("#img_new_contact")[0].src="images/contacts/dialog_word_newly-build-contact.png";
+		
+		$("#select").html("<option value='0'>未分组</option>");
+		 //mask.style.visibility='visible';
+		ban();
+		var iWidth = ($(window).width()-500)/2;
+		var iHeight = ($(window).height()-400)/2;
+		$("#createContact").css("left", iWidth);
+		$("#createContact").css("top", iHeight);
+		$("#createContact").show();	
+				
+	});
+	$("#contacts_new").mouseout(function() {
+		$("#contacts_new")[0].src="images/contacts/contacts_new_off.png";								 
+	});
+	var bgObj;
+	//禁止操作Body
+	function ban() {
+		 var iWidth = document.documentElement.clientWidth; 
+		 var iHeight = document.documentElement.clientHeight; 
+		 bgObj = document.createElement("div"); 
+		 bgObj.style.cssText = "position:absolute;left:0px;top:0px;width:"+iWidth+"px;height:"+Math.max(document.body.clientHeight, iHeight)+"px;filter:Alpha(Opacity=60);opacity:0.3;background-color:#CCC;z-index:1;";
+		 document.body.appendChild(bgObj); 
+	}
+	
+	
+	//新建分组
+	$("#btn_newgroup").click(function() {
+		$("#txt_newgroup").val("");
+		$("#btn_newgroup").css('display','none');
+		$("#txt_newgroup").css('display','block');	
+		$("#txt_newgroup").focus();
+		
+	});
+	
+	//离开新建分组事件
+	$("#txt_newgroup").blur(function(){
+	   if($(this).val()!="") {
+		   
+		   $("#menu").append("<li><span>"+$(this).val()+"(0)</span></li>");
+		   $("#menu").find("span").attr("class","memuSpan1");
+		   loadGroup();
+		   //autoScorll();
+	   }
+	   
+	   
+	   $("#btn_newgroup").css('display','block');
+	   $("#txt_newgroup").css('display','none');	
+	});
+	loadGroup();
+	$("#menu").find("span").attr("class","memuSpan1");
+	//加载分组
+	function loadGroup() {
+		$("#menu").find("li").each(function(index, element) {
+									
+		var _this = $(this);
+		
+		_this.click(function(){	
+			$("#menu").find("span").attr("class","memuSpan1");
+			_this.find("span").attr("class","menuSpan");
+		});
+		});
+	}
+	
+	//发送短信
+	$("#btn_send_message").click(function() {
+		$(this)[0].src="images/contacts/btn_send_message_on.png";									  
+	});
+	$("#btn_send_message").mouseover(function() {
+		$(this)[0].src="images/contacts/btn_send_message_on.png";									  
+	});
+	$("#btn_send_message").mouseout(function() {
+		$(this)[0].src="images/contacts/btn_send_message_off.png";									  
+	});
+	
+	//编辑联系人
+	$("#btn_edit_off").click(function() {
+		$(this)[0].src="images/contacts/btn_edit_on.png";
+		$("#img_new_contact")[0].src="images/contacts/dialog_edit-contact.png";
+	
+		ban();
+		var iWidth = ($(window).width()-500)/2;
+		var iHeight = ($(window).height()-400)/2;
+		$("#createContact").css("left", iWidth);
+		$("#createContact").css("top", iHeight);
+		$("#createContact").show();	
+	});
+	
+	$("#btn_edit_off").mouseover(function() {
+		$(this)[0].src="images/contacts/btn_edit_on.png";
+	});
+	$("#btn_edit_off").mouseout(function() {
+		$(this)[0].src="images/contacts/btn_edit_off.png";
+	});
+	
+	//刷新
+	$("#contacts_reload").click(function(){
+		$(this)[0].src="images/contacts/contacts_reload_on.png";									 
+	});
+	
+	$("#contacts_reload").mouseout(function(){
+		$(this)[0].src="images/contacts/contacts_reload_off.png";									 
+	});
+	
+	//关闭按钮
+	$("#btn_close").click(function() {
+		$(this)[0].src="images/close_on.png";
+		$("#createContact").hide();
+		document.body.removeChild(bgObj);
+	});
+	$("#btn_close").mouseout(function(){
+		$(this)[0].src="images/close_off.png";	
+	});
+	$("#btn_close").mouseover(function(){
+		$(this)[0].src="images/close_over.png";	
+	});
+	
+	//保存按钮
+	$("#btn_save").click(function() {
+		$(this)[0].src="images/contacts/dialog_preservation_on.png";
+	});
+	$("#btn_save").mouseout(function() {
+		$(this)[0].src="images/contacts/dialog_preservation_off.png";
+	});
+	$("#btn_save").mouseover(function() {
+		$(this)[0].src="images/contacts/dialog_preservation_over.png";
+	});
+	
+	
+	//取消按钮
+	$("#btn_cancel").click(function() {
+		$(this)[0].src="images/contacts/dialog_cancel_on.png";
+		$("#createContact").hide();
+		document.body.removeChild(bgObj);
+	});
+	$("#btn_cancel").mouseout(function() {
+		$(this)[0].src="images/contacts/dialog_cancel_off.png";	
+	});
+	$("#btn_cancel").mouseover(function() {
+		$(this)[0].src="images/contacts/dialog_cancel_over.png";	
+	});
+	
+	
+	
+	//删除
+	$("#contacts_delete").click(function() {
+		f_contact.window.removeContact();
+	});
+	
+	//导出联系人
+	$("#contacts_export").click(function(){
+		ban();
+		var iHeight = ($(window).height()-($(this).height()+200))/2;
+		$("#contact_export").css("left", iWidth);
+		$("#contact_export").css("top", iHeight);
+		$("#contact_export").show();
+	});
+	
+	$("#btn_export_close").click(function() {
+		$("#contact_export").hide();
+		document.body.removeChild(bgObj);	
+	});
+	$("#btn_export_close").mouseover(function() {
+		$(this)[0].src="images/close_on.png";
+	});
+	$("#btn_export_close").mouseout(function() {
+		$(this)[0].src="images/close_off.png";
+	});
+	
+	//发送短信
+	$("#btn_send_message").click(function() {
+		ban();
+		var iHeight = ($(window).height()-($(this).height()+200))/2;
+
+		$("#createMessage").css("left", iWidth);
+		$("#createMessage").css("top", iHeight);
+		$("#createMessage").show();		
+	});
+	
+	$("#btn_message_close").click(function() {
+		$("#createMessage").hide();	
+		document.body.removeChild(bgObj);	
+	});
+	
+	$("#btn_message_close").mousemove(function() {
+		$(this)[0].src = "images/close_on.png";	
+	});
+	$("#btn_message_close").mouseout(function() {
+		$(this)[0].src = "images/close_off.png";	
+	});
+	
+	$("#btn_message_cancel").click(function() {
+		$("#createMessage").hide();	
+		document.body.removeChild(bgObj);
+	});
+
+	
+});
+
+//移除联系人
+function removeContact() {
+		
+		/*$("input[name='checkbox2']").each(function(){
+			if (this.checked){
+				$(this).remove();
+				alert($(this)[0].style.background);
+			}
+		});*/
+		
+		$("div[class='contact_div2']").each(function(){
+			var input = $(this).find("input");
+			
+			if (input.attr("checked") == true) {
+				$(this).remove();
+			}
+			
+		});
+		
+}
+
+function checked(){
+	$("input[name='checkbox2']").each(function(){this.checked=true;});
+	$("#contact").find("div[class='contact_div2']").css("background-color","#FBE7AC");
+}
+function unchecked(){
+	$("input[name='checkbox2']").each(function(){this.checked=false;});
+	$("#contact").find("div[class='contact_div2']").css("background-color","#F6FAFB");
+}
+
+function contact_content(val) {
+	
+	var myE = eval(val);
+	var text = JSON.stringify(myE); 
+	var contact =JSON.parse(text); 
+	$("#name").html(contact[0].name);
+	$("#group").html(contact[0].group);
+	$("#mobile").html(contact[0].mobile);
+}
+
+

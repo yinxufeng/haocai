@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataEngine", "DataEngine", "{4A1D00CA-5D5F-452B-8D7E-913CE376D530}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MainUI", "MainUI", "{EE72E8B3-5295-41DD-974B-0747948CFC58}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataEngine", "DataEngine\DataEngine.vcproj", "{68A4B817-87D8-4D6D-9AB8-25245A6422CC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{39C53B30-2609-4E11-8C41-01C2273E162B} = {39C53B30-2609-4E11-8C41-01C2273E162B}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vocl", "DataEngine\contactsimport\vocl\vocl.vcproj", "{39C53B30-2609-4E11-8C41-01C2273E162B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MainUI", "MainUI\PCSuite.vcproj", "{70DA6BA1-A3EC-45E1-AFA3-80C0F21FF857}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68A4B817-87D8-4D6D-9AB8-25245A6422CC} = {68A4B817-87D8-4D6D-9AB8-25245A6422CC}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68A4B817-87D8-4D6D-9AB8-25245A6422CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{68A4B817-87D8-4D6D-9AB8-25245A6422CC}.Debug|Win32.Build.0 = Debug|Win32
+		{68A4B817-87D8-4D6D-9AB8-25245A6422CC}.Release|Win32.ActiveCfg = Release|Win32
+		{68A4B817-87D8-4D6D-9AB8-25245A6422CC}.Release|Win32.Build.0 = Release|Win32
+		{39C53B30-2609-4E11-8C41-01C2273E162B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39C53B30-2609-4E11-8C41-01C2273E162B}.Debug|Win32.Build.0 = Debug|Win32
+		{39C53B30-2609-4E11-8C41-01C2273E162B}.Release|Win32.ActiveCfg = Release|Win32
+		{39C53B30-2609-4E11-8C41-01C2273E162B}.Release|Win32.Build.0 = Release|Win32
+		{70DA6BA1-A3EC-45E1-AFA3-80C0F21FF857}.Debug|Win32.ActiveCfg = Debug|Win32
+		{70DA6BA1-A3EC-45E1-AFA3-80C0F21FF857}.Debug|Win32.Build.0 = Debug|Win32
+		{70DA6BA1-A3EC-45E1-AFA3-80C0F21FF857}.Release|Win32.ActiveCfg = Release|Win32
+		{70DA6BA1-A3EC-45E1-AFA3-80C0F21FF857}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{68A4B817-87D8-4D6D-9AB8-25245A6422CC} = {4A1D00CA-5D5F-452B-8D7E-913CE376D530}
+		{39C53B30-2609-4E11-8C41-01C2273E162B} = {4A1D00CA-5D5F-452B-8D7E-913CE376D530}
+		{70DA6BA1-A3EC-45E1-AFA3-80C0F21FF857} = {EE72E8B3-5295-41DD-974B-0747948CFC58}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/sms.css" type="text/css"  />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+var id = "message_1";
+function showMessage(message) {
+	var cl = $("#message").find("div:last");
+	
+	var date = new Date();
+	var d = date.getYear() +  "-" + date.getMonth() + "-" + date.getDate();
+	var t = date.getHours() +　":" + date.getMinutes() + ":" + date.getSeconds();
+	
+	if (cl.attr("id") == "message_2") {
+		id = "message_1";
+	} else {
+		id = "message_2";
+	}
+	$("#message").append("<div id='" + id + "'>我 日期:" + d + " 时间：" + t + "<br/>" + message + "</div>");
+	//document.body.scrollTop=document.body.scrollHeight;
+	//document.documentElement.scrollTop=parseInt(document.body.offsetHeight)-parseInt(document.documentElement.offsetHeight);
+	document.documentElement.scrollTop=document.body.scrollHeight;
+}
+</script>
+<!--<script type="text/javascript" src="js/jscroll.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#b").jscroll({W:"3px", Btn:{btn:false},Bg:'#F6FAFB',Bar:{Bg:{Out:"#ccc",Hover:"#ccc",Focus:"#ccc"}}});	
+});
+
+</script>-->
+<title>无标题文档</title>
+</head>
+
+<body id="b" style="margin-left:0px; margin-right:0px; margin-top:0px;" bgcolor="#F6FAFB">
+<div id="message">
+<!--<div id="message_1">小明 日期:2012-05-03 时间：02:9:45<br/><span>vdfdsfdsvdfdsfdsvdfds</span></div>
+<div id="message_2">我 日期:2012-05-03 时间：02:9:45<br/><span>dfdf</span></div><br/>
+
+<div id="message_1">小明 日期:2012-05-03 时间：02:9:45<br/><span>vdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfd</span></div>
+<div id="message_2">我 日期:2012-05-03 时间：02:9:45<br/><span>dfdf</span></div>
+
+<div id="message_1">小明 日期:2012-05-03 时间：02:9:45<br/><span>vdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfds</span></div>
+<div id="message_2">我 日期:2012-05-03 时间：02:9:45<br/><span>dfdf</span></div>
+<div id="message_1">小明 日期:2012-05-03 时间：02:9:45<br/><span>vdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfdsvdfdsfds</span></div>
+<div id="message_2">我 日期:2012-05-03 时间：02:9:45<br/><span>dfdf</span></div>
+-->
+</div>
+</body>
+</html>

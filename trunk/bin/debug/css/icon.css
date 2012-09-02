@@ -1,0 +1,193 @@
+@charset "utf-8";
+/* CSS Document */
+/*菜单按钮——off*/
+
+#menu_home_off {
+	width:83px;
+	height:90px;
+	float:left;
+	margin-left:10px;
+	background:url(../images/public/menu_home_off.png) no-repeat;
+}
+
+#menu_download_shop_off {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_download%20shop_off.png) no-repeat;
+}
+
+#menu_contacts_off {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_contacts_off.png) no-repeat;
+}
+
+#menu_message {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_message_off.png) no-repeat;
+}
+
+#menu_file_off {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_file_off.png) no-repeat;
+}
+
+
+
+/*菜单按钮——on*/
+#menu_home_on {
+	width:83px;
+	height:90px;
+	float:left;
+	margin-left:10px;
+	background:url(../images/public/menu_home_on.png) no-repeat;
+}
+
+#menu_download_shop_on {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_download%20shop_on.png) no-repeat;
+}
+
+#menu_contacts_on {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_contacts_on.png) no-repeat;
+}
+
+#menu_message_on {
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_message_on.png) no-repeat;
+}
+
+#menu_file_on{
+	width:83px;
+	height:90px;
+	float:left;
+	background:url(../images/public/menu_file_on.png) no-repeat;
+}
+
+
+.btn_send_message {
+	margin-top:5px;
+	width:76px;
+	height:26px;
+	float:right;
+	background:url(../images/sms/btn_send_gray.png) no-repeat;
+}
+.btn_send_message_on {
+	margin-top:5px;
+	width:76px;
+	height:26px;
+	float:right;
+	background:url(../images/sms/btn_send_on.png) no-repeat;
+}
+
+.btn_send_message_off {
+	margin-top:5px;
+	width:76px;
+	height:26px;
+	float:right;
+	background:url(../images/sms/btn_send_off.png) no-repeat;
+}
+
+#btn_eliminate {
+	margin-top:5px;
+	margin-left:5px;
+	margin-right:20px;
+	width:76px;
+	height:26px;
+	float:right;
+	background:url(../images/sms/btn_eliminate_off.png) no-repeat;
+}
+
+/*新建短信*/
+#btn_message_new {
+	width:95px;
+	height:33px;
+	float:left;
+	background:url(../images/sms/message_new_off.png) no-repeat;
+}
+
+#btn_message_delete {
+	width:70px;
+	height:33px;
+	float:left;
+	background:url(../images/sms/contacts_delete_gray.png) no-repeat;
+}
+
+#btn_message_import {
+	width:70px;
+	height:33px;
+	float:left;
+	background:url(../images/sms/contacts_import_off.png) no-repeat;
+}
+
+
+#btn_message_export {
+	width:70px;
+	height:33px;
+	float:left;
+	background:url(../images/sms/contacts_export_off.png) no-repeat;
+}
+
+.btn_message_reload {
+	width:70px;
+	height:33px;
+	float:left;
+	background:url(../images/sms/contacts_reload_off.png) no-repeat;
+}
+
+.btn_message_reload_on {
+	width:70px;
+	height:33px;
+	float:left;
+	background:url(../images/sms/contacts_reload_on.png) no-repeat;
+}
+
+.div_search {
+	width:156px;
+	height:24px;
+	border:0;
+	margin-top:5px;
+	margin-right:5px;
+	float:right;
+	background:url(../images/sms/search_bg.png) no-repeat;
+}
+
+.div_search_contact_choose {
+	width:156px;
+	height:24px;
+	border:0;
+	margin-top:2px;
+	margin-right:5px;
+	float:right;
+	background:url(../images/sms/search_bg.png) no-repeat;
+}
+
+#btn_search {
+	margin-left:10px;
+	padding-top:2px;
+	width:100px;
+	height:18px;
+	border:0px;
+}
+
+
+.btn_join_off {
+	background:url(../images/wizard/join_off.png) no-repeat;
+	width:56px;
+	height:24px;
+	float:right;
+	margin-right:50px;
+}
