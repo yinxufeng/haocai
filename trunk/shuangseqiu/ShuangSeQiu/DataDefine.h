@@ -9,6 +9,9 @@
 using std::vector;
 using std::map;
 
+#define QIU_COUNT 33
+#define QIU_XUAN  6
+
 enum eSuanFaType                 //预测算法类型
 {
 	SUANFA_WEIZHI_YUCE,          //尾值预测

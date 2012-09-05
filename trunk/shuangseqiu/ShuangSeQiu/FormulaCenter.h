@@ -50,12 +50,19 @@ struct sFormulaData
 {
 	CString m_Data;            //描述数据
 	bool    m_IsTrue;          //是否正确
+	CString m_QiShu;           //期数
+
+	sFormulaData()
+	{
+		m_IsTrue = true;
+	}
 };
 
 //公式数据描述
 struct sFormulaInfo
 {
 	CString                m_FormulaName;          //公式名字
+	CString                m_QiShu;                //期数
 	eFormulaType           m_FormulaType;          //公式类型
 	vector<sFormulaData>   m_DataList;             //数据
 	int                    m_MaxLianCuoCount;      //最大连错次数
@@ -63,6 +70,7 @@ struct sFormulaInfo
 	int                    m_MinLianCuoCount;      //最小连错次数
 	int                    m_MinLianDuiCount;      //最小连对次数 
 	int                    m_ErrorCount;           //错误次数
+	int                    m_TrueCount;            //正确次数
 	map<CString,int>       m_MapErrorInfo;         //错误信息
 	bool                   m_LastStatus;           //最后一次公式状态
 
@@ -74,6 +82,7 @@ struct sFormulaInfo
 		 m_MinLianDuiCount = 0;
 
 		 m_ErrorCount      = 0;
+		 m_TrueCount       = 0;
 		 m_LastStatus      = true;
 		 m_FormulaType     = FORMULA_NULL;
 	}
@@ -85,15 +94,15 @@ class CFormulaCenter
 
 public:
 
-	CFormulaCenter(void);
-
-	~CFormulaCenter(void);
+	//获取数据管理实例
+	static  CFormulaCenter* GetInstance();
 
 	//获取公式信息
 	vector<sFormulaInfo> GetFormulaInfoByType(eFormulaType Type);
 
-	//公式运算
-	void RunFormula();
+	
+	//获取算法个数
+	int GetFormulaCount(eFormulaType Type);
 
 private:
 
@@ -102,5 +111,25 @@ private:
 
 private:
 
-	map<CString,vector<sFormulaInfo>> m_MapFormulaInfo;   //公式数据缓存
+	//整形转化到字符串
+	CString DataToStr(int Data);
+
+	//字符串转化到整形
+	int StrToData(CString DataStr);
+
+	//统计公式信息
+	void ToJiFormulaInfo(sFormulaInfo& Formula);
+
+
+	CFormulaCenter(void);
+
+	~CFormulaCenter(void);
+
+	//公式运算
+	void RunFormula();
+
+
+private:
+
+	map<eFormulaType,vector<sFormulaInfo>> m_MapFormulaInfo;   //公式数据缓存
 };

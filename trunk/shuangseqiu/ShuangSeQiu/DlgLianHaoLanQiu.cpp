@@ -4,10 +4,11 @@
 #include "stdafx.h"
 #include "ShuangSeQiu.h"
 #include "DlgLianHaoLanQiu.h"
-
+#include "FormulaCenter.h"
 
 // CDlgLianHaoLanQiu 对话框
 
+#define FORMULA_COUNT 24
 
 //获取模块路径
 CString GetAppCurrentPath3()
@@ -61,19 +62,36 @@ void CDlgLianHaoLanQiu::InitListHeader()
 	CRect Rect;
 	//初始化应用程序列表控件
 	m_ListCtrl.GetWindowRect(&Rect);
-	int nWidth = Rect.Width()/10;
-	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	2*nWidth);
-	m_ListCtrl.InsertColumn(1,_TEXT("均值"),	LVCFMT_CENTER,	0.5*nWidth);
-	m_ListCtrl.InsertColumn(2,_TEXT("杀红"),	LVCFMT_CENTER,	7.5*nWidth);
-/*	m_ListCtrl.InsertColumn(2,_TEXT("杀红1"),	LVCFMT_CENTER,	nWidth); 
-	m_ListCtrl.InsertColumn(3,_TEXT("杀红2"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(4,_TEXT("杀红3"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(5,_TEXT("杀红4"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(6,_TEXT("杀红5"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(7,_TEXT("杀红6"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(8,_TEXT("杀红7"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(9,_TEXT("杀红8"),	LVCFMT_CENTER,	nWidth);
-	*/
+	int nWidth = Rect.Width()/(FORMULA_COUNT+2);
+
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+
+	m_ListCtrl.InsertColumn(0,_TEXT("杀红"),    LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl.SetColumStyle(0,Style);
+
+	for(int Index = 1; Index < FORMULA_COUNT+1; Index++)
+	{
+		m_ListCtrl.InsertColumn(Index,_TEXT("杀红"),    LVCFMT_CENTER,	nWidth);
+		m_ListCtrl.SetColumStyle(Index,Style);
+	}
+
+
+	
+	m_ListCtrl.SetRowHeight(30);
+	m_ListCtrl.ShowHeader(false);
+
+	sItemBkData ItemBkData;
+	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
+	ItemBkData.m_HeightColor = RGB(222,22,100);
+	ItemBkData.m_HeightFillMode = MODE_FILL_RGB;
+	ItemBkData.m_HeightColor = RGB(100,100,100);
+	ItemBkData.m_BkColor = RGB(222,222,222);
+	m_ListCtrl.SetItemBkData(ItemBkData);
+
 }
 
 void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
@@ -83,15 +101,66 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 	if(!m_IsInitData)
 	{
 		m_IsInitData = true;
+		sItemStyle Style;
+		Style.m_ItemType = TEXT_TYPE;
+		Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+		Style.m_DrawData.m_TextData.m_TextFont = NULL;
+		Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+
+		m_ListCtrl.DeleteAllItems();
+		vector<sFormulaInfo> FormulList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_HONG);
+		int DataSize = CDataManageCenter::GetInstance()->GetDataList()->size();
+		for(int Index = 0; Index < DataSize; Index++)
+		{
+			m_ListCtrl.InsertItem(Index,_T(""));	
+		}
+
+		for(int Index = 0; Index < FORMULA_COUNT; Index++)
+		{
+			for(int i = 0; i < FormulList[Index].m_DataList.size(); i++)
+			{
+				if(Index ==0)
+				{
+					m_ListCtrl.SetItemText(i,0,FormulList[Index].m_DataList[i].m_QiShu);
+				}
+				m_ListCtrl.SetItemText(i,Index+1,FormulList[Index].m_DataList[i].m_Data);
+				if(FormulList[Index].m_DataList[i].m_IsTrue)
+				{
+					Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
+					m_ListCtrl.SetItemSpecialStyle(i,Index+1,Style);
+				}
+				else
+				{
+				
+					Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+					m_ListCtrl.SetItemSpecialStyle(i,Index+1,Style);
+				}
+			}
+		}
+
+		m_ListCtrl.InsertItem(DataSize+1,_T(""));
+		m_ListCtrl.SetItemText(DataSize,0,_T("正确率"));
+		for(int Index = 0; Index < FORMULA_COUNT; Index++)
+		{
+			CString Str;
+			Str.Format(_T("%d%%"),FormulList[Index].m_TrueCount*100/(FormulList[Index].m_ErrorCount+FormulList[Index].m_TrueCount));
+			m_ListCtrl.SetItemText(DataSize,Index+1,Str);
+			Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+			m_ListCtrl.SetItemSpecialStyle(DataSize,Index+1,Style);
+		}
+	}
+//	if(!m_IsInitData)
+//	{
+	/*	m_IsInitData = true;
 		m_ListCtrl.DeleteAllItems();
 		m_ListCtrl.InsertItem(0,"");
 		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 		vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
 		int Sum[6];
-		memset(Sum,0,sizeof(int)*6);
+		memset(Sum,0,sizeof(int)*6);*/
 
 		
-		CString FilePath = GetAppCurrentPath3()+_T("\\shahao.txt");
+	/*	CString FilePath = GetAppCurrentPath3()+_T("\\shahao.txt");
 		HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 
 		for(int Index = 1; Index < (int)DataList->size()+1; Index++)
@@ -418,7 +487,7 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 				ShaHong.Format("%02dS ",TempData);
 			ShaHongList += ShaHong;
 			ShaHong.Empty();
-			ShaArray[TempData]++;
+			ShaArray[TempData]++;*/
 
 		
 			//按出球顺序杀号法
@@ -619,65 +688,65 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 				ShaHong.Empty();
 				ShaArray[TempData]++;
 			}
-*/
-			m_ListCtrl.SetItemText(Index,2,ShaHongList);
+//*/
+//			m_ListCtrl.SetItemText(Index,2,ShaHongList);
+//
+//
+//		
+//			if(FileHandle!= INVALID_HANDLE_VALUE)
+//			{
+//				int ShaCount=0;
+//				int ErrorCount=0;
+//				CString TempStr;
+//				for(int i=1; i < 34;i++)
+//				{
+//					if(ShaArray[i])
+//					{
+//						CString Temp;
+//						Temp.Format("%02d ",i);
+//						TempStr+=Temp;
+//						ShaCount++;
+//						if(Index != DataList->size())
+//						{
+//							for(int j=0; j < 6; j++)
+//							{
+//								if((*DataList)[Index].m_HongQiu[j] == i)
+//								{
+//									ErrorCount++;
+//									break;
+//								}
+//							}
+//						}
+//					}
+//
+//				}
+//
+//				if(Index != DataList->size())
+//				{
+//					CString Temp;
+//					Temp.Format("  杀号个数:%02d,错误个数:%02d\r\n",ShaCount,ErrorCount);
+//					TempStr=(*DataList)[Index].m_QiShu+Temp+TempStr+"\r\n";
+//				}
+//				else
+//				{
+//					CString Temp;
+//					Temp.Format("  杀号个数:%02d\r\n",ShaCount);
+//					TempStr="下期杀号"+Temp+TempStr+"\r\n";
+//				}
+//
+//				DWORD WriteBytes=0;
+//				::WriteFile(FileHandle,TempStr.GetBuffer(),TempStr.GetLength(),&WriteBytes,NULL);
+//				
+//			}
+//		}
+//
+//		if(FileHandle != INVALID_HANDLE_VALUE)
+//		{
+//			CloseHandle(FileHandle);
+//			//ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
+//		}
 
-
-		
-			if(FileHandle!= INVALID_HANDLE_VALUE)
-			{
-				int ShaCount=0;
-				int ErrorCount=0;
-				CString TempStr;
-				for(int i=1; i < 34;i++)
-				{
-					if(ShaArray[i])
-					{
-						CString Temp;
-						Temp.Format("%02d ",i);
-						TempStr+=Temp;
-						ShaCount++;
-						if(Index != DataList->size())
-						{
-							for(int j=0; j < 6; j++)
-							{
-								if((*DataList)[Index].m_HongQiu[j] == i)
-								{
-									ErrorCount++;
-									break;
-								}
-							}
-						}
-					}
-
-				}
-
-				if(Index != DataList->size())
-				{
-					CString Temp;
-					Temp.Format("  杀号个数:%02d,错误个数:%02d\r\n",ShaCount,ErrorCount);
-					TempStr=(*DataList)[Index].m_QiShu+Temp+TempStr+"\r\n";
-				}
-				else
-				{
-					CString Temp;
-					Temp.Format("  杀号个数:%02d\r\n",ShaCount);
-					TempStr="下期杀号"+Temp+TempStr+"\r\n";
-				}
-
-				DWORD WriteBytes=0;
-				::WriteFile(FileHandle,TempStr.GetBuffer(),TempStr.GetLength(),&WriteBytes,NULL);
-				
-			}
-		}
-
-		if(FileHandle != INVALID_HANDLE_VALUE)
-		{
-			CloseHandle(FileHandle);
-			//ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
-		}
-
-	}
+//	}
 }
 
 // 生成的消息映射函数
