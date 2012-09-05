@@ -33,7 +33,7 @@ protected:
 	
 
 private:
-	CListCtrl m_ListCtrl;
+	CListCtrlEx m_ListCtrl;
 	BOOL      m_IsInitData;
 
 public:

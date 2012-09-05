@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "ShuangSeQiu.h"
 #include "ShuangSeQiuDlg.h"
-
+#include "FormulaCenter.h"
 
 
 #ifdef _DEBUG
@@ -233,6 +233,7 @@ void CShuangSeQiuDlg::OnBnClickedLoadDataBtn()
 
 	m_ListCtrl.DeleteAllItems();
 
+	CFormulaCenter::GetInstance();
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 	for(int Index = 0; Index < (int)DataList->size(); Index++)
 	{
