@@ -1,0 +1,61 @@
+body
+{
+ font-family: "Microsoft YaHei";
+ font-weight:500;
+ font-size:12px;
+ 
+}
+ul#menu
+{
+ 
+ padding: 10px;
+ padding-top: 6px;
+ margin: 0px;
+ width: 200px;
+}
+ul#menu li
+{
+ margin: 0px;
+ list-style-type:none;
+ padding-top:8px;
+  border:0px;
+
+}
+ul#menu li ul
+{
+ margin: 0px 0px 0px 15px;
+ display: none;
+}
+//ul#menu li span
+//{
+// background-image: url(../images/filemanage/fm_group_icon02_off.png);
+// background-repeat: no-repeat;
+// background-position: 0px 0px;
+// text-indent: 25px;
+// display: block;
+// text-decoration: none;
+// color: #333333;
+// cursor:default;
+//}
+.memuSpan1{
+	background-image: url(../images/filemanage/fm_group_icon02_off.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	text-indent: 25px;
+	display: block;
+	text-decoration: none;
+	color: #333333;
+	cursor:default;
+}
+.menuSpan
+{
+	//color: #000000;
+	//background-color: #eeeeee;
+	background:url(../images/filemanage/fm_group_icon02_on.png) no-repeat;
+	text-indent: 25px;
+	background-position: 0px 0px;
+	display: block;
+	text-decoration: none;
+	cursor:default;
+ 
+}

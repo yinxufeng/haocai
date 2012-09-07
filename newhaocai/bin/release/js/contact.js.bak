@@ -1,0 +1,278 @@
+// JavaScript Document
+var contact_selectall_flag = true;
+//全靠
+function contact_selectall() {
+	
+	if (contact_selectall_flag) {
+		$("#contacts_selectall")[0].src = "images/contacts/contacts_selectall_on.png";
+		f_contact.window.checked();
+		
+		//f_contact.window.document.getElementById("checkbox1").checked=true;
+		contact_selectall_flag = false;
+		
+	} else {
+		$("#contacts_selectall")[0].src = "images/contacts/contacts_selectall_off.png";
+		f_contact.window.unchecked();
+		contact_selectall_flag=true;
+		
+	}
+	
+}
+
+
+function fnIsOurCustomBrowser()
+{
+	// 检验是否是自定义浏览器我们只用调用函数
+	// CB_IsOurCustomBrowser看是否可以获得.
+	// 不带()表示属性调用,可以检验函数是否在外部窗口
+	// 返回null表示不是自定义窗口,返回false
+	if(window.external.CB_IsOurCustomBrowser != null)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+	
+// 用一个变量检验是否是自定义浏览器.
+bIsCustomBrowser = fnIsOurCustomBrowser();
+
+function fnClose()
+{
+	// 关闭主窗口
+	if(bIsCustomBrowser)
+	{
+		window.external.CB_Close();
+		
+	}
+}
+
+//关闭
+function closeiframe() {
+	$("#iframe1").hide();
+
+}
+
+//添加html
+function addHtml(s) {
+$("#contact").html(s);	
+var checkflag = true;   //是否被选中
+		$("input[name='checkbox2']").each(function(){
+			_this = $(this);
+			_this.click(function(){
+				if(this.checked) {
+					parent.contact_content(_this.val());
+					
+					checkflag = false;
+					
+					$(this).attr("checked", true);
+					
+				} else {
+					checkflag = false;
+					
+					$(this).attr("checked", false);
+				}
+			});
+		});
+		$("#contact").each(function(index, element){
+			
+			$(this).find("div").click(function(){
+				if (checkflag) {
+					$("input[name='checkbox2']").each(function(){this.checked=false;});
+					$("#contact").find("div[class='contact_div2']").css("background-color","#F6FAFB");
+					
+					$(this).find("input").attr("checked", true);
+				}
+				if($(this).find("input").attr("checked") == true) {
+					$(this).css("background-color","#FBE7AC");
+				} else {
+					$(this).css("background-color","#F6FAFB");
+				}
+				
+				checkflag = true;
+			});	
+		});	
+}
+
+//加载联系人
+function loadContact() {
+	if(bIsCustomBrowser) {
+		window.external.CPP_OnRequestContactData();
+	}
+
+}
+
+
+//加载联系人
+function JS_OnRequestContactData(_contact) {
+	
+	var json_contact = _contact;
+	var myE = eval(json_contact);
+	var text = JSON.stringify(myE); 
+	
+	var object = JSON.parse(text);
+	var contact=object;
+	var s="";
+	for(var i =0;i<contact.length;i++)
+	{
+	   switch(contact[i].position){
+		 case 'A':
+		 	s+="<div class=\"contact_div1\">A</div>";
+		 	break;
+		 case 'B':
+			 s+="<div class=\"contact_div1\">B</div>";
+			 break;
+		 case 'C':
+			 s+="<div class=\"contact_div1\">C</div>";
+			 break;
+		 case 'D':
+			 s+="<div class=\"contact_div1\">D</div>";
+			 break;
+		 case 'E':
+		 	s+="<div class=\"contact_div1\">E</div>";
+		 	break;
+		 case 'F':
+			s+="<div class=\"contact_div1\">F</div>";
+			break;
+		 case 'G':
+			s+="<div class=\"contact_div1\">G</div>";
+			break;
+		 case 'H':
+			s+="<div class=\"contact_div1\">H</div>";
+			break;
+		 case 'I':
+		 	s+="<div class=\"contact_div1\">I</div>";
+		 	break;
+		 case 'J':
+			 s+="<div class=\"contact_div1\">B</div>";
+			 break;
+		 case 'K':
+			 s+="<div class=\"contact_div1\">C</div>";
+			 break;
+		 case 'L':
+			 s+="<div class=\"contact_div1\">D</div>";
+			 break;
+		 case 'M':
+		 	s+="<div class=\"contact_div1\">E</div>";
+		 	break;
+		 case 'N':
+			s+="<div class=\"contact_div1\">F</div>";
+			break;
+		 case 'O':
+			s+="<div class=\"contact_div1\">O</div>";
+			break;
+		 case 'P':
+			s+="<div class=\"contact_div1\">P</div>";
+			break;
+		 case 'Q':
+			s+="<div class=\"contact_div1\">Q</div>";
+			break;
+		 case 'R':
+		 	s+="<div class=\"contact_div1\">R</div>";
+		 	break;
+		 case 'S':
+			 s+="<div class=\"contact_div1\">S</div>";
+			 break;
+		 case 'T':
+			 s+="<div class=\"contact_div1\">T</div>";
+			 break;
+		 case 'U':
+			 s+="<div class=\"contact_div1\">U</div>";
+			 break;
+		 case 'V':
+		 	s+="<div class=\"contact_div1\">V</div>";
+		 	break;
+		 case 'W':
+			s+="<div class=\"contact_div1\">W</div>";
+			break;
+		 case 'X':
+			s+="<div class=\"contact_div1\">X</div>";
+			break;
+		 case 'Y':
+			s+="<div class=\"contact_div1\">Y</div>";
+			break;
+		case 'Z':
+			s+="<div class=\"contact_div1\">Z</div>";
+			break;
+	   }
+	   s += "<div class='contact_div2' onselectstart=\"return false;\"><input type='checkbox' name='checkbox2' value=\"person:[{name:'"+contact[i].name+"',mobile:'"+contact[i].mobile+"',group:'40'}]\">" + contact[i].name  + "<span id='moble'>"+contact[i].mobile + "</span></div>";
+			
+	}
+	
+	f_contact.window.addHtml(s);
+		
+}
+
+
+function JS_ProgressBar(iWidth) {
+	//alert(iWidth);
+	iframe1.window.go(iWidth);	
+}
+
+
+
+$(document).ready(function(){
+	
+	
+  	
+	
+	//导入
+	$("#btn_contacts_import").click(function() {
+		$("#iframe1").show();
+		//导入联系人，调用C++内置函数
+		window.external.CPP_Contacts_Import();
+	});
+
+	
+	
+			
+	
+	//新建联系人
+	$("#contacts_new").click(function() {
+		$("#contacts_new")[0].src="images/contacts/contacts_new_on.png";		
+			
+		 //mask.style.visibility='visible';
+		ban();
+		var iWidth = ($(window).width()-500)/2;
+		var iHeight = ($(window).height()-400)/2;
+		$("#createContact").css("left", iWidth);
+		$("#createContact").css("top", iHeight);
+		$("#createContact").show();	
+				
+	});
+	$("#contacts_new").mouseout(function() {
+		$("#contacts_new")[0].src="images/contacts/contacts_new_off.png";								 
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+
+});
+
+function checked(){
+	$("input[name='checkbox2']").each(function(){this.checked=true;});
+	$("#contact").find("div[class='contact_div2']").css("background-color","#FBE7AC");
+}
+function unchecked(){
+	$("input[name='checkbox2']").each(function(){this.checked=false;});
+	$("#contact").find("div[class='contact_div2']").css("background-color","#F6FAFB");
+}
+
+function contact_content(val) {
+	
+	var myE = eval(val);
+	var text = JSON.stringify(myE); 
+	var contact =JSON.parse(text); 
+	$("#name").html(contact[0].name);
+	$("#group").html(contact[0].group);
+	$("#mobile").html(contact[0].mobile);
+}
+
+
