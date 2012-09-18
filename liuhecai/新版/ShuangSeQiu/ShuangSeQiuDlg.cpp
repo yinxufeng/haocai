@@ -101,6 +101,7 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CShuangSeQiuDlg::OnCbnSelchangeCombo1)
 	ON_BN_CLICKED(IDC_BLUE_BALL_BTN, &CShuangSeQiuDlg::OnBnClickedBlueBallBtn)
 	ON_BN_CLICKED(IDC_BUTTON13, &CShuangSeQiuDlg::OnBnClickedButton13)
+	ON_BN_CLICKED(IDC_BLUE_BALL_BTN5, &CShuangSeQiuDlg::OnBnClickedBlueBallBtn5)
 END_MESSAGE_MAP()
 
 
@@ -129,6 +130,8 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
+
+	m_IsShowByChuQiu = false;
 
 	InitListHeader();
 	// 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
@@ -162,10 +165,15 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgShiFaDingHong.Create(CDlgShiFaDingHong::IDD,this);
 	m_DlgShiFaDingHong.ShowWindow(SW_HIDE);
 
-	m_ComboBox.InsertString(0,_T("搜索红球"));
-	m_ComboBox.InsertString(1,_T("搜索篮球"));
+	m_DlgZiDongFenXi.Create(CDlgZiDongFenXi::IDD,this);
+	m_DlgZiDongFenXi.ShowWindow(SW_HIDE);
+
+
+	m_ComboBox.InsertString(0,_T("搜索平码"));
+	m_ComboBox.InsertString(1,_T("搜索特码"));
 	m_ComboBox.InsertString(2,_T("搜索龙头"));
 	m_ComboBox.InsertString(3,_T("搜索尾值"));
+	CenterWindow();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -244,15 +252,15 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl.GetWindowRect(&Rect);
 	int nWidth = Rect.Width()/10;
 	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(1,_TEXT("红球1"),	LVCFMT_CENTER,	nWidth); 
-	m_ListCtrl.InsertColumn(2,_TEXT("红球2"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(3,_TEXT("红球3"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(4,_TEXT("红球4"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(5,_TEXT("红球5"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(6,_TEXT("红球6"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(7,_TEXT("红球之和"),LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(8,_TEXT("篮球"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(9,_TEXT("区间比"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(1,_TEXT("平码1"),	LVCFMT_CENTER,	nWidth); 
+	m_ListCtrl.InsertColumn(2,_TEXT("平码2"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(3,_TEXT("平码3"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(4,_TEXT("平码4"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(5,_TEXT("平码5"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(6,_TEXT("平码6"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(7,_TEXT("平码之和"),LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(8,_TEXT("特码"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(9,_TEXT("特码路数"),	LVCFMT_CENTER,	nWidth);
 	sItemStyle Style;
 	Style.m_ItemType = TEXT_TYPE;
 	Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
@@ -286,9 +294,9 @@ void CShuangSeQiuDlg::InitListHeader()
 void CShuangSeQiuDlg::OnBnClickedRedBallBtn()
 {
 
-	if(!m_ResultDataList.empty())
-		m_RedBallDlg.SetDataList(m_ResultDataList);
-	else
+	//if(!m_ResultDataList.empty())
+	//	m_RedBallDlg.SetDataList(m_ResultDataList);
+	//else
 		m_RedBallDlg.SetDataList(*CDataManageCenter::GetInstance()->GetDataList());
 	m_RedBallDlg.ShowWindow(SW_SHOW);
 }
@@ -382,17 +390,24 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn2()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn4()
 {
-	m_DlgLianHaoHongQiu.ShowWindow(SW_SHOW);
+//	m_DlgLianHaoHongQiu.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn3()
 {
-	m_DlgHengXiangChaZhi.ShowWindow(SW_SHOW);
+//	m_DlgHengXiangChaZhi.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn6()
 {
-	m_DlgZongXiangChaZhi.ShowWindow(SW_SHOW);
+	m_IsShowByChuQiu= false;
+	m_ListCtrl.DeleteAllItems();
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		InsertAndSetText(Index,(*DataList)[Index]);
+	}
+
 }
 
 
@@ -489,7 +504,13 @@ void CShuangSeQiuDlg::OnBnClickedButton10()
 
 void CShuangSeQiuDlg::OnBnClickedButton8()
 {
-
+	m_IsShowByChuQiu = true;
+	m_ListCtrl.DeleteAllItems();
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		InsertAndSetText(Index,(*DataList)[Index]);
+	}
 }
 
 void CShuangSeQiuDlg::OnBnClickedButton12()
@@ -587,7 +608,7 @@ void CShuangSeQiuDlg::InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu)
 	for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
 	{
 		CString Temp;
-		Temp.Format("%02d 路=%d",ShuangSeQiu.m_HongQiu[HongQiu],ShuangSeQiu.m_HongQiu[HongQiu]%3);
+		Temp.Format("%02d",ShuangSeQiu.m_HongQiu[HongQiu]);
 		m_ListCtrl.SetItemText(Row,HongQiu+1,Temp);
 	//	m_ListCtrl.SetItemSpecialStyle(Row,HongQiu+1,Style);
 	}
@@ -600,17 +621,17 @@ void CShuangSeQiuDlg::InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu)
 	LanQiu.Format("%d",ShuangSeQiu.m_LanQiu);
 
 	CString Str;
-	LanQiu.Format("%02d 路=%02d ",ShuangSeQiu.m_LanQiu,ShuangSeQiu.m_LanQiu%3);
-	if(ShuangSeQiu.m_LanQiu%2)
+	LanQiu.Format("%02d",ShuangSeQiu.m_LanQiu);
+	/*if(ShuangSeQiu.m_LanQiu%2)
 		LanQiu+="奇";
 	else
-		LanQiu+="偶";
+		LanQiu+="偶";*/
 //	m_ListCtrl.SetItemText(Index,0,Str);
 
 	m_ListCtrl.SetItemText(Row,8,LanQiu);
 
 	CString QuJianBi;
-	QuJianBi.Format("%d:%d:%d",ShuangSeQiu.m_QuJian[0],ShuangSeQiu.m_QuJian[1],ShuangSeQiu.m_QuJian[2]);
+	QuJianBi.Format("%d",ShuangSeQiu.m_LanQiu%3);
 	m_ListCtrl.SetItemText(Row,9,QuJianBi);
 }
 
@@ -722,4 +743,9 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn()
 void CShuangSeQiuDlg::OnBnClickedButton13()
 {
 	this->m_DlgShiFaDingHong.ShowWindow(SW_SHOW);
+}
+
+void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
+{
+	m_DlgZiDongFenXi.ShowWindow(SW_SHOW);
 }

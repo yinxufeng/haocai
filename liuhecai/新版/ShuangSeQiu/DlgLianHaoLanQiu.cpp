@@ -4,10 +4,12 @@
 #include "stdafx.h"
 #include "ShuangSeQiu.h"
 #include "DlgLianHaoLanQiu.h"
-
+#include "FormulaCenter.h"
 
 // CDlgLianHaoLanQiu 对话框
 
+#define FORMULA_COUNT 24
+#define PAGE_COUNT 22
 
 //获取模块路径
 CString GetAppCurrentPath3()
@@ -32,6 +34,7 @@ CDlgLianHaoLanQiu::CDlgLianHaoLanQiu(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgLianHaoLanQiu::IDD, pParent)
 {
 	m_IsInitData = false;
+	m_CurrentIndex=0;
 }
 
 CDlgLianHaoLanQiu::~CDlgLianHaoLanQiu()
@@ -42,6 +45,7 @@ void CDlgLianHaoLanQiu::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_ListCtrl);
+	DDX_Control(pDX, IDC_COMBO1, m_ComboBox);
 }
 
 
@@ -50,6 +54,10 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoLanQiu, CDialog)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_SEARCH_BTN, &CDlgLianHaoLanQiu::OnBnClickedSearchBtn)
 	ON_WM_ERASEBKGND()
+	ON_BN_CLICKED(IDC_PREV_BTN, &CDlgLianHaoLanQiu::OnBnClickedPrevBtn)
+	ON_BN_CLICKED(IDC_NEXT_BTN, &CDlgLianHaoLanQiu::OnBnClickedNextBtn)
+	ON_BN_CLICKED(IDC_BUTTON5, &CDlgLianHaoLanQiu::OnBnClickedButton5)
+	ON_CBN_SELCHANGE(IDC_COMBO1, &CDlgLianHaoLanQiu::OnCbnSelchangeCombo1)
 END_MESSAGE_MAP()
 
 
@@ -61,20 +69,42 @@ void CDlgLianHaoLanQiu::InitListHeader()
 	CRect Rect;
 	//初始化应用程序列表控件
 	m_ListCtrl.GetWindowRect(&Rect);
-	int nWidth = Rect.Width()/10;
-	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	1*nWidth);
-	//m_ListCtrl.InsertColumn(1,_TEXT("均值"),	LVCFMT_CENTER,	0.5*nWidth);
-	m_ListCtrl.InsertColumn(1,_TEXT("绝杀特码"),	LVCFMT_CENTER,	7*nWidth);
-	m_ListCtrl.InsertColumn(2,_TEXT("绝杀统计"),	LVCFMT_CENTER,	2*nWidth);
-/*	m_ListCtrl.InsertColumn(2,_TEXT("杀红1"),	LVCFMT_CENTER,	nWidth); 
-	m_ListCtrl.InsertColumn(3,_TEXT("杀红2"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(4,_TEXT("杀红3"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(5,_TEXT("杀红4"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(6,_TEXT("杀红5"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(7,_TEXT("杀红6"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(8,_TEXT("杀红7"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(9,_TEXT("杀红8"),	LVCFMT_CENTER,	nWidth);
-	*/
+	int nWidth = Rect.Width()/(FORMULA_COUNT+2);
+
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+
+	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl.SetColumStyle(0,Style);
+
+	for(int Index = 1; Index <= PAGE_COUNT; Index++)
+	{
+		CString Str;
+		Str.Format("%02d",Index);
+		m_ListCtrl.InsertColumn(Index,Str,    LVCFMT_CENTER,	nWidth);
+		m_ListCtrl.SetColumStyle(Index,Style);
+	}
+
+	m_ListCtrl.InsertColumn(PAGE_COUNT+1,"统计",    LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.SetColumStyle(PAGE_COUNT+1,Style);
+	m_ListCtrl.InsertColumn(PAGE_COUNT+2,"对错",    LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.SetColumStyle(PAGE_COUNT+2,Style);
+
+	
+	m_ListCtrl.SetRowHeight(30);
+	m_ListCtrl.ShowHeader(true);
+
+	sItemBkData ItemBkData;
+	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
+	ItemBkData.m_HeightColor = RGB(222,22,100);
+	ItemBkData.m_HeightFillMode = MODE_FILL_RGB;
+	ItemBkData.m_HeightColor = RGB(100,100,100);
+	ItemBkData.m_BkColor = RGB(222,222,222);
+	m_ListCtrl.SetItemBkData(ItemBkData);
+
 }
 
 void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
@@ -84,646 +114,18 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 	if(!m_IsInitData)
 	{
 		m_IsInitData = true;
+		sItemStyle Style;
+		Style.m_ItemType = TEXT_TYPE;
+		Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+		Style.m_DrawData.m_TextData.m_TextFont = NULL;
+		Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+
 		m_ListCtrl.DeleteAllItems();
-		m_ListCtrl.InsertItem(0,"");
-		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
-		vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
-		int Sum[6];
-		memset(Sum,0,sizeof(int)*6);
-
-		
-		CString FilePath = GetAppCurrentPath3()+_T("\\shahao.txt");
-		HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
-
-		for(int Index = 1; Index < (int)DataList->size()+1; Index++)
-		{
-			int ShaArray[QIU_COUNT+1];
-	    	memset(ShaArray,0,sizeof(int)*(QIU_COUNT+1));
-			m_ListCtrl.InsertItem(Index,"");
-			if(Index == DataList->size())
-			{
-				m_ListCtrl.SetItemText(Index,0,"预测");
-			}
-			else
-			{
-				CString Str;
-				Str.Format("%s 特码=%02d",(*DataList)[Index].m_QiShu,(*DataList)[Index].m_LanQiu);
-				/*for(int i =0; i < 6; i++)
-				{
-					CString Temp;
-					Temp.Format("%02d ",(*DataList)[Index].m_HongQiu[i]);
-					Str+=Temp;
-				}
-
-				CString TempLan;
-				TempLan.Format("+%02d",(*DataList)[Index].m_LanQiu);
-				Str+=TempLan;*/
-				m_ListCtrl.SetItemText(Index,0,Str);
-
-			}
-
-			/*CString JunZhi;
-
-			for(int i = 0; i < 6; i++)
-			{
-				Sum[i]+=(*DataList)[Index-1].m_HongQiu[i];
-				CString Temp;
-				Temp.Format("%02d ",Sum[i]/Index);
-				JunZhi+=Temp;
-			}
-
-			m_ListCtrl.SetItemText(Index,1,JunZhi);*/
-
-			CString ShaHongList;
-			int TempData = (*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0];
-			CString ShaHong;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[2]-(*DataList)[Index-1].m_HongQiu[1];
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[1];
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[0]*4-2;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = ((*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_LanQiu)*3;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[0]+9;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-
-			TempData = (*DataList)[Index-1].m_HongQiu[1]+5;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[2]+4;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[2]+7;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[5]+4;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[4]-(*DataList)[Index-1].m_HongQiu[3]+(*DataList)[Index-1].m_LanQiu+1;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[0];
-			if(Index >= 2)
-			{
-				if((*DataList)[Index-1].m_LanQiu == ((*DataList)[Index-2].m_LanQiu))
-					TempData-=1;
-			}
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[1]-1;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-
-			TempData = (*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[3]+1+QIU_COUNT;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[4]+QIU_COUNT;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = abs((*DataList)[Index-1].m_LanQiu*(*DataList)[Index-1].m_HongQiu[0]);
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu+7;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu+9;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-		/*	TempData = (*DataList)[Index-1].m_LanQiu*5+2;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			*/
-
-
-			
-            TempData = (*DataList)[Index-1].m_LanQiu;
-			if(TempData /2 == 0)
-				TempData=TempData*2+2;
-			else
-				TempData=TempData*5+2;
-
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-
-			TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[5]);
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1].m_HongQiu[5]/QIU_COUNT + 14;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = ((*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1].m_HongQiu[4])/2;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = abs((*DataList)[Index-1].m_LanQiu+16-(*DataList)[Index-1].m_HongQiu[0]);
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[1]+(*DataList)[Index-1].m_LanQiu;
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[2];
-			if(TempData > QIU_COUNT)
-				TempData = TempData%QIU_COUNT;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-		
-			
-			//按出球顺序杀号法
-		/*if( ShunXuDataList->size() == DataList->size())
-			{
-			/*	TempData = (*ShunXuDataList)[Index-1].m_HongQiu[0]+(*ShunXuDataList)[Index-1].m_HongQiu[1];
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-*/
-		/*	
-				TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[1]-(*ShunXuDataList)[Index-1].m_HongQiu[2]);
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-				ShaArray[TempData]++;
-
-				TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[2]-(*ShunXuDataList)[Index-1].m_HongQiu[4]);
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-				ShaArray[TempData]++;
-
-
-				TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[0]-(*ShunXuDataList)[Index-1].m_HongQiu[5]) +(*ShunXuDataList)[Index-1].m_LanQiu-3;
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-				ShaArray[TempData]++;
-
-				TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[0]-(*ShunXuDataList)[Index-1].m_HongQiu[2]) +(*ShunXuDataList)[Index-1].m_LanQiu+2;
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-				ShaArray[TempData]++;
-
-				
-				TempData = (*ShunXuDataList)[Index-1].m_HongQiu[0]+(*ShunXuDataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-1].m_HongQiu[2] +(*ShunXuDataList)[Index-1].m_LanQiu-1;
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-				ShaArray[TempData]++;
-
-
-			}
-
-			//按AC值杀号
-			TempData = CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu;
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData = (*DataList)[Index-1].m_LanQiu+ CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			
-			TempData =0;
-			for(int i=0; i < 6; i++)
-				TempData+=(*DataList)[Index-1].m_HongQiu[i]%10;
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
-			TempData += (*DataList)[Index-1].m_LanQiu;
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
-			TempData =TempData*CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
-			TempData =TempData+CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData =CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-			TempData =abs(TempData - (*DataList)[Index-1].m_HongQiu[5]);
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-			TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1])+CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-			TempData =TempData + (*DataList)[Index-1].m_LanQiu;
-			if(TempData > 33)
-				TempData = TempData%33;
-			if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-				ShaHong.Format("%02dF ",TempData);
-			else
-				ShaHong.Format("%02dS ",TempData);
-			ShaHongList += ShaHong;
-			ShaHong.Empty();
-			ShaArray[TempData]++;
-
-
-			for(int i=0; i < 6; i++)
-			{
-				float TempF = (float)(*DataList)[Index-1].m_HongQiu[i];
-				TempF=TempF*0.88;
-				TempData =(int)TempF;
-				if(TempData > 33)
-					TempData = TempData%33;
-				if(Index < DataList->size() && CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData))
-					ShaHong.Format("%02dF ",TempData);
-				else
-					ShaHong.Format("%02dS ",TempData);
-				ShaHongList += ShaHong;
-				ShaHong.Empty();
-				ShaArray[TempData]++;
-			}
-			*/
-
-			m_ListCtrl.SetItemText(Index,1,ShaHongList);
-
-			
-			CString ErrorStr;
-
+		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
+		FillData(m_FormulaInfoList);
 	
-
-			if(FileHandle!= INVALID_HANDLE_VALUE)
-			{
-				
-				CString LuShuStr0 ="路数0：\r\n";
-				CString LuShuStr1 ="路数1：\r\n";
-				CString LuShuStr2 ="路数2：\r\n";
-
-				int ShaCount=0;
-				int ErrorCount=0;
-				CString TempStr;
-				for(int i=1; i < QIU_COUNT+1;i++)
-				{
-					if(ShaArray[i])
-					{
-						CString Temp;
-						Temp.Format("%02d ",i);
-						TempStr+=Temp;
-						ShaCount++;
-
-						switch(i%3)
-						{
-						case 0:
-							LuShuStr0 +=Temp;
-							break;
-						case 1:
-							LuShuStr1 +=Temp;
-							break;
-						case 2:
-							LuShuStr2 +=Temp;
-							break;
-						}
-						
-						if(Index != DataList->size())
-						{
-							if((*DataList)[Index].m_LanQiu == i)
-							{
-								ErrorCount=ShaArray[i];
-							}
-						}
-					}
-
-				}
-
-				if(Index != DataList->size())
-				{
-					CString Temp;
-					Temp.Format("  杀号个数:%02d,错误个数:%02d\r\n",ShaCount,ErrorCount);
-					ErrorStr.Format("杀:%02d,错:%02d",ShaCount,ErrorCount);
-					TempStr=(*DataList)[Index].m_QiShu+Temp+TempStr+"\r\n";
-				}
-				else
-				{
-					CString Temp;
-					Temp.Format("  杀号个数:%02d\r\n",ShaCount);
-					TempStr="下期杀号"+Temp+TempStr+"\r\n";
-
-					ErrorStr.Format("杀:%02d",ShaCount);
-				}
-
-				m_ListCtrl.SetItemText(Index,2,ErrorStr);
-
-				LuShuStr0 +="\r\n";
-				LuShuStr1 +="\r\n";
-				LuShuStr2 +="\r\n";
-
-				DWORD WriteBytes=0;
-				::WriteFile(FileHandle,TempStr.GetBuffer(),TempStr.GetLength(),&WriteBytes,NULL);
-				::WriteFile(FileHandle,LuShuStr0.GetBuffer(),LuShuStr0.GetLength(),&WriteBytes,NULL);
-				::WriteFile(FileHandle,LuShuStr1.GetBuffer(),LuShuStr1.GetLength(),&WriteBytes,NULL);
-				::WriteFile(FileHandle,LuShuStr2.GetBuffer(),LuShuStr2.GetLength(),&WriteBytes,NULL);
-				
-			}
-		}
-
-		if(FileHandle != INVALID_HANDLE_VALUE)
-		{
-			CloseHandle(FileHandle);
-			//ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
-		}
-
 	}
+			
 }
 
 // 生成的消息映射函数
@@ -731,6 +133,25 @@ BOOL CDlgLianHaoLanQiu::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	InitListHeader();
+
+	m_ComboBox.InsertString(0,"正确率大于");
+	m_ComboBox.InsertString(1,"正确率等于");
+	m_ComboBox.InsertString(2,"正确率小于");
+	m_ComboBox.InsertString(3,"正确率区间");
+
+	m_ComboBox.InsertString(4,"特码尾小于");
+	m_ComboBox.InsertString(5,"特码尾等于");
+	m_ComboBox.InsertString(6,"特码尾大于");
+	m_ComboBox.InsertString(7,"特码尾区间");
+	m_ComboBox.InsertString(8,"最后一次错");
+
+	m_ComboBox.InsertString(9,"特码大于");
+	m_ComboBox.InsertString(10,"特码等于");
+	m_ComboBox.InsertString(11,"特码小于");
+	m_ComboBox.InsertString(12,"特码区间");
+
+	m_ComboBox.SetCurSel(0);
+	CenterWindow();
 	return true;
 }
 
@@ -741,63 +162,258 @@ void CDlgLianHaoLanQiu::OnClose()
 
 void CDlgLianHaoLanQiu::OnBnClickedSearchBtn()
 {
-	
+	int Cursel=m_ComboBox.GetCurSel();
+	int Data=-1;
+	int Data1=-1;
+	CString Text;
+	GetDlgItemText(IDC_EDIT1,Text);
+	if(!Text.IsEmpty())
+		Data = atoi(Text.GetBuffer());
+	Text.Empty();
+	GetDlgItemText(IDC_EDIT6,Text);
+	if(!Text.IsEmpty())
+		Data1=atoi(Text.GetBuffer());
+	m_CurrentIndex=0;
+	m_FormulaInfoList=CFormulaCenter::GetInstance()->SearchFormulaInfoByType(FORMULA_SHA_LAN,eSearchVType(Cursel),Data,Data1);
+	FillData(m_FormulaInfoList);
+	UpdateBtnStatus();
 }
 
 BOOL CDlgLianHaoLanQiu::OnEraseBkgnd(CDC* pDC)
 {
-	/*CRect Rect;
-	GetClientRect(Rect);
-	pDC->FillSolidRect(Rect,RGB(222,222,222));
 
-	vector<sShuangSeQiu>* pData=CDataManageCenter::GetInstance()->GetDataList();
-	
-	if(pData->size() == 0)
-		return true;
+	return CDialog::OnEraseBkgnd(pDC);
+}
 
+void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
+{
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
 
-	int Len = pData->size();
-	Rect.top +=5;
-	Rect.bottom-=5;
-	int Height = Rect.Height()/Len;
-	int Width  = Rect.Width()/33;
-
-
-	for(int Index = 0; Index < Len; Index++)
+	m_ListCtrl.DeleteAllItems();
+	int DataSize = CDataManageCenter::GetInstance()->GetDataList()->size();
+	for(int Index = 0; Index < DataSize; Index++)
 	{
-		for(int i = 0; i < 33; i++)
+		m_ListCtrl.InsertItem(Index,_T(""));	
+	}
+
+	m_ListCtrl.InsertItem(DataSize+1,_T(""));
+
+	int EndIndex = FormulList.size() > PAGE_COUNT ? PAGE_COUNT:FormulList.size();
+	if(FormulList.empty())
+		return;
+
+	for(int Index =0; Index < EndIndex; Index++)
+	{
+		m_ListCtrl.SetItemText(0,Index+1,FormulList[Index].m_FormulaName);
+	}
+
+	m_ListCtrl.SetItemText(0,PAGE_COUNT+1,_T("统计"));
+	m_ListCtrl.SetItemText(0,PAGE_COUNT+2,_T("对错"));
+
+	
+	for(int Index = 0; Index < EndIndex;Index++)
+	{
+		for(int i = 0; i < FormulList[Index].m_DataList.size(); i++)
 		{
-			CRect Temp = Rect;
-		    Temp.left = Rect.left + i*Width;
-			Temp.right = Temp.left + Width;
-			Temp.top = Rect.top + Index*Height;
-			Temp.bottom = Temp.top + Height;
-
-			bool IsWant = false;
-			for(int j = 0; j < 6; j++)
+			int TempIndex = Index;
+			if(TempIndex ==0)
 			{
-				if( (*pData)[Index].m_HongQiu[j] == i+1)
-				{
-					IsWant = true;
-					break;
-				}
-
+				m_ListCtrl.SetItemText(i+1,0,FormulList[Index].m_DataList[i].m_QiShu);
 			}
+			m_ListCtrl.SetItemText(i+1,TempIndex+1,FormulList[Index].m_DataList[i].m_Data);
+			if(FormulList[Index].m_DataList[i].m_IsTrue)
+			{
+				if(Index %2 == 0)
+					Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
+				else
+					Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
 
-			if(IsWant)
-				pDC->FillSolidRect(Temp,RGB(255,0,0));
+				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
+			}
 			else
 			{
-				if( i % 2 == 0)
-					pDC->FillSolidRect(Temp,RGB(0,0,0));
-				else
-					pDC->FillSolidRect(Temp,RGB(25,25,255));
 
+				Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
 			}
 		}
 	}
 
-	return true;
-	*/
-	return CDialog::OnEraseBkgnd(pDC);
+	int AllErrorCount=0;
+	int AllTrueCount=0;
+
+	for(int Index = 0; Index < FormulList[0].m_DataList.size(); Index++)
+	{
+		int ErrorCount=0;
+		
+		int Array[50];
+		memset(Array,0,50*sizeof(int));
+		for(int i=0; i < EndIndex; i++)
+		{
+			int Data=abs(atoi(FormulList[i].m_DataList[Index].m_Data.GetBuffer()));
+			if(!FormulList[i].m_DataList[Index].m_IsTrue)
+				ErrorCount++;
+
+			if(Index == FormulList[0].m_DataList.size()-1)
+				Array[Data]++;
+
+		}
+
+
+		CString Str2;
+
+		if(ErrorCount)
+		{
+			Str2="错";
+			AllErrorCount++;
+		}
+		else
+		{
+			Str2="对";
+			AllTrueCount++;
+		}
+
+		CString Temp;
+		Temp.Format("%02d",ErrorCount);
+
+		m_ListCtrl.SetItemText(Index+1,PAGE_COUNT+1,Temp);
+		m_ListCtrl.SetItemText(Index+1,PAGE_COUNT+2,Str2);
+
+		if(!ErrorCount)
+		{
+			Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
+			m_ListCtrl.SetItemSpecialStyle(Index+1,PAGE_COUNT+1,Style);
+			m_ListCtrl.SetItemSpecialStyle(Index+1,PAGE_COUNT+2,Style);
+		}
+		else
+		{
+			Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+			m_ListCtrl.SetItemSpecialStyle(Index+1,PAGE_COUNT+1,Style);
+			m_ListCtrl.SetItemSpecialStyle(Index+1,PAGE_COUNT+2,Style);
+		}
+
+
+		CString Str;
+		int TempCount=0;
+		for(int k= 0; k < 50; k++)
+		{
+			if(Array[k])
+			{
+				CString TempStr;
+				TempStr.Format("%02d ",k);
+				Str+=TempStr;
+				TempCount++;
+			}
+
+		}
+
+		CString TempStr2;
+		TempStr2.Format("杀号个数=%02d 杀号= ",TempCount);
+		Str=TempStr2+Str;
+		 
+		//SetDlgItemText(IDC_RESULT2,Str);
+		GetDlgItem(IDC_RESULT2)->SetWindowText(Str);
+
+	}
+
+
+
+
+	m_ListCtrl.InsertItem(DataSize+2,_T(""));
+	m_ListCtrl.SetItemText(DataSize+2,0,_T("正确率"));
+	for(int Index = 0; Index < EndIndex; Index++)
+	{
+		int TempIndex = Index ;
+		CString Str;
+		if(FormulList[Index].m_ErrorCount+FormulList[Index].m_TrueCount != 0)
+			Str.Format(_T("%d%%"),FormulList[Index].m_TrueCount*100/(FormulList[Index].m_ErrorCount+FormulList[Index].m_TrueCount));
+		m_ListCtrl.SetItemText(DataSize+1,TempIndex+1,Str);
+		Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+		m_ListCtrl.SetItemSpecialStyle(DataSize,TempIndex+1,Style);
+	}
+
+	if(AllErrorCount+AllTrueCount)
+	{
+		CString TempStr;
+		TempStr.Format(_T("%d%%"),AllTrueCount*100/(AllErrorCount+AllTrueCount));
+		m_ListCtrl.SetItemText(DataSize+1,PAGE_COUNT+2,TempStr);
+		Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+		m_ListCtrl.SetItemSpecialStyle(DataSize+1,18,Style);
+	}
+}
+
+void CDlgLianHaoLanQiu::OnBnClickedPrevBtn()
+{
+	if(m_FormulaInfoList.empty())
+		return;
+
+	int Count=0;
+	m_CurrentIndex-=PAGE_COUNT;
+	if(m_CurrentIndex < 0)
+		m_CurrentIndex=0;
+
+	Count=m_CurrentIndex+PAGE_COUNT;
+	if(Count > m_FormulaInfoList.size())
+		Count=m_FormulaInfoList.size()-1;
+
+	UpdateBtnStatus();
+
+
+
+
+	vector<sFormulaInfo>::iterator it = m_FormulaInfoList.begin();
+	vector<sFormulaInfo> Temp;
+	Temp.insert(Temp.begin(),it+m_CurrentIndex,it+Count);
+	FillData(Temp);
+}
+
+void CDlgLianHaoLanQiu::OnBnClickedNextBtn()
+{
+	if(m_FormulaInfoList.empty())
+		return;
+
+		m_CurrentIndex+=PAGE_COUNT;
+	if(m_CurrentIndex >= m_FormulaInfoList.size())
+		m_CurrentIndex=m_FormulaInfoList.size()-1;
+
+	int Count = m_CurrentIndex+PAGE_COUNT;
+	if(Count >= m_FormulaInfoList.size()-1)
+		Count=m_FormulaInfoList.size()-1;
+
+
+	vector<sFormulaInfo>::iterator it = m_FormulaInfoList.begin();
+	vector<sFormulaInfo> Temp;
+	Temp.insert(Temp.begin(),it+m_CurrentIndex,it+Count);
+	FillData(Temp);
+	UpdateBtnStatus();
+}
+
+void CDlgLianHaoLanQiu::OnBnClickedButton5()
+{
+	m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
+	m_CurrentIndex=0;
+	FillData(m_FormulaInfoList);
+	UpdateBtnStatus();
+}
+
+void CDlgLianHaoLanQiu::UpdateBtnStatus()
+{
+	if(m_CurrentIndex + PAGE_COUNT < m_FormulaInfoList.size())
+		GetDlgItem(IDC_NEXT_BTN)->EnableWindow(true);
+	else
+		GetDlgItem(IDC_NEXT_BTN)->EnableWindow(false);
+
+	if(m_CurrentIndex - PAGE_COUNT < 0)
+		GetDlgItem(IDC_PREV_BTN)->EnableWindow(false);
+	else
+		GetDlgItem(IDC_PREV_BTN)->EnableWindow(true);
+
+}
+void CDlgLianHaoLanQiu::OnCbnSelchangeCombo1()
+{
+		OnBnClickedSearchBtn();
 }

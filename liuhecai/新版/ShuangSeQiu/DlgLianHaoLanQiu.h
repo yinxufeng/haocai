@@ -1,5 +1,6 @@
 #pragma once
-
+#include "FormulaCenter.h"
+#include "afxwin.h"
 
 // CDlgLianHaoLanQiu 对话框
 
@@ -30,15 +31,25 @@ protected:
 	//初始化列表头
 	void InitListHeader();
 
-	
+	void FillData(vector<sFormulaInfo>& FormulList);
 
 private:
-	CListCtrl m_ListCtrl;
+
+	CListCtrlEx m_ListCtrl;
 	BOOL      m_IsInitData;
+	CComboBox m_ComboBox;
+	int       m_CurrentIndex;
+	vector<sFormulaInfo> m_FormulaInfoList;
 
 public:
 	afx_msg void OnBnClickedSearchBtn();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
+
+	afx_msg void OnBnClickedPrevBtn();
+	afx_msg void OnBnClickedNextBtn();
+	afx_msg void OnBnClickedButton5();
+	void UpdateBtnStatus();
+	afx_msg void OnCbnSelchangeCombo1();
 
 };

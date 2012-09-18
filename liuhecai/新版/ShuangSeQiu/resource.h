@@ -17,6 +17,7 @@
 #define IDD_SHUANGSEQIU_DIALOG6         136
 #define IDD_SHUANGSEQIU_DIALOG7         137
 #define IDD_WEIHONG_DLG                 138
+#define IDD_SHUANGSEQIU_DIALOG8         139
 #define IDC_LIST1                       1000
 #define IDC_LOAD_DATA_BTN               1002
 #define IDC_RED_BALL_BTN                1003
@@ -28,10 +29,12 @@
 #define IDC_BUTTON3                     1007
 #define IDC_SEARCH_BTN                  1007
 #define IDC_EDIT25                      1007
+#define IDC_FIRST_BTN                   1007
 #define IDC_BUTTON4                     1008
 #define IDC_BLUE_BALL_BTN3              1008
 #define IDC_STATIC1                     1008
 #define IDC_EDIT21                      1008
+#define IDC_EDIT6                       1008
 #define IDC_BUTTON5                     1009
 #define IDC_BLUE_BALL_BTN4              1009
 #define IDC_STATIC2                     1009
@@ -91,6 +94,10 @@
 #define IDC_COMBO1                      1049
 #define IDC_BUTTON13                    1050
 #define IDC_EDIT20                      1052
+#define IDC_PREV_BTN                    1053
+#define IDC_NEXT_BTN                    1054
+#define IDC_RESULT                      1055
+#define IDC_RESULT2                     1056
 
 // Next default values for new objects
 // 
@@ -98,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1053
+#define _APS_NEXT_CONTROL_VALUE         1057
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

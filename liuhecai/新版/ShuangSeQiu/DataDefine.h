@@ -15,7 +15,7 @@ using std::map;
 enum eSuanFaType                 //预测算法类型
 {
 	SUANFA_WEIZHI_YUCE,          //尾值预测
-	SUANFA_LANJI_YUCE,           //篮球为基准预测
+	SUANFA_LANJI_YUCE,           //特码为基准预测
 	SUANFA_ACZHI_YUCE,           //AC值预测
 	SUANFA_HEZHI_YUCE2,          //和值预测2
 	SUANFA_HEZHI_YUCE,           //和值预测
@@ -29,9 +29,9 @@ struct sShuangSeQiu
 {
 	DWORD   m_QiShuID;            //期数ID程序自动分配 
 	CString m_QiShu;              //期数
-	int   m_HongQiu[QIU_XUN];         //红球
-	int   m_LanQiu;             //篮球
-	int   m_HongQiuSum;         //红球之和
+	int   m_HongQiu[QIU_XUN];         //平码
+	int   m_LanQiu;             //特码
+	int   m_HongQiuSum;         //平码之和
 	int   m_QuJian[3];          //区间
 	sShuangSeQiu()
 	{
@@ -44,7 +44,7 @@ struct sShuangSeQiu
 	}
 };
 
-struct sEqualShuangSeQiu          //相等红球数结构体定义
+struct sEqualShuangSeQiu          //相等平码数结构体定义
 {
 	vector<sShuangSeQiu>     m_ShuangSeQiuList;  //双色球列表
 	vector<DWORD>            m_EqualData;        //双色球相等个数列表
@@ -60,14 +60,14 @@ struct sYuCeShuangSeQiu
 struct sZongXiangChaZhi          //纵向差值
 {
 	CString m_QiShu;              //期数
-	DWORD m_HongQiuChaZhi[QIU_XUN];    //红球差值
-	DWORD m_LanQiuChaZhi;        //篮球差值
+	DWORD m_HongQiuChaZhi[QIU_XUN];    //平码差值
+	DWORD m_LanQiuChaZhi;        //特码差值
 };
 
 struct sHengXiangChaZhi          //横向差值
 {
 	CString m_QiShu;             //期数
-	DWORD m_HongQiuChaZhi[QIU_XUN];    //红球差值
-	DWORD m_LanQiuChaZhi;        //篮球差值
+	DWORD m_HongQiuChaZhi[QIU_XUN];    //平码差值
+	DWORD m_LanQiuChaZhi;        //特码差值
 };
 

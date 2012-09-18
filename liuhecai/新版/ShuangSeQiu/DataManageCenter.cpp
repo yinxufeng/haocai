@@ -45,10 +45,10 @@ vector<sShuangSeQiu>* CDataManageCenter::GetDataList()
 	//初始化纵向差值
 	InitZongXiangChaZhi(m_ShuangSeQiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	InitLianHaoHongQiu(m_ShuangSeQiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	InitLianHaoLanQiu(m_ShuangSeQiuList);
 
 	return &m_ShuangSeQiuList;
@@ -258,7 +258,7 @@ map<CString,sYuCeShuangSeQiu>CDataManageCenter::GetDataBySuanFa()
 		int ACCount=GetACCount(m_ShuangSeQiuList[i]);
 		int WeiZhiCount=GetWeiZhiParam(m_ShuangSeQiuList[i]);
 
-		////预测篮球
+		////预测特码
 		//int TempLanQiu  = m_ShuangSeQiuList[i].m_LanQiu % 5;
 		//int TempLanQiu2 = m_ShuangSeQiuList[i].m_LanQiu % 3;
 
@@ -295,7 +295,7 @@ map<CString,sYuCeShuangSeQiu>CDataManageCenter::GetDataBySuanFa()
 			TempQiuData2.m_HongQiu[j]=(Sum-m_ShuangSeQiuList[i].m_HongQiu[j])/m_ShuangSeQiuList[i].m_HongQiu[j];
 			
 
-			//篮球选号
+			//特码选号
 			if(i-1>=0)
 			{
 				TempLanQiuData.m_HongQiu[j]=abs(m_ShuangSeQiuList[i-1].m_HongQiu[j]-m_ShuangSeQiuList[i].m_LanQiu);
@@ -348,7 +348,7 @@ map<CString,sYuCeShuangSeQiu>CDataManageCenter::GetDataBySuanFa()
 	return TempData;
 }
 
-//通过篮球搜索数据
+//通过特码搜索数据
 vector<sShuangSeQiu> CDataManageCenter::SearchDataLanQiu(DWORD Data1,DWORD Data2,DWORD Data3,DWORD Data4,CString Str)
 {
 	DWORD Data[4];
@@ -681,7 +681,7 @@ map<CString,sYuCeShuangSeQiu> CDataManageCenter::SearchDataBySuanFa(DWORD Data1,
 	return Ret;
 }
 
-//搜索红球
+//搜索平码
 vector<sShuangSeQiu> CDataManageCenter::SearchHongQiu(DWORD HongQiu)
 {
 	/*vector<sShuangSeQiu> ShuangSeQiuList;
@@ -705,7 +705,7 @@ vector<sShuangSeQiu> CDataManageCenter::SearchHongQiu(DWORD HongQiu)
 
 }
 
-//搜索红球
+//搜索平码
 vector<sShuangSeQiu> CDataManageCenter::SearchHongQiu(vector<sShuangSeQiu>& DataList,DWORD HongQiu)
 {
 	vector<sShuangSeQiu> ShuangSeQiuList;
@@ -731,16 +731,16 @@ vector<sShuangSeQiu> CDataManageCenter::SearchHongQiu(vector<sShuangSeQiu>& Data
 	//初始化纵向差值
 	InitZongXiangChaZhi(ShuangSeQiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	InitLianHaoHongQiu(ShuangSeQiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	InitLianHaoLanQiu(ShuangSeQiuList);
 
 	return ShuangSeQiuList;
 }
 
-//搜索篮球
+//搜索特码
 vector<sShuangSeQiu> CDataManageCenter::SearchLanQiu(DWORD LanQiu)
 {
 	vector<sShuangSeQiu> ShuangSeQiuList;
@@ -758,10 +758,10 @@ vector<sShuangSeQiu> CDataManageCenter::SearchLanQiu(DWORD LanQiu)
 	//初始化纵向差值
 	InitZongXiangChaZhi(ShuangSeQiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	InitLianHaoHongQiu(ShuangSeQiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	InitLianHaoLanQiu(ShuangSeQiuList);
 
 	return ShuangSeQiuList;
@@ -779,13 +779,13 @@ vector<sHengXiangChaZhi>* CDataManageCenter::GetHengXiangChaZhi()
 	return &m_HengXiangChaZhiList;
 }
 
-//获取连号红球
+//获取连号平码
 vector<sShuangSeQiu>* CDataManageCenter::GetLianHaoHongQiu()
 {
 	return &m_LianHaoHongQiu;
 }
 
-//获取连号篮球
+//获取连号特码
 vector<sShuangSeQiu>* CDataManageCenter::GetLianHaoLanQiu()
 {
 	return &m_LianHaoLanQiu;
@@ -845,7 +845,7 @@ vector<sHengXiangChaZhi> CDataManageCenter::SearchHengXiangChaZhi(DWORD Value)
 }
 
 
-//获取连号红球
+//获取连号平码
 vector<sShuangSeQiu> CDataManageCenter::SearchLianHaoHongQiu(DWORD Value)
 {
 	vector<sShuangSeQiu> QiuList;
@@ -873,16 +873,16 @@ vector<sShuangSeQiu> CDataManageCenter::SearchLianHaoHongQiu(DWORD Value)
 	//初始化纵向差值
 	InitZongXiangChaZhi(QiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	InitLianHaoHongQiu(QiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	InitLianHaoLanQiu(QiuList);
 
 	return QiuList;
 }
 
-//获取连号篮球
+//获取连号特码
 vector<sShuangSeQiu> CDataManageCenter::SearchLianHaoLanQiu(DWORD Value)
 {
 	vector<sShuangSeQiu> QiuList;
@@ -898,10 +898,10 @@ vector<sShuangSeQiu> CDataManageCenter::SearchLianHaoLanQiu(DWORD Value)
 	//初始化纵向差值
 	InitZongXiangChaZhi(QiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	InitLianHaoHongQiu(QiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	InitLianHaoLanQiu(QiuList);
 
 	return QiuList;
@@ -956,7 +956,7 @@ void CDataManageCenter::InitZongXiangChaZhi(vector<sShuangSeQiu>& ShuangSeQiuLis
 	}
 }
 
-//初始化连号红球
+//初始化连号平码
 void CDataManageCenter::InitLianHaoHongQiu(vector<sShuangSeQiu>& ShuangSeQiuList)
 {
 	m_LianHaoHongQiu.clear();
@@ -980,7 +980,7 @@ void CDataManageCenter::InitLianHaoHongQiu(vector<sShuangSeQiu>& ShuangSeQiuList
 	}
 }
 
-//初始化连号篮球
+//初始化连号特码
 void CDataManageCenter::InitLianHaoLanQiu(vector<sShuangSeQiu>& ShuangSeQiuList)
 {
 	m_LianHaoLanQiu.clear();
@@ -1044,10 +1044,10 @@ bool CDataManageCenter::LoadDataFromFile(CString FilePath,vector<sShuangSeQiu>& 
 	//初始化纵向差值
 	InitZongXiangChaZhi(m_ShuangSeQiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	InitLianHaoHongQiu(m_ShuangSeQiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	InitLianHaoLanQiu(m_ShuangSeQiuList);
 	*/
 
@@ -1659,7 +1659,7 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 	ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }
 
-//球是否在红球中
+//球是否在平码中
 bool CDataManageCenter::IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 {
 	bool Ret=false;
@@ -1687,7 +1687,7 @@ bool CDataManageCenter::IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 	return Ret;
 }
 
-//球是否在篮球中
+//球是否在特码中
 bool CDataManageCenter::IsLanQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 {
 
