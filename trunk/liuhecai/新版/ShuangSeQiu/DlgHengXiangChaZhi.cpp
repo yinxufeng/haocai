@@ -178,7 +178,9 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 			}
 
 		//	int Temp1=(*DataList)[Index-1].m_HongQiu[0]/10+(*DataList)[Index-1].m_HongQiu[0]%10 +(*DataList)[Index-1].m_HongQiu[1]/10+(*DataList)[Index-1].m_HongQiu[1]%10;
-			int Temp1=(*DataList)[Index-1].m_HongQiu[1]/10+(*DataList)[Index-1].m_HongQiu[1]%10 +(*DataList)[Index-1].m_HongQiu[2]/10+(*DataList)[Index-1].m_HongQiu[2]%10;
+			//int Temp1=(*DataList)[Index-1].m_HongQiu[1]/10+(*DataList)[Index-1].m_HongQiu[1]%10 +(*DataList)[Index-1].m_HongQiu[2]/10+(*DataList)[Index-1].m_HongQiu[2]%10;
+			//int Temp1=(*DataList)[Index-1].m_HongQiu[1]%3+(*DataList)[Index-1].m_HongQiu[3]%3 +(*DataList)[Index-1].m_HongQiu[5]%3;
+			int Temp1=(*DataList)[Index-1].m_HongQiu[3]%3;
 		//	int Temp1=(*DataList)[Index-1].m_HongQiu[1]%10 +(*DataList)[Index-1].m_HongQiu[2]%10;
 		//	Temp1=Temp1%10;
 			int LuShu =Temp1%3;//GetLuShu(Temp1);
@@ -188,7 +190,7 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 			LuShuArray[LuShu]++;
 			LongTou.Empty();
 			LongTou.Format("%02d",LuShu);
-			LongTou="ɱ"+LongTou;
+			LongTou=""+LongTou;
 
 			if(Index != DataList->size())
 			{

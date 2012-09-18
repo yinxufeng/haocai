@@ -31,7 +31,7 @@ protected:
 	//初始化列表头
 	void InitListHeader();
 
-	//获取相等的红球
+	//获取相等的平码
 	vector<int> GetEqualData(vector<sShuangSeQiu>& DataList);
 
 private:

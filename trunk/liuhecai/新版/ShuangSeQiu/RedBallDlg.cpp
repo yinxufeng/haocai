@@ -10,13 +10,16 @@
 #define ZUOBIAO_WIDTH               50
 #define ZUOBIAO_HEIGHT              20
 // CRedBallDlg ¶Ô»°¿ò
+#define V_PAGE_COUNT                 2
+#define H_PAGE_COUNT                 4
+#define PAGE_COUNT                   (V_PAGE_COUNT*H_PAGE_COUNT)
 
 IMPLEMENT_DYNAMIC(CRedBallDlg, CDialog)
 
 CRedBallDlg::CRedBallDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CRedBallDlg::IDD, pParent)
 {
-	m_DrawType = DRAW_RED_BALL_1;
+	
 	m_DrawIndex = 0;
 }
 
@@ -32,13 +35,10 @@ void CRedBallDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CRedBallDlg, CDialog)
 	ON_WM_ERASEBKGND()
-	ON_BN_CLICKED(IDC_BUTTON1, &CRedBallDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CRedBallDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON3, &CRedBallDlg::OnBnClickedButton3)
-	ON_BN_CLICKED(IDC_BUTTON5, &CRedBallDlg::OnBnClickedButton5)
-	ON_BN_CLICKED(IDC_BUTTON6, &CRedBallDlg::OnBnClickedButton6)
-	ON_BN_CLICKED(IDC_BUTTON4, &CRedBallDlg::OnBnClickedButton4)
-	ON_BN_CLICKED(IDC_BUTTON7, &CRedBallDlg::OnBnClickedButton7)
+	
+	ON_BN_CLICKED(IDC_PREV_BTN, &CRedBallDlg::OnBnClickedPrevBtn)
+	ON_BN_CLICKED(IDC_NEXT_BTN, &CRedBallDlg::OnBnClickedNextBtn)
+	ON_BN_CLICKED(IDC_FIRST_BTN, &CRedBallDlg::OnBnClickedFirstBtn)
 END_MESSAGE_MAP()
 
 
@@ -50,45 +50,68 @@ BOOL CRedBallDlg::OnEraseBkgnd(CDC* pDC)
 	CBitmap Bmp;
 	CRect Rect;
 	GetClientRect(Rect);
+	CDialog::OnEraseBkgnd(pDC);
 
 	MemDC.CreateCompatibleDC(pDC);
 	Bmp.CreateCompatibleBitmap(pDC,Rect.Width(),Rect.Height());
 	CBitmap* Old =(CBitmap*)MemDC.SelectObject(&Bmp);
 	
-	MemDC.FillSolidRect(Rect,RGB(0,0,0));
-	DrawZuoBiao(&MemDC,Rect);
+	MemDC.BitBlt(0,0,Rect.Width(),Rect.Height(),pDC,0,0,SRCCOPY);
 	
-	if(m_DrawType == DRAW_RED_BALL_1)
+
+	
+	int Height = 210;
+	int Width  = 210;
+	int TextWidth  =Width;
+	int TextHeight =40;
+	int SpaceWidth = 20;
+	int SpaceHeight=20;
+	int OffsetWidth= 80;
+	int OffsetHeight=40;
+
+	CRect FrameRect=Rect;
+	FrameRect.left  += OffsetWidth-20; 
+	FrameRect.right -= OffsetWidth;
+	FrameRect.top   += OffsetHeight-20;
+	FrameRect.bottom-= OffsetHeight+20;
+	DrawFrame(&MemDC,FrameRect,RGB(255,0,0),3);
+
+
+	if(m_DataList.empty())
+		return true;
+	int Count=0;
+
+	MemDC.SetBkMode(TRANSPARENT);
+	for(int i = 0; i < V_PAGE_COUNT; i++)
 	{
-		int Width =60*7;
-		int Count=Rect.Width()/Width;
-		for(int Index=0; Index < Count; Index++)
+		for(int j=0; j < H_PAGE_COUNT; j++)
 		{
-			int DrawIndex=m_DrawIndex+Index;
-			if(DrawIndex >= m_DataList.size())
+			
+			CRect TempRect=Rect;
+			TempRect.left = Rect.left+Width*j+SpaceWidth*j + OffsetWidth;
+			TempRect.right = TempRect.left+Width;
+			TempRect.top = Rect.top + Height*i +TextHeight*i+OffsetHeight+SpaceHeight*i;
+			TempRect.bottom =TempRect.top + Height;
+			
+			int TempIndex= m_DrawIndex-Count;
+			if(TempIndex < 0 || TempIndex >= m_DataList.size())
 				break;
 
-			CRect TempRect=Rect;
-			TempRect.left=Rect.left+Index*Width;
-			TempRect.right=TempRect.left + Width;
-			DrawPoint(&MemDC,m_DrawType,TempRect,DrawIndex);
-		}
-	}
-	else
-	{
-		int Width = 60;
-		int Count=Rect.Width()/Width-1;
-		for(int Index=0; Index < Count; Index++)
-		{
-			int DrawIndex=m_DrawIndex+Index;
-			if(DrawIndex >= m_DataList.size())
-				break;
+			Count++;
+			DrawData(&MemDC,TempRect,m_DataList[TempIndex].m_LanQiu);
+			
 
-			CRect TempRect=Rect;
-			TempRect.left=Rect.left+Index*Width;
-			TempRect.right=TempRect.left + Width;
-			DrawPoint(&MemDC,m_DrawType,TempRect,DrawIndex);
+			CString Text;
+			Text=m_DataList[TempIndex].m_QiShu;
+			CRect TextRect=Rect;
+			TextRect.left = Rect.left+Width*j+SpaceWidth*j + OffsetWidth;
+			TextRect.right = TextRect.left+Width;
+			TextRect.top = Rect.top + Height*(i+1) +TextHeight*i+OffsetHeight+SpaceHeight*i;
+			TextRect.bottom =TextRect.top + TextHeight;
+
+			MemDC.DrawText(Text,TextRect,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 		}
+
 	}
 
 	GetClientRect(Rect);
@@ -100,297 +123,67 @@ BOOL CRedBallDlg::OnEraseBkgnd(CDC* pDC)
 	return true;
 }
 
-void CRedBallDlg::DrawZuoBiao(CDC* pDC,CRect& Rect)
-{
-	int Height = TEXT_HEIGHT;
-	int Width  = TEXT_WIDTH;
 
-	int HeightH =20;
-	int WidthH  = 60;
-
-	CRect LineRect=Rect;
-	LineRect.left+=Width+10;
-
-	CPen DotPen(PS_DOT,1,RGB(222,222,222));
-	CPen* OldPen=pDC->SelectObject(&DotPen);
-
-	pDC->SetTextColor(RGB(255,0,0));
-	for(int Index = 0; Index < 33; Index++)
-	{
-		CString Text;
-		Text.Format("%02d",Index+1);
-		CRect TextRect=Rect;
-		TextRect.bottom = Rect.bottom-10-(Index+1)*Height -HeightH;
-		TextRect.top = TextRect.bottom - Height;
-		TextRect.right = TextRect.left + Width;
-		
-		pDC->MoveTo(LineRect.left,TextRect.bottom);
-		pDC->LineTo(LineRect.right,TextRect.bottom);
-		TextRect.top = TextRect.bottom-Height/2;
-		TextRect.bottom=TextRect.bottom+Height/2;
-		pDC->DrawText(Text,TextRect,DT_LEFT|DT_VCENTER);
-	}
-
-	LineRect.bottom -= HeightH+10;
-	Rect = LineRect;
-	pDC->SelectObject(OldPen);
-
-
-}
-
-void CRedBallDlg::DrawPoint(CDC* pDC,eDrawType Type,CRect Rect,int DrawIndex)
-{
-	if(m_DataList.empty())
-		return;
-
-	int HeightH =20;
-	int WidthH  = 60;
-	CPen Pen(PS_SOLID,1,RGB(255,0,0));
-    CPen* OldPen=(CPen*)pDC->SelectObject(&Pen);
-	
-
-	int TempIndex=DrawIndex;
-	if(Type == DRAW_RED_BALL_1)
-	{
-		for(int Index = 0; Index < 6; Index++)
-		{
-			DWORD Data = m_DataList[TempIndex].m_HongQiu[Index];
-			CPoint Point;
-			Point.x = Rect.left+(Index+1)*WidthH;
-			Point.y = Rect.bottom - Data*HeightH;
-			if(Index == 0)
-				pDC->MoveTo(Point.x,Point.y);
-			else
-				pDC->LineTo(Point.x,Point.y);
-
-			//CBursh Bursh(
-			CBrush Brush(RGB(167,167,205));
-			CBrush* OldBrush=(CBrush*)pDC->SelectObject(&Brush);
-			pDC->Ellipse(Point.x-4,Point.y-4,Point.x+4,Point.y+4);
-			pDC->SelectObject(OldBrush);
-			
-			CRect TextRect2=Rect;
-			TextRect2.top =Point.y;
-			TextRect2.bottom= TextRect2.top + HeightH;
-			TextRect2.left =Point.x+4+5;
-			TextRect2.right = TextRect2.left + WidthH;
-			CString Text2;
-			Text2.Format(_T("%02d"),Data);
-			pDC->DrawText(Text2,TextRect2,DT_CENTER|DT_VCENTER);
-
-			
-			CRect TextRect=Rect;
-			TextRect.top =Rect.bottom-10;
-			TextRect.bottom= TextRect.top + HeightH;
-			TextRect.left = Rect.left + (Index+1)*WidthH;
-			TextRect.right = TextRect.left + WidthH;
-			CString Text;
-			Text.Format("%02d",Index+1);
-			pDC->DrawText(Text,TextRect,DT_LEFT|DT_VCENTER);
-		}
-
-		CRect TextRect=Rect;
-		TextRect.top = Rect.bottom+HeightH-30;
-		TextRect.bottom= TextRect.top + HeightH+20;	
-		CString Text= m_DataList[TempIndex].m_QiShu;
-		pDC->DrawText(Text,TextRect,DT_CENTER|DT_VCENTER);
-	}
-	else
-	{
-		//for(int Index = 0; Index < 1; Index++)
-		
-		int Index=0;
-		{
-			int iii=0;
-			if(Type == DRAW_RED_BALL_3)
-				iii=5;
-			DWORD Data = m_DataList[TempIndex].m_HongQiu[iii];
-
-
-			CPoint Point;
-			Point.x = Rect.left+(Index+1)*WidthH;
-			Point.y = Rect.bottom - Data*HeightH;
-			if(TempIndex == m_DrawIndex)
-				pDC->MoveTo(Point.x,Point.y);
-			else
-				pDC->LineTo(Point.x,Point.y);
-
-
-			CBrush Brush(RGB(167,167,205));
-			CBrush* OldBrush=(CBrush*)pDC->SelectObject(&Brush);
-			pDC->Ellipse(Point.x-4,Point.y-4,Point.x+4,Point.y+4);
-			pDC->SelectObject(OldBrush);
-			
-			CRect TextRect2=Rect;
-			TextRect2.top =Point.y;
-			TextRect2.bottom= TextRect2.top + HeightH;
-			TextRect2.left =Point.x+4+5;
-			TextRect2.right = TextRect2.left + WidthH;
-			CString Text2;
-			Text2.Format(_T("%02d"),Data);
-			pDC->DrawText(Text2,TextRect2,DT_CENTER|DT_VCENTER);
-
-			
-			CRect TextRect=Rect;
-			TextRect.top =Rect.bottom-10;
-			TextRect.bottom= TextRect.top + HeightH;
-			TextRect.left = Rect.left + (Index+1)*WidthH;
-			TextRect.right = TextRect.left + WidthH;
-			CString Text;
-			Text.Format("%02d",Index+1);
-			pDC->DrawText(Text,TextRect,DT_LEFT|DT_VCENTER);
-		}
-
-		CRect TextRect=Rect;
-		TextRect.top = Rect.bottom+HeightH-30;
-		TextRect.bottom= TextRect.top + HeightH+20;	
-		CString Text= m_DataList[TempIndex].m_QiShu;
-		pDC->DrawText(Text,TextRect,DT_CENTER|DT_VCENTER);
-	}
-	pDC->SelectObject(OldPen);
-}
-
-void CRedBallDlg::DrawHongQiu(CDC* pDC,eDrawType Type,CRect Rect)
-{
-	switch(Type)
-	{
-	case DRAW_RED_BALL_1:
-		{
-			CPen Pen(PS_SOLID,2,RGB(251,215,209));
-			pDC->SelectObject(&Pen);
-			DrawPoint(pDC,Type,Rect);
-		}
-		break;
-
-	case DRAW_RED_BALL_2:
-		{
-			CPen Pen(PS_SOLID,2,RGB(240,236,64));
-			pDC->SelectObject(&Pen);
-			DrawPoint(pDC,Type,Rect);
-		}
-		break;
-
-	case DRAW_RED_BALL_3:
-		{
-			CPen Pen(PS_SOLID,2,RGB(67,233,87));
-			pDC->SelectObject(&Pen);
-			DrawPoint(pDC,Type,Rect);
-		}
-		break;
-
-	case DRAW_RED_BALL_4:
-		{
-			CPen Pen(PS_SOLID,2,RGB(66,206,234));
-			pDC->SelectObject(&Pen);
-			DrawPoint(pDC,Type,Rect);
-		}
-		break;
-
-	case DRAW_RED_BALL_5:
-		{
-			CPen Pen(PS_SOLID,2,RGB(124,73,227));
-			pDC->SelectObject(&Pen);
-			DrawPoint(pDC,Type,Rect);
-		}
-		break;
-
-	case DRAW_RED_BALL_6:
-		{
-			CPen Pen(PS_SOLID,2,RGB(230,70,196));
-			pDC->SelectObject(&Pen);
-			DrawPoint(pDC,Type,Rect);
-		}
-		break;
-
-	case DRAW_RED_BALL_ALL:
-		{
-			CPen Pen1(PS_SOLID,2,RGB(251,215,209));
-			pDC->SelectObject(&Pen1);
-
-			CPen Pen2(PS_SOLID,2,RGB(240,236,64));
-			pDC->SelectObject(&Pen2);
-			DrawPoint(pDC,Type,Rect);
-
-			CPen Pen3(PS_SOLID,2,RGB(67,233,87));
-			pDC->SelectObject(&Pen3);
-			DrawPoint(pDC,Type,Rect);
-
-			
-			CPen Pen4(PS_SOLID,2,RGB(66,206,234));
-			pDC->SelectObject(&Pen4);
-			DrawPoint(pDC,Type,Rect);
-
-			CPen Pen5(PS_SOLID,2,RGB(124,73,227));
-			pDC->SelectObject(&Pen5);
-			DrawPoint(pDC,Type,Rect);
-
-			CPen Pen6(PS_SOLID,2,RGB(230,70,196));
-			pDC->SelectObject(&Pen6);
-			DrawPoint(pDC,Type,Rect);
-
-		}
-
-		break;
-	}
-}
-
-void CRedBallDlg::OnBnClickedButton1()
-{
-	m_DrawType = DRAW_RED_BALL_1;
-	Invalidate();
-}
-
-void CRedBallDlg::OnBnClickedButton2()
-{
-	m_DrawType = DRAW_RED_BALL_2;
-	Invalidate();
-}
-
-void CRedBallDlg::OnBnClickedButton3()
-{
-	m_DrawType = DRAW_RED_BALL_3;
-	Invalidate();
-}
-
-void CRedBallDlg::OnBnClickedButton5()
-{
-	m_DrawType = DRAW_RED_BALL_5;
-	Invalidate();
-}
-
-void CRedBallDlg::OnBnClickedButton6()
-{
-	m_DrawType = DRAW_RED_BALL_6;
-	Invalidate();
-}
-
-void CRedBallDlg::OnBnClickedButton4()
-{
-	m_DrawType = DRAW_RED_BALL_4;
-	Invalidate();
-}
-
-void CRedBallDlg::OnBnClickedButton7()
-{
-	m_DrawType = DRAW_RED_BALL_ALL;
-	Invalidate();
-}
 
 BOOL CRedBallDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	for(int Index = IDC_BUTTON4; Index <=IDC_BUTTON7; Index++)
-	{
-		GetDlgItem(Index)->ShowWindow(SW_HIDE);
-	}
-
+	CenterWindow();
+	
 	return TRUE; 
+}
+
+void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data)
+{
+	int HCount=7;
+	int VCount=7;
+	int Width = Rect.Width()/HCount;
+	int Height= Rect.Width()/VCount;
+
+	int DrawData=0;
+
+	for(int i = 0; i < 7; i++)
+	{
+		for(int j=0; j < 7; j++)
+		{
+			DrawData++;
+			CRect TempRect=Rect;
+			TempRect.left = Rect.left+Width*j;
+			TempRect.right = TempRect.left+Width;
+			TempRect.top = Rect.top + Height*i;
+			TempRect.bottom =TempRect.top + Height;
+		    DrawFrame(pDC,TempRect,RGB(255,255,255));
+
+			TempRect.left+=1;
+			TempRect.top +=1;
+			TempRect.bottom-=1;
+			TempRect.right-=1;
+
+			CString Text;
+			Text.Format("%02d",DrawData);
+			if(DrawData == Data)
+				pDC->FillSolidRect(TempRect,RGB(255,0,0));
+			pDC->DrawText(Text,TempRect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+		}
+
+	}
+}
+
+void CRedBallDlg::DrawFrame(CDC* pDC,CRect TempRect,COLORREF Color,int FrameWidth)
+{
+	CPen pen(PS_SOLID,FrameWidth,Color);
+	pDC->SelectObject(&pen);
+	pDC->MoveTo(TempRect.left,TempRect.top);
+	pDC->LineTo(TempRect.right,TempRect.top);
+	pDC->LineTo(TempRect.right,TempRect.bottom);
+	pDC->LineTo(TempRect.left,TempRect.bottom);
+	pDC->LineTo(TempRect.left,TempRect.top);
 }
 
 BOOL CRedBallDlg::PreTranslateMessage(MSG* pMsg)
 {
-	int Offset=2;
+	/*int Offset=V_PAGE_COUNT*H_PAGE_COUNT;
 	if(pMsg->message == WM_KEYDOWN)
 	{
 		if(pMsg->wParam == VK_UP)
@@ -420,7 +213,65 @@ BOOL CRedBallDlg::PreTranslateMessage(MSG* pMsg)
 			Invalidate();
 			return 1;
 		}
-	}
+	}*/
 
 	return CDialog::PreTranslateMessage(pMsg);
+}
+
+void CRedBallDlg::OnBnClickedPrevBtn()
+{
+	
+	m_DrawIndex+=PAGE_COUNT;
+	if(m_DrawIndex >= m_DataList.size())
+		m_DrawIndex=m_DataList.size()-1;
+
+	int Count = m_DrawIndex+PAGE_COUNT;
+	if(Count >= m_DataList.size()-1)
+		Count=m_DataList.size()-1;
+	
+	UpdateBtnStatus();
+	Invalidate();
+}
+
+void CRedBallDlg::OnBnClickedNextBtn()
+{
+
+
+	int Count=0;
+	 m_DrawIndex-=PAGE_COUNT;
+	if(m_DrawIndex < 0)
+		m_DrawIndex=0;
+
+	Count= m_DrawIndex+PAGE_COUNT;
+	if(Count > m_DataList.size())
+		Count=m_DataList.size()-1;
+
+	UpdateBtnStatus();
+
+	Invalidate();
+	
+	
+}
+
+
+
+void CRedBallDlg::UpdateBtnStatus()
+{
+	if(m_DrawIndex + PAGE_COUNT < m_DataList.size())
+		GetDlgItem(IDC_PREV_BTN)->EnableWindow(true);
+	else
+		GetDlgItem(IDC_PREV_BTN)->EnableWindow(false);
+
+	if(m_DrawIndex - PAGE_COUNT < 0)
+		GetDlgItem(IDC_NEXT_BTN)->EnableWindow(false);
+	else
+		GetDlgItem(IDC_NEXT_BTN)->EnableWindow(true);
+
+}
+void CRedBallDlg::OnBnClickedFirstBtn()
+{
+	m_DrawIndex=m_DataList.size()-1;
+	if(m_DrawIndex< 0)
+		m_DrawIndex=0;
+	Invalidate();
 }

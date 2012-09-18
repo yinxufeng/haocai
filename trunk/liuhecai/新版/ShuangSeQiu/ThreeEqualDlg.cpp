@@ -47,14 +47,14 @@ void CThreeEqualDlg::InitListHeader()
 	m_ListCtrl.GetWindowRect(&Rect);
 	int nWidth = Rect.Width()/9;
 	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(1,_TEXT("红球1"),	LVCFMT_CENTER,	nWidth); 
-	m_ListCtrl.InsertColumn(2,_TEXT("红球2"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(3,_TEXT("红球3"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(4,_TEXT("红球4"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(5,_TEXT("红球5"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(6,_TEXT("红球6"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(7,_TEXT("红球之和"),	LVCFMT_CENTER,	nWidth);
-	m_ListCtrl.InsertColumn(8,_TEXT("篮球"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(1,_TEXT("平码1"),	LVCFMT_CENTER,	nWidth); 
+	m_ListCtrl.InsertColumn(2,_TEXT("平码2"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(3,_TEXT("平码3"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(4,_TEXT("平码4"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(5,_TEXT("平码5"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(6,_TEXT("平码6"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(7,_TEXT("平码之和"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl.InsertColumn(8,_TEXT("特码"),	LVCFMT_CENTER,	nWidth);
 
 	sItemStyle Style;
 	Style.m_ItemType = TEXT_TYPE;

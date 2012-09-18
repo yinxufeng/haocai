@@ -38,7 +38,7 @@ public:
     //预测计算方法
 	map<CString,sYuCeShuangSeQiu> GetDataBySuanFa();
 
-	//通过篮球搜索数据
+	//通过特码搜索数据
 	vector<sShuangSeQiu> SearchDataLanQiu(DWORD Data1,DWORD Data2,DWORD Data3,DWORD Data4,CString Str=_T(""));
 
 	//通过龙头搜索数据
@@ -51,13 +51,13 @@ public:
 	map<CString,sYuCeShuangSeQiu> SearchDataBySuanFa(DWORD Data1,DWORD Data2,DWORD Data3,DWORD Data4,CString QiShu=_T(""));
 
 
-	//搜索红球
+	//搜索平码
 	vector<sShuangSeQiu> SearchHongQiu(DWORD HongQiu);
 
-	//搜索红球
+	//搜索平码
 	vector<sShuangSeQiu> SearchHongQiu(vector<sShuangSeQiu>& DataList,DWORD HongQiu);
 
-	//搜索篮球
+	//搜索特码
 	vector<sShuangSeQiu> SearchLanQiu(DWORD LanQiu);
 	
 	//获取纵向差值
@@ -66,10 +66,10 @@ public:
 	//获取横向差值
 	vector<sHengXiangChaZhi>* GetHengXiangChaZhi();
 
-	//获取连号红球
+	//获取连号平码
 	vector<sShuangSeQiu>* GetLianHaoHongQiu();
 
-	//获取连号篮球
+	//获取连号特码
 	vector<sShuangSeQiu>* GetLianHaoLanQiu();
 
 	//搜索纵向差值
@@ -78,10 +78,10 @@ public:
 	//搜索横向差值
 	vector<sHengXiangChaZhi> SearchHengXiangChaZhi(DWORD Value);
 
-	//获取连号红球
+	//获取连号平码
 	vector<sShuangSeQiu> SearchLianHaoHongQiu(DWORD Value);
 
-	//获取连号篮球
+	//获取连号特码
 	vector<sShuangSeQiu> SearchLianHaoLanQiu(DWORD Value);
 
 	//从文件加载数据
@@ -106,10 +106,10 @@ public:
 	int GetACCount(sShuangSeQiu& ShuangSeQiu);
 public:
 	
-	//球是否在红球中
+	//球是否在平码中
 	static bool IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV=false);
 
-	//球是否在篮球中
+	//球是否在特码中
 	static bool IsLanQiuInData(sShuangSeQiu QiuData,int Data,bool IsV=false);
 
 	//判断数据是否为合数
@@ -120,7 +120,7 @@ public:
 
 	static CString GetDataStr(int Data,bool IsTrue=true,bool IsV=false);
 
-	//// 判断点位是否在红球中
+	//// 判断点位是否在平码中
 	//static bool IsDianHongQiuInData(sShuangSeQiu QiuData,int Data,int Offset=1);
 
 	////获取点位字符串
@@ -143,10 +143,10 @@ private:
 	//初始化纵向差值
 	void InitZongXiangChaZhi(vector<sShuangSeQiu>& ShuangSeQiuList);
 
-	//初始化连号红球
+	//初始化连号平码
 	void InitLianHaoHongQiu(vector<sShuangSeQiu>& ShuangSeQiuList);
 
-	//初始化连号篮球
+	//初始化连号特码
 	void InitLianHaoLanQiu(vector<sShuangSeQiu>& ShuangSeQiuList);
 
 
@@ -166,7 +166,7 @@ private:
 	vector<sShuangSeQiu>        m_ShuangSeQiuChuHaoList;  //双色球球出号顺序列表
 	vector<sHengXiangChaZhi>    m_HengXiangChaZhiList;    //双色球横向差值列表
 	vector<sZongXiangChaZhi>    m_ZongXiangChaZhiList;    //双色球纵向差值列表
-	vector<sShuangSeQiu>        m_LianHaoHongQiu;         //双色球连号红球数值
-	vector<sShuangSeQiu>        m_LianHaoLanQiu;          //双色球连号篮球数值
+	vector<sShuangSeQiu>        m_LianHaoHongQiu;         //双色球连号平码数值
+	vector<sShuangSeQiu>        m_LianHaoLanQiu;          //双色球连号特码数值
 	BOOL                        m_SearchFlag;             //搜索标志
 };

@@ -13,6 +13,7 @@
 #include "DlgFourEqual.h"
 #include "ThreeEqualDlg.h"
 #include "DlgShiFaDingHong.h"
+#include "DlgZiDongFenXi.h"
 #include "afxwin.h"
 
 class CShuangSeQiuDlg : public CDialog
@@ -82,12 +83,15 @@ private:
 	CDlgFourEqual        m_DlgFourEqual;
 	CThreeEqualDlg       m_DlgThreeEqual;
 	CDlgShiFaDingHong    m_DlgShiFaDingHong;
+	CDlgZiDongFenXi      m_DlgZiDongFenXi;
 
 	vector<sShuangSeQiu> m_ResultDataList;
 
 	CButton m_CheckBtn;
 	CComboBox m_ComboBox;
+	bool      m_IsShowByChuQiu;
 public:
 	afx_msg void OnBnClickedBlueBallBtn();
 	afx_msg void OnBnClickedButton13();
+	afx_msg void OnBnClickedBlueBallBtn5();
 };

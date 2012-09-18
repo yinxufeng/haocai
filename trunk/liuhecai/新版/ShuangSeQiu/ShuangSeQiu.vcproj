@@ -214,7 +214,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgZiDongFenXi.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgZongXiangChaZhi.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FormulaCenter.cpp"
 				>
 			</File>
 			<File
@@ -308,7 +316,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgZiDongFenXi.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgZongXiangChaZhi.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FormulaCenter.h"
 				>
 			</File>
 			<File
