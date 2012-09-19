@@ -234,6 +234,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Markup.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\RedBallDlg.cpp"
 				>
 			</File>
@@ -333,6 +337,10 @@
 			</File>
 			<File
 				RelativePath=".\ListCtrlEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Markup.h"
 				>
 			</File>
 			<File

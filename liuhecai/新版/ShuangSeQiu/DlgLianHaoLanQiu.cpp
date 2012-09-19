@@ -5,6 +5,7 @@
 #include "ShuangSeQiu.h"
 #include "DlgLianHaoLanQiu.h"
 #include "FormulaCenter.h"
+#include "Markup.h"
 
 // CDlgLianHaoLanQiu ¶Ô»°¿ò
 
@@ -58,6 +59,7 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoLanQiu, CDialog)
 	ON_BN_CLICKED(IDC_NEXT_BTN, &CDlgLianHaoLanQiu::OnBnClickedNextBtn)
 	ON_BN_CLICKED(IDC_BUTTON5, &CDlgLianHaoLanQiu::OnBnClickedButton5)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CDlgLianHaoLanQiu::OnCbnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_JINGXUAN_BTN, &CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn)
 END_MESSAGE_MAP()
 
 
@@ -121,8 +123,7 @@ void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 		Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
 
 		m_ListCtrl.DeleteAllItems();
-		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
-		FillData(m_FormulaInfoList);
+		OnBnClickedJingxuanBtn();
 	
 	}
 			
@@ -416,4 +417,43 @@ void CDlgLianHaoLanQiu::UpdateBtnStatus()
 void CDlgLianHaoLanQiu::OnCbnSelchangeCombo1()
 {
 		OnBnClickedSearchBtn();
+}
+
+void CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn()
+{
+	CMarkup Xml;
+	CString FormulaName=GetAppCurrentPath()+"FormulaNameList.xml";
+	Xml.Load(FormulaName.GetBuffer());
+	FormulaName.ReleaseBuffer();
+
+	vector<CString> NameList;
+
+	while(Xml.FindChildElem("FormulaInfo"))
+	{
+		Xml.IntoElem();
+		Xml.FindChildElem("FormulaName");
+		CString Name=Xml.GetChildData().c_str();
+
+		Xml.FindChildElem("FormulaType");
+		CString StrType=Xml.GetChildData().c_str();
+		
+		int Type = atoi(StrType.GetBuffer());
+		StrType.ReleaseBuffer();
+
+		if(Type == FORMULA_SHA_LAN_WEI && !Name.IsEmpty())
+			NameList.push_back(Name);
+			
+		Xml.OutOfElem();
+	}
+
+	if(NameList.empty())
+	{
+		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
+	}
+	else
+		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByName(FORMULA_SHA_LAN,NameList);
+
+	m_CurrentIndex=0;
+	FillData(m_FormulaInfoList);
+	UpdateBtnStatus();
 }
