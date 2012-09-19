@@ -167,6 +167,9 @@ vector<sFormulaInfo>  CFormulaCenter::SearchFormulaInfoByType(eFormulaType Type,
 						continue;
 
 					int TempData = atoi(it->second[Index].m_DataList[SizeIndex].m_Data.GetBuffer());
+					if(TYPE_V_DENG_YU == SearchType)
+						TempData=TempData%10;
+
 					if(Data == TempData)
 					{
 						InfoList.push_back(it->second[Index]);
@@ -250,6 +253,30 @@ vector<sFormulaInfo>  CFormulaCenter::SearchFormulaInfoByType(eFormulaType Type,
 
 	return InfoList;
 	
+}
+
+
+//通过算法获取公式信息
+vector<sFormulaInfo> CFormulaCenter::GetFormulaInfoByName(eFormulaType Type,vector<CString>& NameList)
+{
+	vector<sFormulaInfo> InfoList;
+	map<eFormulaType,vector<sFormulaInfo>>::iterator it = m_MapFormulaInfo.find(Type);
+	if(it != m_MapFormulaInfo.end())
+	{
+		for(int Index = 0; Index < it->second.size(); Index++)
+		{
+			for(int j=0; j < NameList.size(); j++)
+			{
+				if(it->second[Index].m_FormulaName == NameList[j])
+				{
+					InfoList.push_back(it->second[Index]);
+					break;
+				}
+			}
+		}
+	}
+
+	return InfoList;
 }
 
 //公式运算

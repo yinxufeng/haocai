@@ -131,6 +131,9 @@ public:
 
 	//搜索公式信息
 	vector<sFormulaInfo> SearchFormulaInfoByType(eFormulaType Type,eSearchVType SearchType,int Data,int Data2);
+
+	//通过算法获取公式信息
+	vector<sFormulaInfo> GetFormulaInfoByName(eFormulaType Type,vector<CString>& NameList);
 	
 	//获取算法个数
 	int GetFormulaCount(eFormulaType Type);

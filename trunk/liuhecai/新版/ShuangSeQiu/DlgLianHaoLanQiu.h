@@ -52,4 +52,5 @@ public:
 	void UpdateBtnStatus();
 	afx_msg void OnCbnSelchangeCombo1();
 
+	afx_msg void OnBnClickedJingxuanBtn();
 };

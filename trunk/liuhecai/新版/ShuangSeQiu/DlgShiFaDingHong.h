@@ -48,4 +48,5 @@ public:
 	afx_msg void OnBnClickedNextBtn();
 
 	void UpdateBtnStatus();
+	afx_msg void OnBnClickedJinxuanBtn();
 };

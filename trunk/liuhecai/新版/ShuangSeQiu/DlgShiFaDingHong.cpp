@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ShuangSeQiu.h"
 #include "DlgShiFaDingHong.h"
+#include "Markup.h"
 
 
 #define FORMULA_COUNT 20
@@ -12,7 +13,7 @@
 
 #define PAGE_COUNT 16
 
-// CShiFaDingHong ¶Ô»°¿ò
+extern CString GetAppCurrentPath();
 
 IMPLEMENT_DYNAMIC(CDlgShiFaDingHong, CDialog)
 
@@ -43,6 +44,7 @@ BEGIN_MESSAGE_MAP(CDlgShiFaDingHong, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON5, &CDlgShiFaDingHong::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_PREV_BTN, &CDlgShiFaDingHong::OnBnClickedPrevBtn)
 	ON_BN_CLICKED(IDC_NEXT_BTN, &CDlgShiFaDingHong::OnBnClickedNextBtn)
+	ON_BN_CLICKED(IDC_JINXUAN_BTN, &CDlgShiFaDingHong::OnBnClickedJinxuanBtn)
 END_MESSAGE_MAP()
 
 
@@ -122,10 +124,11 @@ void CDlgShiFaDingHong::OnShowWindow(BOOL bShow, UINT nStatus)
 	{
 		m_IsInitData=true;
 
-		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN_WEI);
+		OnBnClickedJinxuanBtn();
+	/*	m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN_WEI);
 		m_CurrentIndex=0;
 		FillData(m_FormulaInfoList);
-		UpdateBtnStatus();
+		UpdateBtnStatus();*/
 	}
 
 }
@@ -401,4 +404,43 @@ void CDlgShiFaDingHong::UpdateBtnStatus()
 	else
 		GetDlgItem(IDC_PREV_BTN)->EnableWindow(true);
 
+}
+
+void CDlgShiFaDingHong::OnBnClickedJinxuanBtn()
+{
+	CMarkup Xml;
+	CString FormulaName=GetAppCurrentPath()+"FormulaNameList.xml";
+	Xml.Load(FormulaName.GetBuffer());
+	FormulaName.ReleaseBuffer();
+
+	vector<CString> NameList;
+
+	while(Xml.FindChildElem("FormulaInfo"))
+	{
+		Xml.IntoElem();
+		Xml.FindChildElem("FormulaName");
+		CString Name=Xml.GetChildData().c_str();
+
+		Xml.FindChildElem("FormulaType");
+		CString StrType=Xml.GetChildData().c_str();
+		
+		int Type = atoi(StrType.GetBuffer());
+		StrType.ReleaseBuffer();
+
+		if(Type == FORMULA_SHA_LAN_WEI && !Name.IsEmpty())
+			NameList.push_back(Name);
+			
+		Xml.OutOfElem();
+	}
+
+	if(NameList.empty())
+	{
+		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN_WEI);
+	}
+	else
+		m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByName(FORMULA_SHA_LAN_WEI,NameList);
+
+	m_CurrentIndex=0;
+	FillData(m_FormulaInfoList);
+	UpdateBtnStatus();
 }
