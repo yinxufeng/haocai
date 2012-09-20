@@ -14,6 +14,7 @@
 #include "ThreeEqualDlg.h"
 #include "DlgShiFaDingHong.h"
 #include "DlgZiDongFenXi.h"
+#include "DlgTeZongHeFenXi.h"
 #include "afxwin.h"
 
 class CShuangSeQiuDlg : public CDialog
@@ -84,6 +85,7 @@ private:
 	CThreeEqualDlg       m_DlgThreeEqual;
 	CDlgShiFaDingHong    m_DlgShiFaDingHong;
 	CDlgZiDongFenXi      m_DlgZiDongFenXi;
+	CDlgTeZongHeFenXi    m_DlgTeZongHeFenXi;
 
 	vector<sShuangSeQiu> m_ResultDataList;
 

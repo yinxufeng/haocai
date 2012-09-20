@@ -18,6 +18,7 @@
 #define IDD_SHUANGSEQIU_DIALOG7         137
 #define IDD_WEIHONG_DLG                 138
 #define IDD_SHUANGSEQIU_DIALOG8         139
+#define IDD_SHUANGSEQIU_DIALOG9         140
 #define IDC_LIST1                       1000
 #define IDC_LOAD_DATA_BTN               1002
 #define IDC_RED_BALL_BTN                1003
@@ -105,7 +106,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        139
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           101

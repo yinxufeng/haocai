@@ -168,6 +168,9 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgZiDongFenXi.Create(CDlgZiDongFenXi::IDD,this);
 	m_DlgZiDongFenXi.ShowWindow(SW_HIDE);
 
+	m_DlgTeZongHeFenXi.Create(CDlgTeZongHeFenXi::IDD,this);
+	m_DlgTeZongHeFenXi.ShowWindow(SW_HIDE);
+
 
 	m_ComboBox.InsertString(0,_T("ËÑË÷Æ½Âë"));
 	m_ComboBox.InsertString(1,_T("ËÑË÷ÌØÂë"));
@@ -747,5 +750,6 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 {
-	m_DlgZiDongFenXi.ShowWindow(SW_SHOW);
+//	m_DlgZiDongFenXi.ShowWindow(SW_SHOW);
+	m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
 }
