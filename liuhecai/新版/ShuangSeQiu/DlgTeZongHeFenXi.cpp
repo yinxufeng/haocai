@@ -60,6 +60,16 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
     	int DataSize = DataList->size();
 		int Offset=18;
 
+		m_ListCtrl.InsertItem(0,_T(""));
+		m_ListCtrl.SetItemText(0,1,_T("特码在一页里"));
+		m_ListCtrl.SetItemText(0,2,_T("特码在一 二页里"));
+		m_ListCtrl.SetItemText(0,3,_T("特码在一 三页里"));
+		m_ListCtrl.SetItemText(0,4,_T("特码在一 二 三页里"));
+		m_ListCtrl.SetItemText(0,5,_T("特码不在一 二 三页里"));
+		m_ListCtrl.SetItemText(0,6,_T("特码在二页里"));
+		m_ListCtrl.SetItemText(0,7,_T("特码在二 三页里"));
+		m_ListCtrl.SetItemText(0,8,_T("特码在三页里"));
+
 		for(int Index = 0; Index < DataSize; Index++)
 		{
 			int TeArray1[50];
@@ -152,7 +162,7 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 				}
 			}
 
-		m_ListCtrl.InsertItem(Index,_T(""));
+		m_ListCtrl.InsertItem(Index+1,_T(""));
 		CString Text;
 		CString TeMa;
 
@@ -182,7 +192,7 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 			}
 
 			TongJi+=_T(" ")+Str;
-	    	m_ListCtrl.SetItemText(Index,i+1,Str);
+	    	m_ListCtrl.SetItemText(Index+1,i+1,Str);
 			if(TeMa.IsEmpty() || Str.Find(TeMa) == -1)
 			{
 				sItemStyle Style;
@@ -190,7 +200,7 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 				Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
 				Style.m_DrawData.m_TextData.m_TextFont = NULL;
 				Style.m_DrawData.m_TextData.m_TextFormat=DT_LEFT | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
-				m_ListCtrl.SetItemSpecialStyle(Index,i+1,Style);
+				m_ListCtrl.SetItemSpecialStyle(Index+1,i+1,Style);
 			}
 			
 		}
