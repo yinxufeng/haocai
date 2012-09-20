@@ -27,6 +27,7 @@ CString GetAppCurrentPath3()
 	return StrDes;
 }
 
+extern CString GetAppCurrentPath();
 
 
 IMPLEMENT_DYNAMIC(CDlgLianHaoLanQiu, CDialog)
