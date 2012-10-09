@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ShuangSeQiu.h"
 #include "RedBallDlg.h"
+#include <math.h>
 
 #define TEXT_WIDTH                  20
 #define TEXT_HEIGHT                 20
@@ -98,7 +99,32 @@ BOOL CRedBallDlg::OnEraseBkgnd(CDC* pDC)
 				break;
 
 			Count++;
-			DrawData(&MemDC,TempRect,m_DataList[TempIndex].m_LanQiu);
+
+			vector<int> ListData;
+			for(int k=3; k >= 0; k--)
+			{
+				if(TempIndex -k >=0)
+				{
+					bool IsEqual=false;
+					for(int f=0; f < ListData.size(); f++)
+					{
+						if(m_DataList[TempIndex-k].m_LanQiu == ListData[f])
+						{
+							IsEqual=true;
+							break;
+						}
+					}
+					
+					if(IsEqual)
+						ListData.push_back((m_DataList[TempIndex-k].m_LanQiu+7)%QIU_COUNT);
+					else
+						ListData.push_back(m_DataList[TempIndex-k].m_LanQiu);
+				}
+			}
+	//		ListData.push_back(m_DataList[TempIndex].m_HongQiu[0]);
+		//	ListData.push_back(m_DataList[TempIndex].m_HongQiu[2]);
+	//		ListData.push_back(m_DataList[TempIndex].m_HongQiu[5]);
+			DrawData(&MemDC,TempRect,m_DataList[TempIndex].m_LanQiu,ListData);
 			
 
 			CString Text;
@@ -134,7 +160,20 @@ BOOL CRedBallDlg::OnInitDialog()
 	return TRUE; 
 }
 
-void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data)
+//获取数据位置
+CPoint CRedBallDlg::GetPointByData(int Data)
+{
+	//int HCount=7;
+	//int VCount=7;
+	//int Width = Rect.Width()/HCount;
+	//int Height= Rect.Width()/VCount;
+	CPoint Point;
+	return Point;
+
+
+}
+
+void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList)
 {
 	int HCount=7;
 	int VCount=7;
@@ -142,6 +181,7 @@ void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data)
 	int Height= Rect.Width()/VCount;
 
 	int DrawData=0;
+	vector<CPoint> PointList;
 
 	for(int i = 0; i < 7; i++)
 	{
@@ -163,11 +203,96 @@ void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data)
 			CString Text;
 			Text.Format("%02d",DrawData);
 			if(DrawData == Data)
+			{
 				pDC->FillSolidRect(TempRect,RGB(255,0,0));
+			}
+			for(int k=0; k < DataList.size(); k++)
+			{
+				if(DataList[k] == DrawData)
+				{
+					CPoint Point; 
+					Point.x = TempRect.left+Width/2;
+					Point.y =TempRect.top+Height/2;
+					PointList.push_back(Point);
+				}
+			}
+	
 			pDC->DrawText(Text,TempRect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 		}
-
 	}
+
+	/*if(PointList.size() == 3)
+	{
+		float A=0;
+		float B=0;
+		float C=0;
+		GetPaoWuXianCanShu(PointList[0],PointList[1],PointList[2],A,B,C);
+
+		for(int x=0;x < Rect.Width();x++)
+		{
+			float y=A*x*x+B*x+C;
+			int Y=(int)y;
+			if(x == 0)
+			{
+				pDC->MoveTo(Rect.left+x,Rect.top+Y);
+			}
+			else
+				pDC->LineTo(Rect.left+x,Rect.top+Y);
+		}
+	}*/
+
+
+	CPen Pen(PS_SOLID,2,RGB(255,0,0));
+	CPen* Old=(CPen*)pDC->SelectObject(&Pen);
+	POINT* Array= new POINT[PointList.size()];
+	if(Array != NULL)
+	{
+		for(int k=0; k < PointList.size(); k++)
+		{
+			Array[k].x = PointList[k].x;
+			Array[k].y = PointList[k].y;
+		}
+
+		pDC->PolyBezier(Array,PointList.size());
+		delete []Array;
+	}
+
+	if(PointList.size()==4)
+	{
+		/*int  temp=PointList[3].x -Rect.left-(PointList[2].x-Rect.left);
+		if(temp == 0)
+			temp=1;
+
+		float k=PointList[3].y - Rect.left-(PointList[2].y-Rect.left);
+		float b=PointList[3].y-k*(PointList[3].y-Rect.left);
+
+		float x1=-b/k;
+		CPoint Point1;
+		Point1.x=(int)(Rect.left+x1);
+		Point1.y=Rect.top;
+		float x2=((Rect.bottom-Rect.top)-b)/k;
+		CPoint Point2;
+		Point2.x=(int)(Rect.left+x2);
+		Point2.y=Rect.bottom;
+		CPen Pen2(PS_SOLID,2,RGB(21,222,0));
+		pDC->SelectObject(&Pen2);
+		pDC->MoveTo(Point1.x,Point1.y);
+		pDC->LineTo(Point2.x,Point2.y);*/
+	}
+
+	/*for(int k=0; k < PointList.size(); k++)
+	{
+		CPen Pen2(PS_SOLID,2,RGB(21,222,0));
+		pDC->SelectObject(&Pen2);
+		if(k%2 == 0)
+			pDC->MoveTo(PointList[k].x,PointList[k].y);
+		else
+			pDC->LineTo(PointList[k].x,PointList[k].y);
+		
+	}*/
+	
+	pDC->SelectObject(Old);
+
 }
 
 void CRedBallDlg::DrawFrame(CDC* pDC,CRect TempRect,COLORREF Color,int FrameWidth)
@@ -274,4 +399,57 @@ void CRedBallDlg::OnBnClickedFirstBtn()
 	if(m_DrawIndex< 0)
 		m_DrawIndex=0;
 	Invalidate();
+}
+
+CPoint CRedBallDlg::GetCenterPoint(CRect Rect)
+{
+	CPoint Temp;
+	Temp.x = Rect.left+Rect.Width()/2;
+	Temp.y = Rect.top +Rect.Height()/2;
+	return Temp;
+}
+
+//X'=x*cos(n)+y*sin(n)
+//Y'=-x*sin(n)+y*cos(n)
+
+CRect CRedBallDlg::MapCenterPoint(CPoint Point,CRect Rect)
+{
+	/*int HCount=7;
+	int VCount=7;
+	int Width = Rect.Width()/HCount;
+	int Height= Rect.Width()/VCount;*/
+
+	double Du=(60*3.14)/180;
+	CRect Temp;
+	Temp.left=Rect.left*cos(Du)+Rect.top*sin(Du);
+	Temp.top=Rect.left*sin(Du)+Rect.top*cos(Du);
+
+	Temp.right=Rect.right*cos(Du)+Rect.bottom*sin(Du);
+	Temp.bottom=Rect.right*cos(Du)+Rect.bottom*sin(Du);
+
+	if(Temp.left > Temp.right)
+	{
+		int TempData=Temp.left;
+		Temp.left=Temp.right;
+		Temp.right=TempData;
+	}
+	if(Temp.top > Temp.bottom)
+	{
+		int TempData=Temp.top;
+		Temp.left=Temp.bottom;
+		Temp.right=TempData;
+	}
+	return Temp;
+}
+
+//获取抛物线参数
+void CRedBallDlg::GetPaoWuXianCanShu(CPoint Point1,CPoint Point2,CPoint Point3,float& A,float& B,float& C)
+{
+	int X1=Point1.x-Point2.x != 0 ?Point1.x-Point2.x:1;
+	int X2=Point1.x-Point3.x != 0 ?Point1.x-Point3.x:1;
+	int X3=Point2.x-Point3.x != 0 ?Point2.x-Point3.x:1;
+
+	A=(Point1.y-Point2.y)/((X1)*(X3))-(Point1.y-Point3.y)/((X2)*(X3));
+	B=(Point1.y-Point3.y)/(X2)-A*(Point1.x+Point3.x);
+	C=Point1.y-A*Point1.x*Point1.x+B*Point1.x;
 }
