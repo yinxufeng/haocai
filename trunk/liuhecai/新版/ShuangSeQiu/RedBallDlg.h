@@ -20,7 +20,7 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
-	void DrawData(CDC* pDC,CRect Rect,int Data);
+	void DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList);
 
 	void DrawFrame(CDC* pDC,CRect Rect,COLORREF Color,int FrameWidth=1);
 
@@ -29,6 +29,16 @@ public:
 	afx_msg void OnBnClickedFirstBtn();
 	
 	void UpdateBtnStatus();
+
+	CPoint GetCenterPoint(CRect Rect);
+	CRect MapCenterPoint(CPoint Point,CRect Rect);
+
+	//获取抛物线参数
+	void GetPaoWuXianCanShu(CPoint Point1,CPoint Point2,CPoint Point3,float& A,float& B,float& C);
+
+	//获取数据位置
+	CPoint GetPointByData(int Data);
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);   
 
