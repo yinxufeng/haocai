@@ -98,6 +98,18 @@ BOOL CRedBallDlg::OnEraseBkgnd(CDC* pDC)
 			if(TempIndex < 0 || TempIndex >= m_DataList.size())
 				break;
 
+
+			vector<int> ListData2;
+			int date=atoi(m_DataList[TempIndex].m_QiShu.GetBuffer());
+			date+=m_DataList[TempIndex].m_LanQiu;
+			srand(m_DataList[TempIndex].m_LanQiu);
+			int TempData=abs(rand()%QIU_COUNT);
+			TempData=TempData%QIU_COUNT;
+
+			ListData2.push_back(TempData);
+
+			DrawData2(&MemDC,TempRect,m_DataList[TempIndex].m_LanQiu,ListData2);
+
 			Count++;
 
 			vector<int> ListData;
@@ -121,12 +133,10 @@ BOOL CRedBallDlg::OnEraseBkgnd(CDC* pDC)
 						ListData.push_back(m_DataList[TempIndex-k].m_LanQiu);
 				}
 			}
-	//		ListData.push_back(m_DataList[TempIndex].m_HongQiu[0]);
-		//	ListData.push_back(m_DataList[TempIndex].m_HongQiu[2]);
-	//		ListData.push_back(m_DataList[TempIndex].m_HongQiu[5]);
+
 			DrawData(&MemDC,TempRect,m_DataList[TempIndex].m_LanQiu,ListData);
 			
-
+			
 			CString Text;
 			Text=m_DataList[TempIndex].m_QiShu;
 			CRect TextRect=Rect;
@@ -173,6 +183,75 @@ CPoint CRedBallDlg::GetPointByData(int Data)
 
 }
 
+void CRedBallDlg::DrawData2(CDC* pDC,CRect Rect,int Data,vector<int>&DataList)
+{
+	int HCount=7;
+	int VCount=7;
+	int Width = Rect.Width()/HCount;
+	int Height= Rect.Width()/VCount;
+
+
+	CPen pen(PS_SOLID,1,RGB(110,110,110));
+	CPen* old=(CPen*)pDC->SelectObject(&pen);
+	pDC->MoveTo(Rect.left,Rect.top);
+	pDC->LineTo(Rect.right,Rect.bottom);
+	pDC->MoveTo(Rect.right,Rect.top);
+	pDC->LineTo(Rect.left,Rect.bottom);
+
+	pDC->SelectObject(old);
+
+
+	int DrawData=0;
+
+	int Row = Data%7;
+	int Colun=Data/7;
+
+
+
+	CRect ERect=Rect;
+	ERect.left = Rect.left+Width*(Colun);
+	ERect.right = ERect.left+3*Width;
+	ERect.top = Rect.top + Height*(Row);
+	ERect.bottom =ERect.top + 3*Height;
+	pDC->Ellipse(ERect);
+
+
+
+	for(int i = 0; i < 7; i++)
+	{
+		for(int j=0; j < 7; j++)
+		{
+			DrawData++;
+			CRect TempRect=Rect;
+			TempRect.left = Rect.left+Width*j;
+			TempRect.right = TempRect.left+Width;
+			TempRect.top = Rect.top + Height*i;
+			TempRect.bottom =TempRect.top + Height;
+		    DrawFrame(pDC,TempRect,RGB(255,255,255));
+
+			TempRect.left+=1;
+			TempRect.top +=1;
+			TempRect.bottom-=1;
+			TempRect.right-=1;
+
+			CString Text;
+			Text.Format("%02d",DrawData);
+			if(DrawData == Data)
+				pDC->FillSolidRect(TempRect,RGB(255,0,0));
+
+			for(int Index=0; Index < DataList.size(); Index++)
+			{
+				if(DrawData == DataList[Index] && DrawData !=Data)
+					pDC->FillSolidRect(TempRect,RGB(222,222,0));
+			}
+
+		
+			pDC->DrawText(Text,TempRect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+		}
+
+	}
+}
+
 void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList)
 {
 	int HCount=7;
@@ -200,11 +279,11 @@ void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList)
 			TempRect.bottom-=1;
 			TempRect.right-=1;
 
-			CString Text;
-			Text.Format("%02d",DrawData);
+			/*CString Text;
+			Text.Format("%02d",DrawData);*/
 			if(DrawData == Data)
 			{
-				pDC->FillSolidRect(TempRect,RGB(255,0,0));
+			//	pDC->FillSolidRect(TempRect,RGB(255,0,0));
 			}
 			for(int k=0; k < DataList.size(); k++)
 			{
@@ -217,30 +296,11 @@ void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList)
 				}
 			}
 	
-			pDC->DrawText(Text,TempRect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+		//	pDC->DrawText(Text,TempRect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 		}
 	}
 
-	/*if(PointList.size() == 3)
-	{
-		float A=0;
-		float B=0;
-		float C=0;
-		GetPaoWuXianCanShu(PointList[0],PointList[1],PointList[2],A,B,C);
-
-		for(int x=0;x < Rect.Width();x++)
-		{
-			float y=A*x*x+B*x+C;
-			int Y=(int)y;
-			if(x == 0)
-			{
-				pDC->MoveTo(Rect.left+x,Rect.top+Y);
-			}
-			else
-				pDC->LineTo(Rect.left+x,Rect.top+Y);
-		}
-	}*/
-
+	
 
 	CPen Pen(PS_SOLID,2,RGB(255,0,0));
 	CPen* Old=(CPen*)pDC->SelectObject(&Pen);
@@ -259,37 +319,14 @@ void CRedBallDlg::DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList)
 
 	if(PointList.size()==4)
 	{
-		/*int  temp=PointList[3].x -Rect.left-(PointList[2].x-Rect.left);
-		if(temp == 0)
-			temp=1;
 
-		float k=PointList[3].y - Rect.left-(PointList[2].y-Rect.left);
-		float b=PointList[3].y-k*(PointList[3].y-Rect.left);
-
-		float x1=-b/k;
-		CPoint Point1;
-		Point1.x=(int)(Rect.left+x1);
-		Point1.y=Rect.top;
-		float x2=((Rect.bottom-Rect.top)-b)/k;
-		CPoint Point2;
-		Point2.x=(int)(Rect.left+x2);
-		Point2.y=Rect.bottom;
 		CPen Pen2(PS_SOLID,2,RGB(21,222,0));
 		pDC->SelectObject(&Pen2);
-		pDC->MoveTo(Point1.x,Point1.y);
-		pDC->LineTo(Point2.x,Point2.y);*/
-	}
-
-	/*for(int k=0; k < PointList.size(); k++)
-	{
-		CPen Pen2(PS_SOLID,2,RGB(21,222,0));
-		pDC->SelectObject(&Pen2);
-		if(k%2 == 0)
-			pDC->MoveTo(PointList[k].x,PointList[k].y);
-		else
-			pDC->LineTo(PointList[k].x,PointList[k].y);
 		
-	}*/
+			pDC->MoveTo(PointList[0].x,PointList[0].y);
+			pDC->LineTo(PointList[2].x,PointList[2].y);
+
+	}
 	
 	pDC->SelectObject(Old);
 

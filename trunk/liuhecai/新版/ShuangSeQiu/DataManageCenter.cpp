@@ -1009,7 +1009,7 @@ bool  CDataManageCenter::LoadDataFromFile(CString FilePath,bool IsChuHaoXunXu,bo
 	//	SaveDataToCSVFile();
 
 		//保存统计五期以内和五期以外数据到txt文件中
-		//SaveFiveDataToTxtFile();
+		SaveFiveDataToTxtFile();
 	}
 	else
 	{
@@ -1558,18 +1558,18 @@ void CDataManageCenter::SaveDataToCSVFile()
 }
 
 
-//保存统计五期以内和五期以外数据到txt文件中
+//保存统计7期以内和7期以外数据到txt文件中
 void CDataManageCenter::SaveFiveDataToTxtFile()
 {
 	CString  WriteStr;
 	CString  WriteStr2=_T("\r\n\r\n\r\n");
-	for(int Index =4; Index < m_ShuangSeQiuList.size(); Index++)
+	for(int Index =15; Index < m_ShuangSeQiuList.size(); Index++)
 	{
 		
 
 		int Data[QIU_COUNT]={0};
 
-		for(int i=4; i >= 0; i--)
+		for(int i=15; i >= 0; i--)
 		{
 			for(int j=0; j < QIU_XUN; j++)
 			{
@@ -1594,12 +1594,13 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 			}
 			else
 			{
+			
 				WuQiYiWai+=TempStr;
 			}
 		}
 
 		CString ChuQiu;
-		if(Index+1 != m_ShuangSeQiuList.size())
+		/*if(Index+1 != m_ShuangSeQiuList.size())
 		{
 			int Count=0;
 			for(int i=0; i < QIU_XUN; i++)
@@ -1617,30 +1618,46 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 			Temp.Format(_T("     五期以内出球个数：%02d    五期以外出球个数：%02d\r\n"),Count,QIU_XUN-Count);
 			ChuQiu+=Temp;
 			WriteStr2+=ChuQiu;
-		}
+		}*/
 
-		CString Temp;
+	/*	CString Temp;
 		Temp.Format(_T("    个数%02d\r\n"),Count);
 		WuQiYiNei+=Temp;
 		Temp.Empty();
 		Temp.Format(_T("    个数%02d\r\n"),QIU_COUNT-Count);
-		WuQiYiWai+=Temp;
+		WuQiYiWai+=Temp;*/
 
-		 WriteStr+=WuQiYiNei+WuQiYiWai;
+	
+
+		if(Index+1 != m_ShuangSeQiuList.size())
+		{
+			CString TempStr;
+			TempStr.Format("%02d",m_ShuangSeQiuList[Index].m_LanQiu);
+			CString DuiStr=" 对";
+			if(WuQiYiNei.Find(TempStr)!=-1)
+				DuiStr=" 错";
+			WriteStr+=m_ShuangSeQiuList[Index].m_QiShu+"期 "+TempStr+DuiStr+":\r\n"+WuQiYiNei;
+		}
+		else
+		{
+			WriteStr+="下期预测:\r\n"+WuQiYiNei;
+		}
+		/* WriteStr=WuQiYiNei;
 		 if(!ChuQiu.IsEmpty())
 			  WriteStr+=ChuQiu;
-			
-		 if((Index) % 4)
-		 {
-			 WriteStr+=_T("\r\n");
-		//	 WriteStr2+=_T("\r\n");
-			 
-		 }
-		 else
-		 {
-			 WriteStr+=_T("\r\n\r\n\r\n");
-			// WriteStr2+=_T("\r\n\r\n\r\n");
-		 }
+			*/
+		WriteStr+=_T("\r\n");
+		// if((Index) % 4)
+		// {
+		//	 WriteStr+=_T("\r\n");
+		////	 WriteStr2+=_T("\r\n");
+		//	 
+		// }
+		// else
+		// {
+		//	 WriteStr+=_T("\r\n\r\n\r\n");
+		//	// WriteStr2+=_T("\r\n\r\n\r\n");
+		// }
 	}
 
 	CString FilePath2 = GetAppCurrentPath2()+_T("\\wuqitongji.txt");

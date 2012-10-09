@@ -138,8 +138,6 @@ public:
 	//获取算法个数
 	int GetFormulaCount(eFormulaType Type);
 
-	
-
 private:
 
 	//运行杀红公式

@@ -35,8 +35,8 @@ protected:
 	CString GetDataStr(int LuShu);
 
 private:
-	CListCtrl m_ListCtrl;
-	BOOL      m_IsInitData;
+	CListCtrlEx m_ListCtrl;
+	BOOL        m_IsInitData;
 public:
 	afx_msg void OnBnClickedSearchBtn();
 };
