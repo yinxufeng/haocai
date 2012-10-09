@@ -297,7 +297,7 @@ void CFormulaCenter::ExecShaHongFormula()
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
 
-	const int  FormualCount = 48;   //定义公式个数
+	const int  FormualCount = 50;   //定义公式个数
 	sFormulaInfo FormualList[FormualCount];
 
 	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
@@ -855,7 +855,7 @@ void CFormulaCenter::ExecShaLanFormula()
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
 
-	const int  FormualCount = 55;   //定义公式个数
+	const int  FormualCount = 58;   //定义公式个数
 	sFormulaInfo FormualList[FormualCount];
 
 	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
@@ -1355,6 +1355,39 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
 		FormualIndex++;
 
+		TempData =(*ShunXuDataList)[Index-1].m_LanQiu+7;
+		TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+		TempData =abs((*ShunXuDataList)[Index-1].m_LanQiu-7);
+		TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+		int date=atoi((*ShunXuDataList)[Index-1].m_QiShu.GetBuffer());
+		date+=(*ShunXuDataList)[Index-1].m_LanQiu;
+		srand(date);
+		TempData=date;
+		TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+
+			
+
 	}
 
 	for(int i = 0; i < FormualCount; i++)
@@ -1376,7 +1409,7 @@ void CFormulaCenter::ExecShaLanVFormula()
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
 
-	const int  FormualCount = 41;   //定义公式个数
+	const int  FormualCount = 56;   //定义公式个数
 	sFormulaInfo FormualList[FormualCount];
 
 	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
@@ -1705,6 +1738,77 @@ void CFormulaCenter::ExecShaLanVFormula()
 		}
 
 
+		
+	/*	TempData = (*DataList)[Index-1].m_HongQiu[5]%10;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;*/
+
+		for(int i=0; i < 6; i++)
+		{
+	//	TempData = (*ShunXuDataList)[Index-1].m_HongQiu[i]%10;
+		TempData = (*DataList)[Index-1].m_HongQiu[i]%10;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+		}
+
+		for(int i=0; i < 6;i++)
+		{
+			TempData = (*ShunXuDataList)[Index-1].m_HongQiu[i]%10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData);
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+		}
+
+	    	TempData = (*ShunXuDataList)[Index-1].m_HongQiu[3]%10+(*ShunXuDataList)[Index-1].m_HongQiu[3]/10;
+			TempData=TempData%10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData);
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+
+		/*	TempData = (*ShunXuDataList)[Index-1].m_HongQiu[2]%10+(*ShunXuDataList)[Index-1].m_HongQiu[1]/10;
+			TempData=TempData%10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData);
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;*/
+
+			TempData = (*DataList)[Index-1].m_HongQiu[0]%10+(*DataList)[Index-1].m_HongQiu[5]%10+(*DataList)[Index-1].m_HongQiu[5]/10;
+			TempData=TempData%10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData);
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+
+
+			TempData = (*ShunXuDataList)[Index-1].m_HongQiu[4]%10+(*ShunXuDataList)[Index-1].m_HongQiu[4]/10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData);
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu+AddStr:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+
+
+
+
 	}
 
 	for(int i = 0; i < FormualCount; i++)
@@ -1717,6 +1821,6 @@ void CFormulaCenter::ExecShaLanVFormula()
 		m_MapFormulaInfo[FORMULA_SHA_LAN_WEI].push_back(FormualList[i]);
 	}
 
-	sort(m_MapFormulaInfo[FORMULA_SHA_LAN_WEI].begin(),m_MapFormulaInfo[FORMULA_SHA_LAN_WEI ].end(), SortByErrorCount);
+//	sort(m_MapFormulaInfo[FORMULA_SHA_LAN_WEI].begin(),m_MapFormulaInfo[FORMULA_SHA_LAN_WEI ].end(), SortByErrorCount);
 
 }

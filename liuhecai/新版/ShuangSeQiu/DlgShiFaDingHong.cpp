@@ -82,8 +82,6 @@ void CDlgShiFaDingHong::InitListHeader()
 
 
 	m_ListCtrl.SetRowHeight(30);
-	//m_ListCtrl.ShowHeader(false);
-
 	sItemBkData ItemBkData;
 	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
 	ItemBkData.m_HeightColor = RGB(222,22,100);

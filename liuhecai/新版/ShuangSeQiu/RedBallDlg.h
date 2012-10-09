@@ -21,6 +21,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 	void DrawData(CDC* pDC,CRect Rect,int Data,vector<int>&DataList);
+	void DrawData2(CDC* pDC,CRect Rect,int Data,vector<int>&DataList);
 
 	void DrawFrame(CDC* pDC,CRect Rect,COLORREF Color,int FrameWidth=1);
 
