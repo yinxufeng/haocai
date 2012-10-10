@@ -62,14 +62,14 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 		int Offset=18;
 
 		m_ListCtrl.InsertItem(0,_T(""));
-		m_ListCtrl.SetItemText(0,1,_T("特码在一页里"));
-		m_ListCtrl.SetItemText(0,2,_T("特码在一 二页里"));
-		m_ListCtrl.SetItemText(0,3,_T("特码在一 三页里"));
-		m_ListCtrl.SetItemText(0,4,_T("特码在一 二 三页里"));
-		m_ListCtrl.SetItemText(0,5,_T("特码不在一 二 三页里"));
-		m_ListCtrl.SetItemText(0,6,_T("特码在二页里"));
-		m_ListCtrl.SetItemText(0,7,_T("特码在二 三页里"));
-		m_ListCtrl.SetItemText(0,8,_T("特码在三页里"));
+		m_ListCtrl.SetItemText(0,1,_T("特码在        一页里："));
+		m_ListCtrl.SetItemText(0,2,_T("特码在     一 二页里："));
+		m_ListCtrl.SetItemText(0,3,_T("特码在     一 三页里："));
+		m_ListCtrl.SetItemText(0,4,_T("特码在  一 二 三页里："));
+		m_ListCtrl.SetItemText(0,5,_T("特码不在一 二 三页里："));
+		m_ListCtrl.SetItemText(0,6,_T("特码在        二页里："));
+		m_ListCtrl.SetItemText(0,7,_T("特码在     二 三页里："));
+		m_ListCtrl.SetItemText(0,8,_T("特码在        三页里："));
 
 		for(int Index = 0; Index < DataSize; Index++)
 		{
@@ -116,55 +116,56 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 					TempArray[0][TempData]++;
 				}
 
-				//特在一 二组里
-				if(TeArray1[j] && TeArray2[j] && !TeArray3[j])
-				{
-					int TempData = j;
-					TempArray[1][TempData]++;
-				}
-
-				//特在一 三组里
-				if(TeArray1[j] && !TeArray2[j] && TeArray3[j])
-				{
-					int TempData = j;
-					TempArray[2][TempData]++;
-				}
-
-				//特在一 二 三 组里
-				if(TeArray1[j] && TeArray2[j] && TeArray3[j])
-				{
-					int TempData = j;
-					TempArray[3][TempData]++;
-				}
-
-				//特不再在一 二 三 组里
-				if(!TeArray1[j] && !TeArray2[j] && !TeArray3[j])
-				{
-					int TempData = j;
-					TempArray[4][TempData]++;
-				}
-
-
 				//特在二组里
 				if(TeArray2[j] && !TeArray1[j] && !TeArray3[j])
 				{
 					int TempData = j;
-					TempArray[5][TempData]++;
-				}
-
-				//特在二 三 组里
-				if(TeArray2[j] && !TeArray1[j] && TeArray3[j])
-				{
-					int TempData = j;
-					TempArray[6][TempData]++;
+					TempArray[1][TempData]++;
 				}
 
 				//特在三 组里
 				if(TeArray2[j] && TeArray1[j] && TeArray3[j])
 				{
 					int TempData = j;
+					TempArray[2][TempData]++;
+				}
+
+
+				//特在一 二组里
+				if(TeArray1[j] && TeArray2[j] && !TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[3][TempData]++;
+				}
+
+				//特在一 三组里
+				if(TeArray1[j] && !TeArray2[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[4][TempData]++;
+				}
+
+				//特在二 三 组里
+				if(TeArray2[j] && !TeArray1[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[5][TempData]++;
+				}
+
+				//特在一 二 三 组里
+				if(TeArray1[j] && TeArray2[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[6][TempData]++;
+				}
+
+				//特不再在一 二 三 组里
+				if(!TeArray1[j] && !TeArray2[j] && !TeArray3[j])
+				{
+					int TempData = j;
 					TempArray[7][TempData]++;
 				}
+
 			}
 
 			m_ListCtrl.InsertItem(Index+1,_T(""));
@@ -199,17 +200,10 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 					}
 				}
 
-			
-				m_ListCtrl.SetItemText(Index+1,i+1,Str);
-				if(TeMa.IsEmpty() || Str.Find(TeMa) == -1)
-				{
-					sItemStyle Style;
-					Style.m_ItemType = TEXT_TYPE;
-					Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
-					Style.m_DrawData.m_TextData.m_TextFont = NULL;
-					Style.m_DrawData.m_TextData.m_TextFormat=DT_LEFT |DT_WORDBREAK|DT_EDITCONTROL|DT_EDITCONTROL|DT_CENTER;
-					m_ListCtrl.SetItemSpecialStyle(Index+1,i+1,Style);
-				}
+		        CString Temp;
+				Temp.Format("情况_%d:",i+1);
+				Str=Temp+Str+"\r\n";
+		
 
 			}
 

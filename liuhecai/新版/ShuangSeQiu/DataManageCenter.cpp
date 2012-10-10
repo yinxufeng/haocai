@@ -1563,13 +1563,14 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 {
 	CString  WriteStr;
 	CString  WriteStr2=_T("\r\n\r\n\r\n");
-	for(int Index =15; Index < m_ShuangSeQiuList.size(); Index++)
+	int AllCount=15;
+	for(int Index =AllCount; Index < m_ShuangSeQiuList.size(); Index++)
 	{
 		
 
 		int Data[QIU_COUNT]={0};
 
-		for(int i=15; i >= 0; i--)
+		for(int i=AllCount; i >= 0; i--)
 		{
 			for(int j=0; j < QIU_XUN; j++)
 			{
@@ -1599,65 +1600,39 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 			}
 		}
 
-		CString ChuQiu;
-		/*if(Index+1 != m_ShuangSeQiuList.size())
-		{
-			int Count=0;
-			for(int i=0; i < QIU_XUN; i++)
-			{
-				int TempData = m_ShuangSeQiuList[Index+1].m_HongQiu[i];
-				CString TempStr;
-				TempStr.Format(_T("%02d "),TempData);
-				if(Data[TempData-1])
-					Count++;
-				ChuQiu += TempStr;
-			}
+		CString Temp;
+	    Temp.Format(_T("十五期以内 %02d：\r\n"),Count);
+		CString Temp2;
+		Temp2.Format(_T("十五期以外 %02d：\r\n"),QIU_COUNT-Count);
 
-			ChuQiu= m_ShuangSeQiuList[Index+1].m_QiShu+_T(" ")+ChuQiu;
-			CString Temp;
-			Temp.Format(_T("     五期以内出球个数：%02d    五期以外出球个数：%02d\r\n"),Count,QIU_XUN-Count);
-			ChuQiu+=Temp;
-			WriteStr2+=ChuQiu;
-		}*/
-
-	/*	CString Temp;
-		Temp.Format(_T("    个数%02d\r\n"),Count);
-		WuQiYiNei+=Temp;
-		Temp.Empty();
-		Temp.Format(_T("    个数%02d\r\n"),QIU_COUNT-Count);
-		WuQiYiWai+=Temp;*/
-
-	
 
 		if(Index+1 != m_ShuangSeQiuList.size())
 		{
 			CString TempStr;
 			TempStr.Format("%02d",m_ShuangSeQiuList[Index].m_LanQiu);
 			CString DuiStr=" 对";
-			if(WuQiYiNei.Find(TempStr)!=-1)
+			if(WuQiYiNei.Find(TempStr) ==-1)
 				DuiStr=" 错";
-			WriteStr+=m_ShuangSeQiuList[Index].m_QiShu+"期 "+TempStr+DuiStr+":\r\n"+WuQiYiNei;
+
+			WriteStr+=m_ShuangSeQiuList[Index].m_QiShu+"期 特码 "+TempStr+" 在十五期以内 "+DuiStr+":\r\n";
+			WriteStr+=Temp+WuQiYiNei+_T("\r\n");
+			WriteStr+=Temp2+WuQiYiWai;
+
+			WriteStr2+=m_ShuangSeQiuList[Index].m_QiShu+"期 特码 "+TempStr+" 在十五期以内 "+DuiStr+":\r\n";
 		}
 		else
 		{
-			WriteStr+="下期预测:\r\n"+WuQiYiNei;
+			CString Temp;
+			Temp.Format(_T(" 十五期以内个数%02d "),Count);
+			WriteStr+="下期预测:"+Temp+"\r\n";
+			WriteStr+=Temp+WuQiYiNei+"\r\n";
+			WriteStr+=Temp2+WuQiYiWai;
+			WriteStr2+="下期预测:";
 		}
-		/* WriteStr=WuQiYiNei;
-		 if(!ChuQiu.IsEmpty())
-			  WriteStr+=ChuQiu;
-			*/
+	
 		WriteStr+=_T("\r\n");
-		// if((Index) % 4)
-		// {
-		//	 WriteStr+=_T("\r\n");
-		////	 WriteStr2+=_T("\r\n");
-		//	 
-		// }
-		// else
-		// {
-		//	 WriteStr+=_T("\r\n\r\n\r\n");
-		//	// WriteStr2+=_T("\r\n\r\n\r\n");
-		// }
+		WriteStr2+=_T("\r\n");
+	
 	}
 
 	CString FilePath2 = GetAppCurrentPath2()+_T("\\wuqitongji.txt");

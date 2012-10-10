@@ -235,12 +235,14 @@ void CDlgShiFaDingHong::FillData(vector<sFormulaInfo>& FormulList)
 				else
 					Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
 
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
 				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
 			}
 			else
 			{
 
-				Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+				Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+				Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
 				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
 			}
 		}

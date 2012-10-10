@@ -266,7 +266,7 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl.InsertColumn(9,_TEXT("ÌØÂëÂ·Êý"),	LVCFMT_CENTER,	nWidth);
 	sItemStyle Style;
 	Style.m_ItemType = TEXT_TYPE;
-	Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
 	Style.m_DrawData.m_TextData.m_TextFont = NULL;
 	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
 	m_ListCtrl.SetColumStyle(0,Style);
@@ -278,8 +278,11 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl.SetColumStyle(6,Style);
 	m_ListCtrl.SetColumStyle(7,Style);
 	m_ListCtrl.SetColumStyle(9,Style);
+
 	Style.m_DrawData.m_TextData.m_TextColor=RGB(120,195,230);
+	//Style.m_DrawData.m_TextData.m_BGColor  = RGB(205,250,248);
 	m_ListCtrl.SetColumStyle(8,Style);
+	//m_ListCtrl.SetColumStyle(9,Style);
 	m_ListCtrl.SetRowHeight(30);
 
 	sItemBkData ItemBkData;
