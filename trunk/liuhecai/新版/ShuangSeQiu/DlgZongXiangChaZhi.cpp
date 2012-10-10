@@ -129,7 +129,25 @@ void CDlgZongXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 					m_ListCtrl.SetItemText(i,0,FormulList[Index].m_DataList[i].m_QiShu);
 				}
 				m_ListCtrl.SetItemText(i,TempIndex+1,FormulList[Index].m_DataList[i].m_Data);
+
 				if(FormulList[Index].m_DataList[i].m_IsTrue)
+				{
+					if(Index %2 == 0)
+						Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
+					else
+						Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+
+					Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+					m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
+				}
+				else
+				{
+
+					Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+					Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+					m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
+				}
+				/*if(FormulList[Index].m_DataList[i].m_IsTrue)
 				{
 					if(Index %2 == 0)
 						Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
@@ -143,7 +161,7 @@ void CDlgZongXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 				
 					Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
 					m_ListCtrl.SetItemSpecialStyle(i,TempIndex+1,Style);
-				}
+				}*/
 			}
 		}
 

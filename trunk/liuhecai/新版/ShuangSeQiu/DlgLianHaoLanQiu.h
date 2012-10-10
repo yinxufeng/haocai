@@ -53,4 +53,5 @@ public:
 	afx_msg void OnCbnSelchangeCombo1();
 
 	afx_msg void OnBnClickedJingxuanBtn();
+	afx_msg void OnBnClickedZidongBtn();
 };

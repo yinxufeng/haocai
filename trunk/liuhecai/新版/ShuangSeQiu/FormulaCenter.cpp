@@ -310,7 +310,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		CString AddStr;
 
 		TempData = abs((*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -320,7 +320,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_HongQiu[2]-(*DataList)[Index-1].m_HongQiu[1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -330,7 +330,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = abs((*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -339,7 +339,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_HongQiu[0]*4-2);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -350,7 +350,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = ((*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_LanQiu)*3;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -360,7 +360,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = (*DataList)[Index-1].m_HongQiu[0]+9;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -369,7 +369,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[1]+5;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -378,7 +378,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]+4;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -387,7 +387,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]+7;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -396,7 +396,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[5]+4;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -405,7 +405,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[4]-(*DataList)[Index-1].m_HongQiu[3]+(*DataList)[Index-1].m_LanQiu+1;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -414,7 +414,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[0];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -423,7 +423,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[1]-1;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -433,7 +433,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[3]+1+33);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -442,7 +442,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[4]+33);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -451,7 +451,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu*(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -460,7 +460,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+7;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -469,7 +469,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+9;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -478,7 +478,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -488,7 +488,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[5]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -497,7 +497,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1].m_HongQiu[5]/33 + 14;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -506,7 +506,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = ((*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1].m_HongQiu[4])/2;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -515,7 +515,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu+16-(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -524,7 +524,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[1]+(*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -533,7 +533,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[2]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -543,7 +543,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[1]-(*ShunXuDataList)[Index-1].m_HongQiu[2]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -553,7 +553,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[2]-(*ShunXuDataList)[Index-1].m_HongQiu[4]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -563,7 +563,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[0]-(*ShunXuDataList)[Index-1].m_HongQiu[5] +(*ShunXuDataList)[Index-1].m_LanQiu-3);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -572,7 +572,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[0]-(*ShunXuDataList)[Index-1].m_HongQiu[2]) +(*ShunXuDataList)[Index-1].m_LanQiu+2;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -582,7 +582,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData = (*ShunXuDataList)[Index-1].m_HongQiu[0]+(*ShunXuDataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-1].m_HongQiu[2] +(*ShunXuDataList)[Index-1].m_LanQiu-1;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -593,7 +593,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		//按AC值杀号
 		TempData = CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -602,7 +602,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -611,7 +611,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+ CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -622,7 +622,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		TempData =0;
 		for(int i=0; i < 6; i++)
 			TempData+=(*DataList)[Index-1].m_HongQiu[i]%10;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -633,7 +633,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
 		TempData += (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -643,7 +643,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
 		TempData =TempData*CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -653,7 +653,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
 		TempData =TempData+CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -663,7 +663,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		TempData =CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
 		TempData =abs(TempData - (*DataList)[Index-1].m_HongQiu[5]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -673,7 +673,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1])+CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
 		TempData =TempData + (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -688,7 +688,7 @@ void CFormulaCenter::ExecShaHongFormula()
 			float TempF = (float)(*DataList)[Index-1].m_HongQiu[i];
 			TempF=TempF*0.88;
 			TempData =(int)TempF;
-			TempData = TempData%QIU_COUNT;
+			if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 			IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 			FormulaData.m_Data   = DataToStr(TempData);
 			FormulaData.m_IsTrue = !IsTrue;
@@ -699,7 +699,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 
 		TempData =abs((*DataList)[Index-1].m_LanQiu+16-(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -710,7 +710,7 @@ void CFormulaCenter::ExecShaHongFormula()
 
 		//上期开球顺序h2+上上期大小平码H3-2
 		TempData =(*DataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-1].m_HongQiu[2] -2;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -723,7 +723,7 @@ void CFormulaCenter::ExecShaHongFormula()
 		if(Index > 1)
 		{
 			TempData =(*DataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-2].m_HongQiu[1] -2;
-			TempData = TempData%QIU_COUNT;
+			if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 			IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuInData((*DataList)[Index],TempData):true;
 			FormulaData.m_Data   = DataToStr(TempData);
 			FormulaData.m_IsTrue = !IsTrue;
@@ -867,7 +867,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		CString AddStr;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -877,7 +877,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]-(*DataList)[Index-1].m_HongQiu[1];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -887,7 +887,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = (*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[1];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -896,7 +896,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[0]*4-2;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -907,7 +907,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = ((*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_LanQiu)*3;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -917,7 +917,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = (*DataList)[Index-1].m_HongQiu[0]+9;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -926,7 +926,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[1]+5;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -935,7 +935,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]+4;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -944,7 +944,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]+7;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -953,7 +953,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[5]+4;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -962,7 +962,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[4]-(*DataList)[Index-1].m_HongQiu[3]+(*DataList)[Index-1].m_LanQiu+1;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -971,7 +971,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[0];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -980,7 +980,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[1]-1;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -990,7 +990,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[3]+1+33);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -999,7 +999,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[4]+33);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1008,7 +1008,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu*(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1017,7 +1017,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+7;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1026,7 +1026,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+9;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1035,7 +1035,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1045,7 +1045,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu-(*DataList)[Index-1].m_HongQiu[5]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1054,7 +1054,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1].m_HongQiu[5]/33 + 14;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1063,7 +1063,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = ((*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1].m_HongQiu[4])/2;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1072,7 +1072,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_LanQiu+16-(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1081,7 +1081,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[1]+(*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1090,7 +1090,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = abs((*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1].m_HongQiu[2]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1100,7 +1100,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[1]-(*ShunXuDataList)[Index-1].m_HongQiu[2]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1110,7 +1110,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[2]-(*ShunXuDataList)[Index-1].m_HongQiu[4]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1120,7 +1120,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[0]-(*ShunXuDataList)[Index-1].m_HongQiu[5]) +(*ShunXuDataList)[Index-1].m_LanQiu-3;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1129,7 +1129,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = abs((*ShunXuDataList)[Index-1].m_HongQiu[0]-(*ShunXuDataList)[Index-1].m_HongQiu[2]) +(*ShunXuDataList)[Index-1].m_LanQiu+2;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1139,7 +1139,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData = (*ShunXuDataList)[Index-1].m_HongQiu[0]+(*ShunXuDataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-1].m_HongQiu[2] +(*ShunXuDataList)[Index-1].m_LanQiu-1;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1150,7 +1150,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		//按AC值杀号
 		TempData = CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1159,7 +1159,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1168,7 +1168,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData = (*DataList)[Index-1].m_LanQiu+ CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1179,7 +1179,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		TempData =0;
 		for(int i=0; i < 6; i++)
 			TempData+=(*DataList)[Index-1].m_HongQiu[i]%10;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1190,7 +1190,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
 		TempData += (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1200,7 +1200,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
 		TempData =TempData*CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1210,7 +1210,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1]);
 		TempData =TempData+CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1220,7 +1220,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		TempData =CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
 		TempData =abs(TempData - (*DataList)[Index-1].m_HongQiu[5]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1230,7 +1230,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		TempData =CDataManageCenter::GetZhiShuCount((*DataList)[Index-1])+CDataManageCenter::GetInstance()->GetACCount((*DataList)[Index-1]);
 		TempData =TempData + (*DataList)[Index-1].m_LanQiu;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1245,7 +1245,7 @@ void CFormulaCenter::ExecShaLanFormula()
 			float TempF = (float)(*DataList)[Index-1].m_HongQiu[i];
 			TempF=TempF*0.88;
 			TempData =(int)TempF;
-			TempData = TempData%QIU_COUNT;
+			if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 			FormulaData.m_Data   = DataToStr(TempData);
 			FormulaData.m_IsTrue = !IsTrue;
@@ -1256,7 +1256,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 
 		TempData =abs((*DataList)[Index-1].m_LanQiu+16-(*DataList)[Index-1].m_HongQiu[0]);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1267,7 +1267,7 @@ void CFormulaCenter::ExecShaLanFormula()
 
 		//上期开球顺序h2+上上期大小平码H3-2
 		TempData =abs((*DataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-1].m_HongQiu[2] -2);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1280,7 +1280,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		if(Index > 1)
 		{
 			TempData =abs((*DataList)[Index-1].m_HongQiu[1]+(*ShunXuDataList)[Index-2].m_HongQiu[1] -2);
-			TempData = TempData%QIU_COUNT;
+			if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 			FormulaData.m_Data   = DataToStr(TempData);
 			FormulaData.m_IsTrue = !IsTrue;
@@ -1302,7 +1302,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		//48
 
 		TempData =(*ShunXuDataList)[Index-1].m_HongQiu[5];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1311,7 +1311,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =(*ShunXuDataList)[Index-1].m_HongQiu[4];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1320,7 +1320,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =(*ShunXuDataList)[Index-1].m_HongQiu[3];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1329,7 +1329,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =(*ShunXuDataList)[Index-1].m_HongQiu[2];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1338,7 +1338,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =(*ShunXuDataList)[Index-1].m_HongQiu[1];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1347,7 +1347,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =(*ShunXuDataList)[Index-1].m_HongQiu[0];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1356,7 +1356,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =(*ShunXuDataList)[Index-1].m_LanQiu+7;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1365,7 +1365,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualIndex++;
 
 		TempData =abs((*ShunXuDataList)[Index-1].m_LanQiu-7);
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1377,7 +1377,7 @@ void CFormulaCenter::ExecShaLanFormula()
 		date+=(*ShunXuDataList)[Index-1].m_LanQiu;
 		srand(date);
 		TempData=date;
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;
@@ -1423,7 +1423,7 @@ void CFormulaCenter::ExecShaLanVFormula()
 		CString AddStr=_T("  ")+DataToStr(TempData);
 
 		TempData = (*DataList)[Index-1].m_HongQiu[5]-(*DataList)[Index-1].m_HongQiu[0];
-		TempData = TempData%QIU_COUNT;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
 		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
 		FormulaData.m_Data   = DataToStr(TempData);
 		FormulaData.m_IsTrue = !IsTrue;

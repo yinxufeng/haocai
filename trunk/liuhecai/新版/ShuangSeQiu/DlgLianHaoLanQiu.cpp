@@ -61,6 +61,7 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoLanQiu, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON5, &CDlgLianHaoLanQiu::OnBnClickedButton5)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CDlgLianHaoLanQiu::OnCbnSelchangeCombo1)
 	ON_BN_CLICKED(IDC_JINGXUAN_BTN, &CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn)
+	ON_BN_CLICKED(IDC_ZIDONG_BTN, &CDlgLianHaoLanQiu::OnBnClickedZidongBtn)
 END_MESSAGE_MAP()
 
 
@@ -196,7 +197,9 @@ void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
 	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
 
 	m_ListCtrl.DeleteAllItems();
-	int DataSize = CDataManageCenter::GetInstance()->GetDataList()->size();
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	int DataSize = DataList->size();
 	for(int Index = 0; Index < DataSize; Index++)
 	{
 		m_ListCtrl.InsertItem(Index,_T(""));	
@@ -224,7 +227,14 @@ void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
 			int TempIndex = Index;
 			if(TempIndex ==0)
 			{
-				m_ListCtrl.SetItemText(i+1,0,FormulList[Index].m_DataList[i].m_QiShu);
+				CString QiShu=FormulList[Index].m_DataList[i].m_QiShu;
+				if(i+1 < DataList->size())
+				{
+					CString TempStr;
+					TempStr.Format(" %02d",(*DataList)[i+1].m_LanQiu);
+					QiShu=(*DataList)[i+1].m_QiShu+TempStr;
+				}
+				m_ListCtrl.SetItemText(i+1,0,QiShu);
 			}
 			m_ListCtrl.SetItemText(i+1,TempIndex+1,FormulList[Index].m_DataList[i].m_Data);
 			if(FormulList[Index].m_DataList[i].m_IsTrue)
@@ -234,14 +244,17 @@ void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
 				else
 					Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
 
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
 				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
 			}
 			else
 			{
 
-				Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
+				Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+				Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
 				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
 			}
+		
 		}
 	}
 
@@ -441,7 +454,7 @@ void CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn()
 		int Type = atoi(StrType.GetBuffer());
 		StrType.ReleaseBuffer();
 
-		if(Type == FORMULA_SHA_LAN_WEI && !Name.IsEmpty())
+		if(Type == FORMULA_SHA_LAN && !Name.IsEmpty())
 			NameList.push_back(Name);
 			
 		Xml.OutOfElem();
@@ -457,4 +470,177 @@ void CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn()
 	m_CurrentIndex=0;
 	FillData(m_FormulaInfoList);
 	UpdateBtnStatus();
+}
+
+void CDlgLianHaoLanQiu::OnBnClickedZidongBtn()
+{
+	
+		CString FilePath2 = GetAppCurrentPath()+_T("\\zidongfenxi.txt");
+
+		HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+		if(FileHandle2 == INVALID_HANDLE_VALUE)
+		{
+			AfxMessageBox(_T("打开文件失败！"));
+			return;
+		}
+			
+		vector<sFormulaInfo> InfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
+		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+		int DataSize = DataList->size();
+		int Offset=18;
+
+		CString StrArray[9]={"特码在        一页里：",
+			"特码在        二页里：",
+			"特码在        三页里：",
+			"特码在     一 二页里：",
+			"特码在     一 三页里：",
+			"特码在     二 三页里：",
+			"特码在  一 二 三页里：",
+			"特码不在一 二 三页里：",
+			"综合"};
+		for(int Index = 0; Index < DataSize; Index++)
+		{
+			int TeArray1[50];
+			int TeArray2[50];
+			int TeArray3[50];
+			int TeArray4[50];
+			memset(TeArray1,0,sizeof(int)*50);
+			memset(TeArray2,0,sizeof(int)*50);
+			memset(TeArray3,0,sizeof(int)*50);
+			memset(TeArray4,0,sizeof(int)*50);
+
+			for(int i = 0 ; i <InfoList.size(); i++)
+			{
+				if(InfoList[i].m_DataList.empty())
+					continue;
+
+				int TempData=atoi(InfoList[i].m_DataList[Index].m_Data.GetBuffer());
+				TeArray4[TempData]++;
+
+				if(i < Offset)
+				{
+					TeArray1[TempData]++;
+				}
+				else if( i >= Offset && i < 2*Offset)
+				{
+					TeArray2[TempData]++;
+
+				}
+				else
+					TeArray3[TempData]++;
+			}
+
+
+			int TempArray[8][50];
+			memset(TempArray,0,8*50*sizeof(int));
+
+			for(int j=0; j < 50; j++)
+			{
+				//特在一组里
+				if(TeArray1[j] && !TeArray2[j] && !TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[0][TempData]++;
+				}
+
+				//特在二组里
+				if(TeArray2[j] && !TeArray1[j] && !TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[1][TempData]++;
+				}
+
+				//特在三 组里
+				if(TeArray2[j] && TeArray1[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[2][TempData]++;
+				}
+
+
+				//特在一 二组里
+				if(TeArray1[j] && TeArray2[j] && !TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[3][TempData]++;
+				}
+
+				//特在一 三组里
+				if(TeArray1[j] && !TeArray2[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[4][TempData]++;
+				}
+
+				//特在二 三 组里
+				if(TeArray2[j] && !TeArray1[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[5][TempData]++;
+				}
+
+				//特在一 二 三 组里
+				if(TeArray1[j] && TeArray2[j] && TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[6][TempData]++;
+				}
+
+				//特不再在一 二 三 组里
+				if(!TeArray1[j] && !TeArray2[j] && !TeArray3[j])
+				{
+					int TempData = j;
+					TempArray[7][TempData]++;
+				}
+
+			}
+
+
+			CString TongJi;
+			int TempTest[50];
+			memset(TempTest,0,sizeof(int)*50);
+			CString WriteStr;
+			if(Index == DataSize-1)
+			{
+				WriteStr="下期预测：\r\n";
+			}
+			else
+			{
+				CString TeStr;
+				TeStr.Format(" 特码 %02d",(*DataList)[Index+1].m_LanQiu);
+				WriteStr=(*DataList)[Index+1].m_QiShu+"期"+TeStr+"：\r\n";
+			}
+
+			for(int i=0; i < 8; i++)
+			{
+				int Count=0;
+				CString Str;
+				for(int j=0; j < 50; j++)
+				{
+					CString Temp;
+					if(TempArray[i][j])
+					{
+						Temp.Format("%02d ",j);
+						Str+=Temp;
+						TempTest[j]++;
+						Count++;
+
+					}
+				}
+
+				CString CountStr;
+				CountStr.Format("个数 %02d：",Count);
+
+				CString TempStr=StrArray[i]+CountStr+Str+"\r\n";
+				WriteStr+=TempStr;
+			}
+
+			WriteStr+="\r\n\r\n";
+			DWORD WriteBytes=0;
+			::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+
+		}	
+		
+		CloseHandle(FileHandle2);
+		ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }

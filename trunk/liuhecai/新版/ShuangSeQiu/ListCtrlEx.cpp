@@ -469,17 +469,12 @@ void CListCtrlEx::DrawByStyle(CDC* pDC,int nItem,int nSubItem,CRect& rSubItem,sI
 		{
 			CString Text;
             Text = GetItemText(nItem, nSubItem);
+			if(pStyle->m_DrawData.m_TextData.m_IsFillBG)
+				pDC->FillSolidRect(rSubItem,pStyle->m_DrawData.m_TextData.m_BGColor);
+
 			pDC->SetTextColor(pStyle->m_DrawData.m_TextData.m_TextColor);
 			pDC->DrawText(Text, &rSubItem,pStyle->m_DrawData.m_TextData.m_TextFormat);
-			//if(pStyle->m_DrawData.m_TextData.m_EnableEdit)
-			//	//ShowEdit(rSubItem,Text,pStyle->m_DrawData.m_TextData.m_TextFont);
-			//	CSkinListCtrl::ShowEdit(nItem,nSubItem);
-			//else
-			//{
-			//	pDC->DrawText(Text, &rSubItem,pStyle->m_DrawData.m_TextData.m_TextFormat);
-			//	//m_Edit.ShowWindow(SW_HIDE);
-			//	CSkinListCtrl::DisposeEidt();
-			//}
+			
 		}
 		break;
 

@@ -75,6 +75,8 @@ struct sItemStyle
 		BOOL       m_EnableEdit;               //是否可编辑    //目前只有在 TEXT_TYPE 下可编辑
 		CFont*     m_TextFont;                 //文本字体
 		UINT       m_TextFormat;               //文本显示风格 同DrawText中的Format
+		BOOL       m_IsFillBG;                 //是否填充背景
+		COLORREF   m_BGColor;                  //背景颜色
 	};
 
 	struct sButtonData                        //按钮数据
@@ -150,6 +152,8 @@ struct sItemStyle
 		m_DrawData.m_TextData.m_EnableEdit = false;
 		m_DrawData.m_TextData.m_TextFont = NULL;
 		m_DrawData.m_TextData.m_TextFormat = DT_SINGLELINE | DT_CENTER| DT_VCENTER | DT_END_ELLIPSIS;
+		m_DrawData.m_TextData.m_IsFillBG=true;                     //是否填充背景
+		m_DrawData.m_TextData.m_BGColor=RGB(205,250,213);                  //背景颜色
 	}
 };
 
