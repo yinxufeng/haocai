@@ -74,6 +74,7 @@ void CShuangSeQiuDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_ListCtrl);
+	DDX_Control(pDX, IDC_LIST2, m_ListCtrl2);
 	DDX_Control(pDX, IDC_CHECK1, m_CheckBtn);
 	DDX_Control(pDX, IDC_COMBO1, m_ComboBox);
 }
@@ -172,6 +173,9 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgTeZongHeFenXi.ShowWindow(SW_HIDE);
 
 
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
 	m_ComboBox.InsertString(0,_T("搜索红球"));
 	m_ComboBox.InsertString(1,_T("搜索篮球"));
 	m_ComboBox.InsertString(2,_T("搜索龙头"));
@@ -238,6 +242,9 @@ void CShuangSeQiuDlg::OnBnClickedLoadDataBtn()
 	/*FilePath=GetAppCurrentPath()+_T("Data2.txt");
 	CDataManageCenter::GetInstance()->LoadDataFromFile(FilePath,true);*/
 
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
 	m_ListCtrl.DeleteAllItems();
 
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
@@ -264,6 +271,26 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl.InsertColumn(7,_TEXT("红球之和"),LVCFMT_CENTER,	nWidth);
 	m_ListCtrl.InsertColumn(8,_TEXT("篮球"),	LVCFMT_CENTER,	nWidth);
 	m_ListCtrl.InsertColumn(9,_TEXT("篮球路数"),	LVCFMT_CENTER,	nWidth);
+
+
+	nWidth = Rect.Width()/17;
+	m_ListCtrl2.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(1,_TEXT("0V"),	LVCFMT_CENTER,	nWidth); 
+	m_ListCtrl2.InsertColumn(2,_TEXT("1V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(3,_TEXT("2V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(4,_TEXT("3V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(5,_TEXT("4V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(6,_TEXT("5V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(7,_TEXT("6V"),LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(8,_TEXT("7V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(9,_TEXT("8V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(10,_TEXT("9V"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl2.InsertColumn(11,_TEXT("妍儿定V"),	LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl2.InsertColumn(12,_TEXT("统计出V"),	LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl2.InsertColumn(13,_TEXT("统计未出V"),	LVCFMT_CENTER,	2*nWidth);
+
+
+
 	sItemStyle Style;
 	Style.m_ItemType = TEXT_TYPE;
 	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
@@ -279,11 +306,15 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl.SetColumStyle(7,Style);
 	m_ListCtrl.SetColumStyle(9,Style);
 
+
+	for(int i=0; i < 11; i++)
+		m_ListCtrl2.SetColumStyle(i,Style);
+
 	Style.m_DrawData.m_TextData.m_TextColor=RGB(120,195,230);
-	//Style.m_DrawData.m_TextData.m_BGColor  = RGB(205,250,248);
 	m_ListCtrl.SetColumStyle(8,Style);
-	//m_ListCtrl.SetColumStyle(9,Style);
+	
 	m_ListCtrl.SetRowHeight(30);
+	m_ListCtrl2.SetRowHeight(30);
 
 	sItemBkData ItemBkData;
 	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
@@ -292,7 +323,11 @@ void CShuangSeQiuDlg::InitListHeader()
 	ItemBkData.m_HeightColor = RGB(100,100,100);
 	ItemBkData.m_BkColor = RGB(222,222,222);
 
+
+
+
 	m_ListCtrl.SetItemBkData(ItemBkData);
+	m_ListCtrl2.SetItemBkData(ItemBkData);
 
 }
 
@@ -309,6 +344,9 @@ void CShuangSeQiuDlg::OnBnClickedRedBallBtn()
 
 void CShuangSeQiuDlg::OnBnClickedSearchBtn()
 {
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
 	CString Text;
 	GetDlgItem(IDC_EDIT1)->GetWindowText(Text);
 	DWORD Data=::atoi(Text.GetBuffer());
@@ -343,6 +381,9 @@ void CShuangSeQiuDlg::OnBnClickedSearchBtn()
 
 void CShuangSeQiuDlg::OnBnClickedSearchBtn2()
 {
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
 	CString Text;
 	GetDlgItem(IDC_EDIT2)->GetWindowText(Text);
 	DWORD Data=::atoi(Text.GetBuffer());
@@ -408,6 +449,8 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn3()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn6()
 {
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
 	m_IsShowByChuQiu= false;
 	m_ListCtrl.DeleteAllItems();
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
@@ -512,6 +555,8 @@ void CShuangSeQiuDlg::OnBnClickedButton10()
 
 void CShuangSeQiuDlg::OnBnClickedButton8()
 {
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
 	m_IsShowByChuQiu = true;
 	m_ListCtrl.DeleteAllItems();
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
@@ -523,6 +568,9 @@ void CShuangSeQiuDlg::OnBnClickedButton8()
 
 void CShuangSeQiuDlg::OnBnClickedButton12()
 {
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
 	m_ListCtrl.DeleteAllItems();
 	map<CString,sYuCeShuangSeQiu> Temp;
 	Temp=CDataManageCenter::GetInstance()->GetDataBySuanFa();
@@ -602,12 +650,6 @@ void CShuangSeQiuDlg::OnBnClickedButton12()
 //插入和设置文本
 void CShuangSeQiuDlg::InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu)
 {
-	//sItemStyle Style;
-	//Style.m_ItemType = TEXT_TYPE;
-	//Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
-	//Style.m_DrawData.m_TextData.m_TextFont = NULL;
-	//Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
-
 	m_ListCtrl.InsertItem(Row,"");
 	if(ShuangSeQiu.m_QiShu == _T("分割"))
 		return ;
@@ -618,7 +660,6 @@ void CShuangSeQiuDlg::InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu)
 		CString Temp;
 		Temp.Format("%02d",ShuangSeQiu.m_HongQiu[HongQiu]);
 		m_ListCtrl.SetItemText(Row,HongQiu+1,Temp);
-	//	m_ListCtrl.SetItemSpecialStyle(Row,HongQiu+1,Style);
 	}
 
 	CString HongQiuSum;
@@ -630,11 +671,6 @@ void CShuangSeQiuDlg::InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu)
 
 	CString Str;
 	LanQiu.Format("%02d",ShuangSeQiu.m_LanQiu);
-	/*if(ShuangSeQiu.m_LanQiu%2)
-		LanQiu+="奇";
-	else
-		LanQiu+="偶";*/
-//	m_ListCtrl.SetItemText(Index,0,Str);
 
 	m_ListCtrl.SetItemText(Row,8,LanQiu);
 
@@ -642,6 +678,102 @@ void CShuangSeQiuDlg::InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu)
 	QuJianBi.Format("%d",ShuangSeQiu.m_LanQiu%3);
 	m_ListCtrl.SetItemText(Row,9,QuJianBi);
 }
+
+//插入和设置文本
+void CShuangSeQiuDlg::InsertAndSetText2(int Row,sShuangSeQiu& ShuangSeQiu,int* pCount)
+{
+	m_ListCtrl2.InsertItem(Row,"");
+	m_ListCtrl2.SetItemText(Row,0,ShuangSeQiu.m_QiShu);
+	int DataArray[10];
+	memset(DataArray,0,10*sizeof(int));
+
+	for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
+	{
+		int Data=ShuangSeQiu.m_HongQiu[HongQiu]%10;
+		DataArray[Data]++;
+		if(pCount != NULL)
+		{
+			pCount[Data]++;
+		}
+	}
+
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	
+	CString Chu;
+	CString WeiChu;
+	CString YanEr;
+	for(int i=0; i < 10; i++)
+	{
+		CString QuJianBi;
+		QuJianBi.Format("%d",i);
+		if(DataArray[i])
+		{
+
+			m_ListCtrl2.SetItemText(Row,i+1,QuJianBi);
+			Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			Chu+= QuJianBi;
+			m_ListCtrl2.SetItemSpecialStyle(Row,i+1,Style);
+
+		}
+		else
+		{
+			WeiChu+= QuJianBi;
+			Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+			m_ListCtrl2.SetItemSpecialStyle(Row,i+1,Style);
+		}
+
+	}
+
+
+	int Array[5]={1,3,5,6,8};
+	int DataArray2[10];
+	memset(DataArray2,0,10*sizeof(int));
+
+
+	for(int i=0; i < 10; i++)
+	{
+		for(int j=0; j < 10; j++)
+		{
+			if( i != j)
+			{
+				/*int a=Array[i];
+				int b=Array[j];*/
+				int a=i;
+				int b=j;
+				if(DataArray[a]&& DataArray[b])
+				{
+				int TempData=a+b;
+				TempData=TempData%10;
+				DataArray2[TempData]++;
+				}
+			}
+		}
+	}
+	
+	
+	for(int i=0; i < 10; i++)
+	{
+		CString QuJianBi;
+		QuJianBi.Format("%d",i);
+		if(!DataArray2[i])
+			YanEr+= QuJianBi;
+	}
+
+	Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+	m_ListCtrl2.SetItemText(Row,11,YanEr);
+	m_ListCtrl2.SetItemText(Row,12,Chu);
+	m_ListCtrl2.SetItemText(Row,13,WeiChu);
+	m_ListCtrl2.SetItemSpecialStyle(Row,11,Style);
+	m_ListCtrl2.SetItemSpecialStyle(Row,12,Style);
+	m_ListCtrl2.SetItemSpecialStyle(Row,13,Style);
+
+
+}
+
 
 void CShuangSeQiuDlg::OnBnClickedButton11()
 {
@@ -757,9 +889,29 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 {
-//	m_DlgLianHaoLanQiu.SetWondowsTitle("狂杀红球",FORMULA_SHA_HONG);
-	//m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_SHOW);
+	m_ListCtrl2.DeleteAllItems();
 
-//	m_DlgZiDongFenXi.ShowWindow(SW_SHOW);
-//	m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	if(DataList->empty())
+		return;
+
+	int CountArray[10];
+	memset(CountArray,0,sizeof(int)*10);
+
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		InsertAndSetText2(Index,(*DataList)[Index],CountArray);
+	}
+
+	m_ListCtrl2.InsertItem(DataList->size(),"");
+	m_ListCtrl2.SetItemText(DataList->size(),0,"V数统计");
+
+	for(int i=0; i < 10; i++)
+	{
+		CString Text;
+		Text.Format(_T("%d"),CountArray[i]);
+		m_ListCtrl2.SetItemText(DataList->size(),i+1,Text);
+	}
 }
