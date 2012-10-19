@@ -20,6 +20,7 @@
 #define IDD_SHUANGSEQIU_DIALOG8         139
 #define IDD_SHUANGSEQIU_DIALOG9         140
 #define IDC_LIST1                       1000
+#define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
 #define IDC_RED_BALL_BTN                1003
 #define IDC_BLUE_BALL_BTN               1004

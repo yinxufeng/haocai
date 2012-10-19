@@ -61,6 +61,10 @@ public:
 
 	//插入和设置文本
 	void InsertAndSetText(int Row,sShuangSeQiu& ShuangSeQiu);
+
+	//插入和设置文本
+	void InsertAndSetText2(int Row,sShuangSeQiu& ShuangSeQiu,int* pCount=NULL);
+
 	afx_msg void OnBnClickedButton11();
 
 private:
@@ -68,9 +72,12 @@ private:
 	//初始化列表头
 	void InitListHeader();
 
+
+
 private:
 
 	CListCtrlEx m_ListCtrl;
+	CListCtrlEx m_ListCtrl2;
 	CRedBallDlg m_RedBallDlg;
 
 	CDlgLianHaoHongQiu   m_DlgLianHaoHongQiu;
