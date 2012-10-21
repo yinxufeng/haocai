@@ -1038,6 +1038,7 @@ bool CDataManageCenter::LoadDataFromFile(CString FilePath,vector<sShuangSeQiu>& 
 	ParseData(StrData,QiuList);
 	delete []Buffer;
 
+	CloseHandle(FileHandle);
 	//初始化横向差值
 /*	InitHengXiangChaZhi(m_ShuangSeQiuList);
 

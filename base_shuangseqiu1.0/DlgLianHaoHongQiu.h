@@ -29,8 +29,9 @@ protected:
 	//初始化列表头
 	void InitListHeader();
 
+	CString TransData(CString DataStr,float Data);
 private:
-	CListCtrl m_ListCtrl;
+	CListCtrlEx m_ListCtrl;
 	BOOL      m_IsInitData;
 public:
 	afx_msg void OnBnClickedSearchBtn();
