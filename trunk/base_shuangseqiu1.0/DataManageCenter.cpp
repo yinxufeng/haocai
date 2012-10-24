@@ -1009,7 +1009,7 @@ bool  CDataManageCenter::LoadDataFromFile(CString FilePath,bool IsChuHaoXunXu,bo
 	//	SaveDataToCSVFile();
 
 		//保存统计五期以内和五期以外数据到txt文件中
-		SaveFiveDataToTxtFile();
+	//	SaveFiveDataToTxtFile();
 	}
 	else
 	{
@@ -1559,97 +1559,206 @@ void CDataManageCenter::SaveDataToCSVFile()
 }
 
 
-//保存统计7期以内和7期以外数据到txt文件中
+//保存统计五期以内和五期以外数据到txt文件中
 void CDataManageCenter::SaveFiveDataToTxtFile()
 {
-	//CString  WriteStr;
-	//CString  WriteStr2=_T("\r\n\r\n\r\n");
-	//int AllCount=15;
-	//for(int Index =AllCount; Index < m_ShuangSeQiuList.size(); Index++)
-	//{
-	//	
+	CString  WriteStr;
+	CString  WriteStr2=_T("\r\n\r\n\r\n");
+	for(int Index =4; Index < m_ShuangSeQiuList.size(); Index++)
+	{
+		
 
-	//	int Data[QIU_COUNT]={0};
+		int Data[33]={0};
 
-	//	for(int i=AllCount; i >= 0; i--)
-	//	{
-	//		for(int j=0; j < QIU_XUN; j++)
-	//		{
-	//			int TempData = m_ShuangSeQiuList[Index-i].m_HongQiu[j]-1;
-	//			if(TempData >= 0)
-	//				Data[TempData]++;
-	//		}
-	//	}
+		for(int i=4; i >= 0; i--)
+		{
+			for(int j=0; j < 6; j++)
+			{
+				int TempData = m_ShuangSeQiuList[Index-i].m_HongQiu[j]-1;
+				if(TempData >= 0)
+					Data[TempData]++;
+			}
+		}
 
-	//	int Count=0;
-	//	CString WuQiYiWai;
-	//    CString WuQiYiNei;
-	//	for(int k=0; k < QIU_COUNT; k++)
-	//	{
-	//		CString TempStr;
-	//		TempStr.Format(_T("%02d "),k+1);
+		int Count=0;
+		CString WuQiYiWai;
+	    CString WuQiYiNei;
+		for(int k=0; k < 33; k++)
+		{
+			CString TempStr;
+			TempStr.Format(_T("%02d "),k+1);
 
-	//		if(Data[k])
-	//		{	
-	//			Count++;
-	//			WuQiYiNei+=TempStr;
-	//		}
-	//		else
-	//		{
-	//		
-	//			WuQiYiWai+=TempStr;
-	//		}
-	//	}
+			if(Data[k])
+			{	
+				Count++;
+				WuQiYiNei+=TempStr;
+			}
+			else
+			{
+				WuQiYiWai+=TempStr;
+			}
+		}
 
-	//	CString Temp;
-	//    Temp.Format(_T("十五期以内 %02d：\r\n"),Count);
-	//	CString Temp2;
-	//	Temp2.Format(_T("十五期以外 %02d：\r\n"),QIU_COUNT-Count);
+		CString ChuQiu;
+		if(Index+1 != m_ShuangSeQiuList.size())
+		{
+			int Count=0;
+			for(int i=0; i < 6; i++)
+			{
+				int TempData = m_ShuangSeQiuList[Index+1].m_HongQiu[i];
+				CString TempStr;
+				TempStr.Format(_T("%02d "),TempData);
+				if(Data[TempData-1])
+					Count++;
+				ChuQiu += TempStr;
+			}
 
+			ChuQiu= m_ShuangSeQiuList[Index+1].m_QiShu+_T(" ")+ChuQiu;
+			CString Temp;
+			Temp.Format(_T("     五期以内出球个数：%02d    五期以外出球个数：%02d\r\n"),Count,6-Count);
+			ChuQiu+=Temp;
+			WriteStr2+=ChuQiu;
+		}
 
-	//	if(Index+1 != m_ShuangSeQiuList.size())
-	//	{
-	//		CString TempStr;
-	//		TempStr.Format("%02d",m_ShuangSeQiuList[Index].m_LanQiu);
-	//		CString DuiStr=" 对";
-	//		if(WuQiYiNei.Find(TempStr) ==-1)
-	//			DuiStr=" 错";
+		CString Temp;
+		Temp.Format(_T("    个数%02d\r\n"),Count);
+		WuQiYiNei+=Temp;
+		Temp.Empty();
+		Temp.Format(_T("    个数%02d\r\n"),33-Count);
+		WuQiYiWai+=Temp;
 
-	//		WriteStr+=m_ShuangSeQiuList[Index].m_QiShu+"期 篮球 "+TempStr+" 在十五期以内 "+DuiStr+":\r\n";
-	//		WriteStr+=Temp+WuQiYiNei+_T("\r\n");
-	//		WriteStr+=Temp2+WuQiYiWai;
+		 WriteStr+=WuQiYiNei+WuQiYiWai;
+		 if(!ChuQiu.IsEmpty())
+			  WriteStr+=ChuQiu;
+			
+		 if((Index) % 4)
+		 {
+			 WriteStr+=_T("\r\n");
+		//	 WriteStr2+=_T("\r\n");
+			 
+		 }
+		 else
+		 {
+			 WriteStr+=_T("\r\n\r\n\r\n");
+			// WriteStr2+=_T("\r\n\r\n\r\n");
+		 }
+	}
 
-	//		WriteStr2+=m_ShuangSeQiuList[Index].m_QiShu+"期 篮球 "+TempStr+" 在十五期以内 "+DuiStr+":\r\n";
-	//	}
-	//	else
-	//	{
-	//		CString Temp;
-	//		Temp.Format(_T(" 十五期以内个数%02d "),Count);
-	//		WriteStr+="下期预测:"+Temp+"\r\n";
-	//		WriteStr+=Temp+WuQiYiNei+"\r\n";
-	//		WriteStr+=Temp2+WuQiYiWai;
-	//		WriteStr2+="下期预测:";
-	//	}
-	//
-	//	WriteStr+=_T("\r\n");
-	//	WriteStr2+=_T("\r\n");
-	//
-	//}
+	CString FilePath2 = GetAppCurrentPath2()+_T("\\wuqitongji.txt");
 
-	//CString FilePath2 = GetAppCurrentPath2()+_T("\\wuqitongji.txt");
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox(_T("打开文件失败！"));
+		return;
+	}
+		
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	::WriteFile(FileHandle2,WriteStr2.GetBuffer(),WriteStr2.GetLength(),&WriteBytes,NULL);
+	CloseHandle(FileHandle2);
+}
 
-	//HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
-	//if(FileHandle2 == INVALID_HANDLE_VALUE)
-	//{
-	//	AfxMessageBox(_T("打开文件失败！"));
-	//	return;
-	//}
-	//	
-	//DWORD WriteBytes=0;
-	//::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
-	//::WriteFile(FileHandle2,WriteStr2.GetBuffer(),WriteStr2.GetLength(),&WriteBytes,NULL);
-	//CloseHandle(FileHandle2);
-	//ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
+//保存29组统计数据到txt文件中
+void CDataManageCenter::Save29DataToTxtFile()
+{
+	CString  WriteStr;
+	CString FilePath2 = GetAppCurrentPath2()+_T("\\tongji29zu.txt");
+
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox(_T("打开文件失败！"));
+		return;
+	}
+
+	
+	for(int Index = 0; Index < this->m_ShuangSeQiuList.size(); Index++)
+	{
+		vector<int> VecIndex;
+		for(int i=0; i< m_Data29.size(); i++)
+		{
+			int Count=0;
+			for(int j =0; j < m_Data29[i].m_WeiHong.size(); j++)
+			{
+				bool IsWant=false;
+				for(int k=0; k < 6; k++)
+				{
+					if(m_ShuangSeQiuList[Index].m_HongQiu[k] == m_Data29[i].m_WeiHong[j])
+					{
+						IsWant=true;
+						break;
+					}
+				}
+
+				if(IsWant)
+				{
+					Count++;
+					//break;
+				}
+			}
+			
+			if(Count == 6)
+			{
+				VecIndex.push_back(i);
+
+			}
+		}
+
+		int ArrayData[33];
+		memset(ArrayData,0,sizeof(int)*33);
+
+		CString IndexStr;
+		for(int f =0; f < VecIndex.size(); f++)
+		{
+			CString TempStr;
+			TempStr.Format("%02d ",VecIndex[f]+1);
+			IndexStr +=TempStr;
+			for(int j=0; j <  m_Data29[VecIndex[f]].m_WeiHong.size(); j++)
+			{
+				int TempData= m_Data29[VecIndex[f]].m_WeiHong[j]-1;
+				ArrayData[TempData]++;
+			}
+		}
+
+		int DataCount=0;
+		CString Str;
+		for(int g=0; g < 33;g++)
+		{
+			if(ArrayData[g] == VecIndex.size())
+			{
+				CString TempStr;
+				TempStr.Format("%02d ",g+1);
+				Str+=TempStr;
+				DataCount++;
+			}
+		}
+
+		for(int h=Str.GetLength(); h < 80; h++)
+			Str+=" ";
+		CString DataStr;
+		DataStr.Format("个数：%02d",DataCount);
+		Str+=DataStr;
+
+		CString QiuStr=m_ShuangSeQiuList[Index].m_QiShu;
+		if(Index==0)
+			QiuStr+="\r\n";
+		QiuStr+=" ";
+		for(int k=0; k < 6; k++)
+		{
+			CString TempStr;
+			TempStr.Format("%02d ",m_ShuangSeQiuList[Index].m_HongQiu[k]);
+			QiuStr+=TempStr;
+		}
+
+		for(int f=IndexStr.GetLength(); f < 36; f++)
+			IndexStr+=" ";
+		WriteStr+=QiuStr+"  所属组："+IndexStr+" 交集："+Str+"\r\n";
+	}
+
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	CloseHandle(FileHandle2);
 }
 
 //球是否在红球中
@@ -1738,11 +1847,506 @@ CString CDataManageCenter::GetDataStr(int Data,bool IsTrue,bool IsV)
 	if(IsV)
 		TempStr+="V";
 
-	if(IsTrue)
+	/*if(IsTrue)
 		TempStr+="S";
 	else
-		TempStr+="F";
+		TempStr+="F";*/
 
 	return TempStr;
 
+}
+
+//初始化29组数据
+void CDataManageCenter::Init29Data()
+{
+	sData29 Data;
+
+	//04 06 08 13 18 19 27 29 31
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(29);
+	Data.m_JueSha.push_back(31);
+	Data.m_BianHao="一";
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+    //03 06 11 19 20 21 24 31 33
+	Data.m_BianHao="  二";
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(31);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//03 06 07 17 19 20 31 32 33
+	Data.m_BianHao="  三";
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(31);
+	Data.m_JueSha.push_back(32);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//01 02 06 14 16 19 25 28 31
+	Data.m_BianHao="  四";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(28);
+	Data.m_JueSha.push_back(31);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//02 05 10 12 15 16 25 26 30
+	Data.m_BianHao="  五";
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(30);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+
+	//06 07 11 17 19 21 24 31 32
+	Data.m_BianHao="  六";
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(31);
+	Data.m_JueSha.push_back(32);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//05 06 08 15 18 19 29 30 31
+	Data.m_BianHao="  七";
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(29);
+	Data.m_JueSha.push_back(30);
+	Data.m_JueSha.push_back(31);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//06 09 10 12 19 22 23 26 31
+	Data.m_BianHao="  八";
+	Data.m_JueSha.push_back(6);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(19);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(31);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//05 07 09 15 17 22 23 30 32
+	Data.m_BianHao="  九";
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(30);
+	Data.m_JueSha.push_back(32);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	// 01 03 04 13 14 20 27 28 33
+	Data.m_BianHao="  十";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(28);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//02 07 08 16 17 18 25 29 32
+	Data.m_BianHao="十一";
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(29);
+	Data.m_JueSha.push_back(32);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//01 04 11 13 14 21 24 27 28
+	Data.m_BianHao="十二";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(28);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//02 09 11 16 21 22 23 24 25
+	Data.m_BianHao="十三";
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(25);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//04 05 09 13 15 22 23 27 30
+	Data.m_BianHao="十四";
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(30);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//04 07 09 13 17 22 23 27 32
+	Data.m_BianHao="十五";
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(32);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//04 05 10 12 13 16 25 26 27
+	Data.m_BianHao="十六";
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(27);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//02 04 10 12 13 16 25 26 27
+	Data.m_BianHao="十七";
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(27);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//02 04 05 13 15 16 25 27 30
+	Data.m_BianHao="十八";
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(30);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//04 05 07 13 15 17 27 30 32
+	Data.m_BianHao="十九";
+	Data.m_JueSha.push_back(4);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(13);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(27);
+	Data.m_JueSha.push_back(30);
+	Data.m_JueSha.push_back(32);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//01 03 05 14 15 20 28 30 33
+	Data.m_BianHao="二十";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(28);
+	Data.m_JueSha.push_back(30);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//03 08 11 18 20 21 24 29 33
+	Data.m_BianHao="二一";
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(29);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//03 10 11 12 20 21 24 26 33
+	Data.m_BianHao="二二";
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//03 07 11 17 20 21 24 32 33
+	Data.m_BianHao="二三";
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(32);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//03 08 10 12 18 20 26 29 33
+	Data.m_BianHao="二四";
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(29);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//02 03 09 16 20 22 23 25 33
+	Data.m_BianHao="二五";
+	Data.m_JueSha.push_back(2);
+	Data.m_JueSha.push_back(3);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(16);
+	Data.m_JueSha.push_back(20);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(25);
+	Data.m_JueSha.push_back(33);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//08 10 11 12 18 21 24 26 29
+	Data.m_BianHao="二六";
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(29);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//01 05 11 14 15 21 24 28 30
+	Data.m_BianHao="二七";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(5);
+	Data.m_JueSha.push_back(11);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(15);
+	Data.m_JueSha.push_back(21);
+	Data.m_JueSha.push_back(24);
+	Data.m_JueSha.push_back(28);
+	Data.m_JueSha.push_back(30);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//01 08 09 14 18 22 23 28 29
+	Data.m_BianHao="二八";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(8);
+	Data.m_JueSha.push_back(9);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(18);
+	Data.m_JueSha.push_back(22);
+	Data.m_JueSha.push_back(23);
+	Data.m_JueSha.push_back(28);
+	Data.m_JueSha.push_back(29);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+	//01 07 10 12 14 17 26 28 32
+	Data.m_BianHao="二九";
+	Data.m_JueSha.push_back(1);
+	Data.m_JueSha.push_back(7);
+	Data.m_JueSha.push_back(10);
+	Data.m_JueSha.push_back(12);
+	Data.m_JueSha.push_back(14);
+	Data.m_JueSha.push_back(17);
+	Data.m_JueSha.push_back(26);
+	Data.m_JueSha.push_back(28);
+	Data.m_JueSha.push_back(32);
+	InitOneData(Data);
+	m_Data29.push_back(Data);
+	Data.m_JueSha.clear();
+	Data.m_WeiHong.clear();
+
+
+
+}
+
+//初始一组数据
+void CDataManageCenter::InitOneData(sData29 &Data)
+{
+	for(int i=0; i< 33; i++)
+	{
+		bool IsWant=true;
+		for(int j=0; j < Data.m_JueSha.size(); j++)
+		{
+			if(i+1 == Data.m_JueSha[j])
+			{
+				IsWant=false;
+				break;
+			}
+		}
+
+		if(IsWant)
+			Data.m_WeiHong.push_back(i+1);
+
+	}
 }

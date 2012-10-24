@@ -6,7 +6,8 @@
 #include "ShuangSeQiu.h"
 #include "ShuangSeQiuDlg.h"
 
-
+#include <afxinet.h>
+#include <afxwin.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,6 +28,8 @@ CString GetAppCurrentPath()
 
 	return StrDes;
 }
+
+
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -75,6 +78,7 @@ void CShuangSeQiuDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_ListCtrl);
 	DDX_Control(pDX, IDC_LIST2, m_ListCtrl2);
+	DDX_Control(pDX, IDC_LIST3, m_ListCtrl3);
 	DDX_Control(pDX, IDC_CHECK1, m_CheckBtn);
 	DDX_Control(pDX, IDC_COMBO1, m_ComboBox);
 }
@@ -103,6 +107,10 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_BN_CLICKED(IDC_BLUE_BALL_BTN, &CShuangSeQiuDlg::OnBnClickedBlueBallBtn)
 	ON_BN_CLICKED(IDC_BUTTON13, &CShuangSeQiuDlg::OnBnClickedButton13)
 	ON_BN_CLICKED(IDC_BLUE_BALL_BTN5, &CShuangSeQiuDlg::OnBnClickedBlueBallBtn5)
+	ON_BN_CLICKED(IDC_LOAD_DATA_BTN2, &CShuangSeQiuDlg::OnBnClickedLoadDataBtn2)
+	ON_BN_CLICKED(IDC_BUTTON14, &CShuangSeQiuDlg::OnBnClickedButton14)
+	ON_BN_CLICKED(IDC_BUTTON15, &CShuangSeQiuDlg::OnBnClickedButton15)
+	ON_BN_CLICKED(IDC_BUTTON16, &CShuangSeQiuDlg::OnBnClickedButton16)
 END_MESSAGE_MAP()
 
 
@@ -175,6 +183,7 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 
 	m_ComboBox.InsertString(0,_T("搜索红球"));
 	m_ComboBox.InsertString(1,_T("搜索篮球"));
@@ -182,6 +191,8 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_ComboBox.InsertString(3,_T("搜索尾值"));
 	CenterWindow();
 
+	OnBnClickedLoadDataBtn();
+	OnBnClickedLoadDataBtn2();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -239,11 +250,10 @@ void CShuangSeQiuDlg::OnBnClickedLoadDataBtn()
 {
 	CString FilePath=GetAppCurrentPath()+_T("Data.txt");
 	CDataManageCenter::GetInstance()->LoadDataFromFile(FilePath,false);
-	/*FilePath=GetAppCurrentPath()+_T("Data2.txt");
-	CDataManageCenter::GetInstance()->LoadDataFromFile(FilePath,true);*/
-
+	
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 
 	m_ListCtrl.DeleteAllItems();
 
@@ -290,6 +300,24 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl2.InsertColumn(13,_TEXT("统计未出V"),	LVCFMT_CENTER,	2*nWidth);
 
 
+	nWidth = Rect.Width()/19;
+	m_ListCtrl3.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(1,_TEXT("0合"),	LVCFMT_CENTER,	nWidth); 
+	m_ListCtrl3.InsertColumn(2,_TEXT("1合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(3,_TEXT("2合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(4,_TEXT("3合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(5,_TEXT("4合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(6,_TEXT("5合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(7,_TEXT("6合"),LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(8,_TEXT("7合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(9,_TEXT("8合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(10,_TEXT("9合"),	LVCFMT_CENTER,	nWidth);
+	m_ListCtrl3.InsertColumn(11,_TEXT("妍儿合和"),	LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl3.InsertColumn(12,_TEXT("妍儿合差"),	LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl3.InsertColumn(13,_TEXT("统计出合"),	LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl3.InsertColumn(14,_TEXT("统计未出合"),	LVCFMT_CENTER,	2*nWidth);
+
+
 
 	sItemStyle Style;
 	Style.m_ItemType = TEXT_TYPE;
@@ -307,14 +335,18 @@ void CShuangSeQiuDlg::InitListHeader()
 	m_ListCtrl.SetColumStyle(9,Style);
 
 
-	for(int i=0; i < 11; i++)
+	for(int i=0; i < 14; i++)
 		m_ListCtrl2.SetColumStyle(i,Style);
+
+	for(int i=0; i < 15; i++)
+		m_ListCtrl3.SetColumStyle(i,Style);
 
 	Style.m_DrawData.m_TextData.m_TextColor=RGB(120,195,230);
 	m_ListCtrl.SetColumStyle(8,Style);
 	
 	m_ListCtrl.SetRowHeight(30);
 	m_ListCtrl2.SetRowHeight(30);
+	m_ListCtrl3.SetRowHeight(30);
 
 	sItemBkData ItemBkData;
 	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
@@ -328,6 +360,7 @@ void CShuangSeQiuDlg::InitListHeader()
 
 	m_ListCtrl.SetItemBkData(ItemBkData);
 	m_ListCtrl2.SetItemBkData(ItemBkData);
+	m_ListCtrl3.SetItemBkData(ItemBkData);
 
 }
 
@@ -346,6 +379,7 @@ void CShuangSeQiuDlg::OnBnClickedSearchBtn()
 {
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 
 	CString Text;
 	GetDlgItem(IDC_EDIT1)->GetWindowText(Text);
@@ -383,6 +417,7 @@ void CShuangSeQiuDlg::OnBnClickedSearchBtn2()
 {
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 
 	CString Text;
 	GetDlgItem(IDC_EDIT2)->GetWindowText(Text);
@@ -451,6 +486,7 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn6()
 {
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 	m_IsShowByChuQiu= false;
 	m_ListCtrl.DeleteAllItems();
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
@@ -557,6 +593,7 @@ void CShuangSeQiuDlg::OnBnClickedButton8()
 {
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 	m_IsShowByChuQiu = true;
 	m_ListCtrl.DeleteAllItems();
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
@@ -570,6 +607,7 @@ void CShuangSeQiuDlg::OnBnClickedButton12()
 {
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 
 	m_ListCtrl.DeleteAllItems();
 	map<CString,sYuCeShuangSeQiu> Temp;
@@ -775,99 +813,216 @@ void CShuangSeQiuDlg::InsertAndSetText2(int Row,sShuangSeQiu& ShuangSeQiu,int* p
 }
 
 
-void CShuangSeQiuDlg::OnBnClickedButton11()
+//插入和设置文本
+void CShuangSeQiuDlg::InsertAndSetText3(int Row,sShuangSeQiu& ShuangSeQiu,int* pCount)
 {
-	CString Text3;
-	GetDlgItem(IDC_EDIT3)->GetWindowText(Text3);
-	CString Text4;
-	GetDlgItem(IDC_EDIT4)->GetWindowText(Text4);
-	CString Text5;
-	GetDlgItem(IDC_EDIT5)->GetWindowText(Text5);
-	CString Text7;
-	GetDlgItem(IDC_EDIT7)->GetWindowText(Text7);
+	m_ListCtrl3.InsertItem(Row,"");
+	m_ListCtrl3.SetItemText(Row,0,ShuangSeQiu.m_QiShu);
+	int DataArray[10];
+	memset(DataArray,0,10*sizeof(int));
 
-	DWORD Data1=0,Data2=0,Data3=0,Data4=0;
-	Data1=atoi(Text3.GetBuffer());
-	Data2=atoi(Text4.GetBuffer());
-	Data3=atoi(Text5.GetBuffer());
-	Data4=atoi(Text7.GetBuffer());
-	CString QiShu;
-	if(Data1 == 0 && !Text3.IsEmpty())
-		QiShu=Text3;
-	if(Data2 == 0 && !Text4.IsEmpty())
-		QiShu=Text4;
-
-	if(Data3 == 0 && !Text5.IsEmpty())
-		QiShu=Text5;
-	if(Data4 == 0 && !Text7.IsEmpty())
-		QiShu=Text7;
-
-	
-
+	for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
+	{
+		int Data=ShuangSeQiu.m_HongQiu[HongQiu]%10+ShuangSeQiu.m_HongQiu[HongQiu]/10;
+		Data=Data%10;
+		DataArray[Data]++;
+		if(pCount != NULL)
+		{
+			pCount[Data]++;
+		}
+	}
 
 	sItemStyle Style;
 	Style.m_ItemType = TEXT_TYPE;
-	Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,33);
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
 	Style.m_DrawData.m_TextData.m_TextFont = NULL;
 	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	
+	CString Chu;
+	CString WeiChu;
+	CString YanEr;
+	CString YanErHeCha;
 
-	m_ListCtrl.DeleteAllItems();
-	map<CString,sYuCeShuangSeQiu> Temp;
-	Temp=CDataManageCenter::GetInstance()->SearchDataBySuanFa(Data1,Data2,Data3,Data4,QiShu);
-
-	map<CString,sYuCeShuangSeQiu>::iterator it=Temp.begin();
-	if(it == Temp.end())
-		return;
-
-
-	int RowCount=0;
-	for(; it != Temp.end();it++)
+	for(int i=0; i < 10; i++)
 	{
-		map<eSuanFaType,sShuangSeQiu>::iterator TempIt=it->second.m_YuCeQiuMap.begin();
-		int Index=0;
-		for(;TempIt != it->second.m_YuCeQiuMap.end();TempIt++)
+		CString QuJianBi;
+		QuJianBi.Format("%d",i);
+		if(DataArray[i])
 		{
-			InsertAndSetText(RowCount+Index,TempIt->second);
-			Index++;
-			
-			for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
-			{
-				int TempData = TempIt->second.m_HongQiu[HongQiu];
-				for(int j=0; j < QIU_XUN; j++)
-				{
-					if(TempData == Data1 || TempData == Data2 || TempData == Data3 || TempData == Data4)
-					{
-						m_ListCtrl.SetItemSpecialStyle(RowCount+Index-1,HongQiu+1,Style);
-						break;
-					}
-				}
-			}
 
+			m_ListCtrl3.SetItemText(Row,i+1,QuJianBi);
+			Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			Chu+= QuJianBi;
+			m_ListCtrl3.SetItemSpecialStyle(Row,i+1,Style);
 
 		}
-
-		InsertAndSetText(RowCount+Index,it->second.m_ShuangSeQiu);
-		for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
+		else
 		{
-			int TempData = it->second.m_ShuangSeQiu.m_HongQiu[HongQiu];
-			for(int j=0; j < QIU_XUN; j++)
-			{
-				if(TempData == Data1 || TempData == Data2 || TempData == Data3 || TempData == Data4)
-				{
-					m_ListCtrl.SetItemSpecialStyle(RowCount+Index,HongQiu+1,Style);
-					break;
-				}
-			}
+			WeiChu+= QuJianBi;
+			Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+			m_ListCtrl3.SetItemSpecialStyle(Row,i+1,Style);
 		}
-
-
-		Index++;
-
-		m_ListCtrl.InsertItem(RowCount+Index,"");
-		RowCount+=Index+1;
 
 	}
+
+
+	
+	int DataArray2[10];
+	int DataArray3[10];
+	memset(DataArray2,0,10*sizeof(int));
+	memset(DataArray3,0,10*sizeof(int));
+
+
+	for(int i=0; i < 10; i++)
+	{
+		for(int j=0; j < 10; j++)
+		{
+			if( i != j)
+			{
+
+				int a=i;
+				int b=j;
+				if(DataArray[a]&& DataArray[b])
+				{
+					int TempData=a+b;
+					TempData=TempData%10;
+					DataArray2[TempData]++;
+
+					int TempData3=abs(a-b);
+					TempData3=TempData3%10;
+					DataArray3[TempData3]++;
+
+				}
+			}
+		}
+	}
+	
+	
+	for(int i=0; i < 10; i++)
+	{
+		CString QuJianBi;
+		QuJianBi.Format("%d",i);
+		if(!DataArray2[i])
+			YanEr+= QuJianBi;
+		
+		QuJianBi.Empty();
+		QuJianBi.Format("%d",i);
+		if(!DataArray3[i])
+			YanErHeCha+=QuJianBi;
+	}
+
+	Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+	m_ListCtrl3.SetItemText(Row,11,YanEr);
+	m_ListCtrl3.SetItemText(Row,12,YanErHeCha);
+	m_ListCtrl3.SetItemText(Row,13,Chu);
+	m_ListCtrl3.SetItemText(Row,14,WeiChu);
+	m_ListCtrl3.SetItemSpecialStyle(Row,11,Style);
+	m_ListCtrl3.SetItemSpecialStyle(Row,12,Style);
+	m_ListCtrl3.SetItemSpecialStyle(Row,13,Style);
+	m_ListCtrl3.SetItemSpecialStyle(Row,14,Style);
+
+
 }
+
+void CShuangSeQiuDlg::OnBnClickedButton11()
+{
+	CFormulaCenter::GetInstance();
+	m_DlgLianHaoLanQiu.SetWondowsTitle("定红和红V",FORMULA_DING_HONG_WEI);
+	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+}
+//void CShuangSeQiuDlg::OnBnClickedButton11()
+//{
+//	CString Text3;
+//	GetDlgItem(IDC_EDIT3)->GetWindowText(Text3);
+//	CString Text4;
+//	GetDlgItem(IDC_EDIT4)->GetWindowText(Text4);
+//	CString Text5;
+//	GetDlgItem(IDC_EDIT5)->GetWindowText(Text5);
+//	CString Text7;
+//	GetDlgItem(IDC_EDIT7)->GetWindowText(Text7);
+//
+//	DWORD Data1=0,Data2=0,Data3=0,Data4=0;
+//	Data1=atoi(Text3.GetBuffer());
+//	Data2=atoi(Text4.GetBuffer());
+//	Data3=atoi(Text5.GetBuffer());
+//	Data4=atoi(Text7.GetBuffer());
+//	CString QiShu;
+//	if(Data1 == 0 && !Text3.IsEmpty())
+//		QiShu=Text3;
+//	if(Data2 == 0 && !Text4.IsEmpty())
+//		QiShu=Text4;
+//
+//	if(Data3 == 0 && !Text5.IsEmpty())
+//		QiShu=Text5;
+//	if(Data4 == 0 && !Text7.IsEmpty())
+//		QiShu=Text7;
+//
+//	
+//
+//
+//	sItemStyle Style;
+//	Style.m_ItemType = TEXT_TYPE;
+//	Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,33);
+//	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+//	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+//
+//	m_ListCtrl.DeleteAllItems();
+//	map<CString,sYuCeShuangSeQiu> Temp;
+//	Temp=CDataManageCenter::GetInstance()->SearchDataBySuanFa(Data1,Data2,Data3,Data4,QiShu);
+//
+//	map<CString,sYuCeShuangSeQiu>::iterator it=Temp.begin();
+//	if(it == Temp.end())
+//		return;
+//
+//
+//	int RowCount=0;
+//	for(; it != Temp.end();it++)
+//	{
+//		map<eSuanFaType,sShuangSeQiu>::iterator TempIt=it->second.m_YuCeQiuMap.begin();
+//		int Index=0;
+//		for(;TempIt != it->second.m_YuCeQiuMap.end();TempIt++)
+//		{
+//			InsertAndSetText(RowCount+Index,TempIt->second);
+//			Index++;
+//			
+//			for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
+//			{
+//				int TempData = TempIt->second.m_HongQiu[HongQiu];
+//				for(int j=0; j < QIU_XUN; j++)
+//				{
+//					if(TempData == Data1 || TempData == Data2 || TempData == Data3 || TempData == Data4)
+//					{
+//						m_ListCtrl.SetItemSpecialStyle(RowCount+Index-1,HongQiu+1,Style);
+//						break;
+//					}
+//				}
+//			}
+//
+//
+//		}
+//
+//		InsertAndSetText(RowCount+Index,it->second.m_ShuangSeQiu);
+//		for(int HongQiu=0; HongQiu < QIU_XUN; HongQiu++)
+//		{
+//			int TempData = it->second.m_ShuangSeQiu.m_HongQiu[HongQiu];
+//			for(int j=0; j < QIU_XUN; j++)
+//			{
+//				if(TempData == Data1 || TempData == Data2 || TempData == Data3 || TempData == Data4)
+//				{
+//					m_ListCtrl.SetItemSpecialStyle(RowCount+Index,HongQiu+1,Style);
+//					break;
+//				}
+//			}
+//		}
+//
+//
+//		Index++;
+//
+//		m_ListCtrl.InsertItem(RowCount+Index,"");
+//		RowCount+=Index+1;
+//
+//	}
+//}
 
 void CShuangSeQiuDlg::OnCbnSelchangeCombo1()
 {
@@ -877,7 +1032,33 @@ void CShuangSeQiuDlg::OnCbnSelchangeCombo1()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_SHOW);
+	
+	m_ListCtrl3.DeleteAllItems();
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	if(DataList->empty())
+		return;
+
+	int CountArray[10];
+	memset(CountArray,0,sizeof(int)*10);
+
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		InsertAndSetText3(Index,(*DataList)[Index],CountArray);
+	}
+
+	m_ListCtrl3.InsertItem(DataList->size(),"");
+	m_ListCtrl3.SetItemText(DataList->size(),0,"合数统计");
+
+	for(int i=0; i < 10; i++)
+	{
+		CString Text;
+		Text.Format(_T("%d"),CountArray[i]);
+		m_ListCtrl3.SetItemText(DataList->size(),i+1,Text);
+	}
 }
 
 void CShuangSeQiuDlg::OnBnClickedButton13()
@@ -890,7 +1071,9 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 {
 	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
 	m_ListCtrl2.ShowWindow(SW_SHOW);
+	
 	m_ListCtrl2.DeleteAllItems();
 
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
@@ -914,4 +1097,817 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 		Text.Format(_T("%d"),CountArray[i]);
 		m_ListCtrl2.SetItemText(DataList->size(),i+1,Text);
 	}
+}
+
+void CShuangSeQiuDlg::OnBnClickedLoadDataBtn2()
+{
+	::CreateThread(NULL,0,RequestDataInfoThread,this,0,0);
+}
+
+
+DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
+{
+    CShuangSeQiuDlg* Self=(CShuangSeQiuDlg*)lpVoid;
+
+	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(false);
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	int StartQiShu=0;
+	if(DataList->empty())
+	{
+		__time32_t aa=time(NULL);
+		COleDateTime TempTime(aa);
+		StartQiShu=TempTime.GetYear();
+		StartQiShu=StartQiShu*1000;
+		StartQiShu++;
+	}
+	else
+	{
+		int TempIndex=DataList->size()-1;
+		CString QiShu=(*DataList)[TempIndex].m_QiShu;
+		StartQiShu=atoi(QiShu.GetBuffer());
+		QiShu.ReleaseBuffer();
+		StartQiShu++;
+	}
+
+	vector<sShuangSeQiuInfo> InfoList;
+	while(true)
+	{
+		CString Url;
+		CString QiHao;
+		QiHao.Format(_T("%d"),StartQiShu);
+		Url.Format(_T("http://kaijiang.cjcp.com.cn/ssq/%d.html"),StartQiShu);
+		CHttpFile* File= NULL;
+		try
+		{
+			//获取服务器列表文件
+			CInternetSession Session;
+			File=(CHttpFile*)Session.OpenURL(Url);
+			if(NULL == File) 
+				return -1;
+
+			DWORD Len=0;
+			DWORD   Status; 
+			DWORD   StatusSize   =   sizeof(Status); 
+			DWORD   ContentLen=0,   ContentLenSize   =   sizeof(ContentLenSize); 
+			if(File->QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_STATUS_CODE,  &Status,   &StatusSize,   NULL) &&   Status   ==   HTTP_STATUS_OK) 
+				File-> QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_CONTENT_LENGTH,   &Len,   &ContentLenSize);	
+
+			char Buffer[10*1024+1];
+			memset(Buffer,0,10*1024+1);
+			DWORD AllLen = 0;
+			CString Txt;
+			while(true)
+			{
+				char Buffer[1024*10+1]={0};
+				memset(Buffer,0,1024*10+1);
+				DWORD ReadLen= Len - AllLen > 10*1024 ? 10*1024 : Len - AllLen;
+				DWORD ReadBytes=File->Read(Buffer,ReadLen);
+				if(ReadBytes == -1)
+					break;
+				AllLen += ReadBytes;
+				CString TempTxt=CString(Buffer);
+				Txt+=TempTxt;
+
+				if(AllLen == Len )
+					break;
+				
+
+			}
+
+			if(Txt.Find("对不起没有找到该页面") !=-1)
+				break;
+
+			sShuangSeQiuInfo Info;
+			Info.m_QiHao = QiHao;
+			PaseInfo(Txt,Info);
+			InfoList.push_back(Info);
+			File->Close();
+			delete File; File = NULL;
+		}catch(...)
+		{
+			if(File)
+			{
+				File->Close();
+				delete File; File = NULL;
+			}
+
+			break;
+		
+		}
+
+		StartQiShu++;
+	}
+
+	CString FileName=GetAppCurrentPath()+_T("Data.txt");
+	HANDLE FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+	{
+		FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	}
+	::SetFilePointer(FileHandle,0,0,FILE_END);
+	for(int i = 0; i < InfoList.size(); i++)
+	{
+		DWORD WriteByte=0;
+		::WriteFile(FileHandle,InfoList[i].m_ChuQiuShuanXu.GetBuffer(),InfoList[i].m_ChuQiuShuanXu.GetLength(),&WriteByte,NULL);
+	}
+	CloseHandle(FileHandle);
+
+	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(true);
+	Self->OnBnClickedLoadDataBtn();
+	return 0;
+}
+
+//解析数据
+bool CShuangSeQiuDlg::PaseInfo(CString& Txt,sShuangSeQiuInfo& Info)
+{
+	int StartPos=0;
+	int EndPos=0;
+	CString TempStr;
+	CString FindStr=_T("<input type=\"button\" value=\"");
+	CString LanQiu;
+	for(int Index = 0; Index < 7; Index++)
+	{
+	
+		StartPos=Txt.Find(FindStr,StartPos);
+		if(StartPos != -1)
+		{
+			EndPos=Txt.Find(_T("\""),StartPos+FindStr.GetLength()+1);
+			if(EndPos != -1)
+			{
+				CString Value=Txt.Mid(StartPos+FindStr.GetLength(),EndPos-StartPos-FindStr.GetLength());
+				TempStr+=_T(" ")+Value;
+				if(Index == 6)
+					LanQiu=Value;
+
+			}
+		}
+		StartPos = EndPos+1;
+	}
+	if(!TempStr.IsEmpty())
+	{
+		TempStr.TrimLeft();
+		TempStr.TrimRight();
+		TempStr=TempStr+_T(" ;\r\n");
+		Info.m_KaiJiangHao = Info.m_QiHao +_T(" ")+TempStr;
+	}
+
+	FindStr=_T("<td class=\"kjhm\"><strong>");
+	StartPos=Txt.Find(FindStr,StartPos);
+	if(StartPos != -1)
+	{
+		EndPos = Txt.Find(_T("</strong>"),StartPos+FindStr.GetLength()+1);
+		if(EndPos != -1)
+		{
+			CString Value = Txt.Mid(StartPos+FindStr.GetLength(),EndPos-StartPos-FindStr.GetLength());
+			if(!Value.IsEmpty())
+			{
+				Value.TrimLeft();
+				Value.TrimRight();
+				Value=Value+_T(" ")+LanQiu+_T(" ;\r\n");
+				Info.m_ChuQiuShuanXu = Info.m_QiHao +_T(" ")+Value;
+			}
+		}
+	}
+
+	return true;
+}
+void CShuangSeQiuDlg::OnBnClickedButton14()
+{
+	
+}
+
+void CShuangSeQiuDlg::OnBnClickedButton15()
+{
+	
+}
+
+void CShuangSeQiuDlg::OnBnClickedButton16()
+{
+	::CreateThread(NULL,0,CombineDataThread,this,0,0);
+}
+
+ DWORD CShuangSeQiuDlg::CombineDataThread(LPVOID lpVoid)
+{
+	CShuangSeQiuDlg* Self=(CShuangSeQiuDlg*)lpVoid;
+
+	CString FilePath=GetAppCurrentPath()+"tiaojian.txt";
+	DWORD Flag = OPEN_EXISTING;
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+		return 0;
+
+	Self->GetDlgItem(IDC_BUTTON16)->EnableWindow(false);
+	DWORD Size = ::GetFileSize(FileHandle,NULL);
+	char* Buffer = new char[Size+1];
+	memset(Buffer,'\0',Size+1);
+	DWORD ReadBytes=0;
+	::ReadFile(FileHandle,Buffer,Size,&ReadBytes,NULL);
+	CString StrData=CString(Buffer);
+	map<CString,vector<int>> MapData;
+	ParseData(StrData,MapData);
+	Combine(MapData);
+	delete []Buffer;
+	CloseHandle(FileHandle);
+	Self->GetDlgItem(IDC_BUTTON16)->EnableWindow(true);
+	return 0;
+}
+
+
+//解析数据
+void CShuangSeQiuDlg::ParseData(CString& StrData,map<CString,vector<int>>& MapData)
+{
+	int StartPos=0;
+	int EndPos=0;
+	while(EndPos != -1)
+	{
+		EndPos=StrData.Find(";",StartPos);
+		if(EndPos == -1)
+			break;
+
+		CString Temp=StrData.Mid(StartPos,EndPos-StartPos);
+		StartPos = EndPos+1;
+		
+		int Pos=Temp.Find("=");
+		if(Pos == -1)
+			continue;
+
+		CString Name = Temp.Left(Pos);
+		if(Name.Find("\r\n") != -1)
+			Name=Name.Mid(Name.Find("\r\n")+2);
+		Name=Name.Trim();
+		Temp=Temp.Mid(Pos+1);
+		if(!Temp.IsEmpty())
+		{
+			vector<int> Data=GetDataList(Temp);
+			MapData[Name]=Data;
+		}
+		
+	}
+
+	for(int i = 0; i < MapData["球数"].size(); i++)
+	{
+		for(int Index = 0 ; Index < MapData["球数"].size(); Index++)
+		{
+			if(MapData["球数"][i] < MapData["球数"][Index])
+			{
+				int Temp1 = MapData["球数"][Index];
+				MapData["球数"][Index]=MapData["球数"][i];
+				MapData["球数"][i] = Temp1;
+			}	
+		}
+	}
+}
+
+//组合数据
+void CShuangSeQiuDlg::Combine(map<CString,vector<int>> MapData)
+{
+	int n=0,m=0;
+
+	n=MapData["球数"].size();
+	m=MapData["球选"][0];
+	m = m > n ? n : m;
+
+	int* order = new int[m+1];    
+	for(int i=0; i<=m; i++)
+	  order[i] = i-1;            // 注意这里order[0]=-1用来作为循环判断标识
+	 
+
+	 CString WriteStr;
+	 int count = 0;   
+	 int AllCount=0;
+	 int k = m;
+	 bool flag = true;           // 标志找到一个有效组合
+	 while(order[0] == -1)
+	 {
+		  if(flag)                   // 输出符合要求的组合
+		  {   
+			  flag = false;
+			  CString OutStr;
+
+			  map<CString,vector<int>>::iterator it=MapData.begin();
+
+			  int WantCount=0;
+			  int RealWantCount=0;
+			  for(; it != MapData.end(); it++)
+			  {
+				  if(it->first == "龙头")
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[1]];
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first == "凤尾")
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[m]];
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+					  continue;
+				  }
+
+				  if(it->first == "胆V或")
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								  IsWant=true;
+								  break;
+							  }
+						  }
+
+						  if(IsWant)
+							  break;
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+					  continue;
+				  }
+
+				  if(it->first == "胆V且")
+				  {
+					  WantCount++;
+					  int Array[10];
+					  memset(Array,0,sizeof(int)*10);
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								  Array[TempData]++;
+								 break;
+							  }
+						  }
+					  }
+
+					  int QieCount=0;
+					  for(int f=0; f < 10; f++)
+					  {
+						  if(Array[f])
+							  QieCount++;
+					  }
+					  if(QieCount >= it->second.size() )
+						RealWantCount++;
+					  continue;
+				  }
+
+
+				  if(it->first == "定胆")
+				  {
+					  WantCount++;
+					  int QieCount=0;
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]];
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 QieCount++;
+								 break;
+							  }
+						  }
+					  }
+
+					  if(QieCount >= it->second.size() )
+						RealWantCount++;
+					  continue;
+				  }
+				  
+				  if(it->first.Find("杀号") != -1)
+				  {
+					  WantCount++;
+					  int QieCount=0;
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]];
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 QieCount++;
+								 break;
+							  }
+						  }
+					  }
+
+					  if(QieCount < it->second.size() )
+						RealWantCount++;
+					  continue;
+				  }
+
+
+				  if(it->first.Find("红一大于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[1]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData > it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红一小于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[1]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData < it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				    if(it->first.Find("红二大于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[2]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData > it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红二小于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[2]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData < it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+
+
+				    if(it->first.Find("红三大于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[3]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData > it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红三小于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[3]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData < it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+
+
+				    if(it->first.Find("红四大于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[4]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData > it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红四小于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[4]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData < it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+
+
+				    if(it->first.Find("红五大于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[5]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData > it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红五小于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[5]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData < it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+
+
+				    if(it->first.Find("红六大于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[6]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData > it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红六小于") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[6]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData < it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+
+
+
+
+
+			  }
+
+			  if(RealWantCount == WantCount)
+			  {
+					for(int i=1; i<=m; i++)      
+					{
+						int TempData=MapData["球数"][order[i]];	
+						CString Temp;
+						Temp.Format("%02d ",TempData);
+						OutStr+=Temp;
+					}
+
+				   CString LanQiu;
+				   LanQiu.Format("%02d",MapData["蓝球"][0]);
+				   OutStr+=LanQiu;
+				   OutStr+="\r\n";
+				   WriteStr+=OutStr;
+				   count++;
+			  }
+
+			  AllCount++;
+			 
+		  }
+
+		  order[k]++;                // 在当前位置选择新的数字
+		  if(order[k] == n)          // 当前位置已无数字可选，回溯
+		  {
+		   order[k--] = 0;
+		   continue;
+		  }     
+		  
+		  if(k < m)                  // 更新当前位置的下一位置的数字          
+		  {
+		   order[++k] = order[k-1];
+		   continue;
+		  }
+		  
+		  if(k == m)
+		   flag = true;
+	 }
+
+	 delete[] order;
+
+    CString FilePath2 = GetAppCurrentPath()+_T("\\goumai.txt");
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox(_T("打开文件失败！"));
+		return;
+	}
+
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	WriteStr.ReleaseBuffer();
+	CloseHandle(FileHandle2);
+
+	 CString Header;
+	 Header.Format("总注数：%02d 缩水后：%02d\r\n",AllCount,count);
+	 WriteStr=Header+WriteStr;
+
+
+    CString FilePath = GetAppCurrentPath()+_T("\\suoshui.txt");
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox(_T("打开文件失败！"));
+		return;
+	}
+		
+	WriteBytes=0;
+	::WriteFile(FileHandle,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	WriteStr.ReleaseBuffer();
+	CloseHandle(FileHandle);
+	ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
+
+}
+
+//获取数据
+vector<int> CShuangSeQiuDlg::GetDataList(CString& StrData)
+{
+	int StartPos = 0;
+	int EndPos   = 0;
+	int Index = 0;
+	int Count=0;
+	vector<int> DataList;
+
+	while(EndPos != -1)
+	{
+		EndPos=StrData.Find(_T(" "),StartPos);
+		if(EndPos == -1)
+			break;
+
+		CString Temp = StrData.Mid(StartPos,EndPos-StartPos);
+		int TempData = atoi(Temp.GetBuffer());
+		Temp.ReleaseBuffer();
+		if(TempData != 0)
+			DataList.push_back(TempData);
+		StartPos = EndPos+1;
+	}
+
+	return DataList;
 }
