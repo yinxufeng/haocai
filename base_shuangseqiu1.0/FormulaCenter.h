@@ -146,12 +146,13 @@ private:
 	//运行定红V公式
 	void ExecDingHongFormula();
 
-
 	//运行杀蓝公式
 	void ExecShaLanFormula();
 
 	//运行杀蓝V公式
 	void ExecShaLanVFormula();
+
+
 
 private:
 

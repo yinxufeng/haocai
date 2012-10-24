@@ -25,6 +25,15 @@ enum eSuanFaType                 //预测算法类型
 
 };
 
+//29组数据
+struct sData29
+{
+	CString     m_BianHao;       //编号
+	vector<int> m_WeiHong;       //围红号
+	vector<int> m_JueSha;        //绝杀号
+	vector<int> m_GuanLian;      //关联号
+};
+
 struct sShuangSeQiu
 {
 	DWORD   m_QiShuID;            //期数ID程序自动分配 

@@ -63,7 +63,9 @@
 #define IDC_STATIC10                    1017
 #define IDC_BUTTON10                    1017
 #define IDC_STATIC11                    1018
+#define IDC_LIST3                       1018
 #define IDC_STATIC12                    1019
+#define IDC_LOAD_DATA_BTN2              1019
 #define IDC_STATIC13                    1020
 #define IDC_STATIC14                    1021
 #define IDC_STATIC15                    1022
@@ -95,8 +97,11 @@
 #define IDC_CHECK1                      1048
 #define IDC_COMBO1                      1049
 #define IDC_BUTTON13                    1050
+#define IDC_BUTTON14                    1051
 #define IDC_EDIT20                      1052
+#define IDC_BUTTON15                    1052
 #define IDC_PREV_BTN                    1053
+#define IDC_BUTTON16                    1053
 #define IDC_NEXT_BTN                    1054
 #define IDC_RESULT                      1055
 #define IDC_RESULT2                     1056

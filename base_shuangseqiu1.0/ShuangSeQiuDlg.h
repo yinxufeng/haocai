@@ -17,6 +17,18 @@
 #include "DlgTeZongHeFenXi.h"
 #include "afxwin.h"
 
+
+struct sShuangSeQiuInfo
+{
+	CString m_QiHao;
+	CString m_KaiJiangHao;
+	CString m_ChuQiuShuanXu;
+	CString m_BenQiXiaoLiang;
+	CString m_JiangChiGunCun;
+	CString m_OtherInfo;
+};
+
+
 class CShuangSeQiuDlg : public CDialog
 {
 // 构造
@@ -64,6 +76,9 @@ public:
 
 	//插入和设置文本
 	void InsertAndSetText2(int Row,sShuangSeQiu& ShuangSeQiu,int* pCount=NULL);
+	
+	//插入和设置文本
+	void InsertAndSetText3(int Row,sShuangSeQiu& ShuangSeQiu,int* pCount=NULL);
 
 	afx_msg void OnBnClickedButton11();
 
@@ -78,6 +93,7 @@ private:
 
 	CListCtrlEx m_ListCtrl;
 	CListCtrlEx m_ListCtrl2;
+	CListCtrlEx m_ListCtrl3;
 	CRedBallDlg m_RedBallDlg;
 
 	CDlgLianHaoHongQiu   m_DlgLianHaoHongQiu;
@@ -103,4 +119,25 @@ public:
 	afx_msg void OnBnClickedBlueBallBtn();
 	afx_msg void OnBnClickedButton13();
 	afx_msg void OnBnClickedBlueBallBtn5();
+	afx_msg void OnBnClickedLoadDataBtn2();
+
+	static DWORD WINAPI RequestDataInfoThread(LPVOID lpVoid);
+	static DWORD WINAPI CombineDataThread(LPVOID lpVoid);
+
+
+	//解析数据
+	static bool PaseInfo(CString& Txt,sShuangSeQiuInfo& Info);
+	afx_msg void OnBnClickedButton14();
+	afx_msg void OnBnClickedButton15();
+	afx_msg void OnBnClickedButton16();
+
+
+	//解析数据
+	static void ParseData(CString& StrData,map<CString,vector<int>>& MapData);
+
+	//获取数据
+	static vector<int> GetDataList(CString& StrData);
+
+	//组合数据
+	static void Combine(map<CString,vector<int>> MapData);
 };

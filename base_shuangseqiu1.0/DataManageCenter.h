@@ -102,6 +102,9 @@ public:
 	//保存统计五期以内和五期以外数据到txt文件中
 	void SaveFiveDataToTxtFile();
 
+	//保存29组统计数据到txt文件中
+	void Save29DataToTxtFile();
+
 	//获取AC差值
 	int GetACCount(sShuangSeQiu& ShuangSeQiu);
 public:
@@ -155,6 +158,13 @@ private:
 	int GetWeiZhiParam(sShuangSeQiu& ShuangSeQiu);
 
 
+	/////初始29组数/////////////
+
+	//初始化29组数据
+	void Init29Data();
+
+	//初始一组数据
+	void InitOneData(sData29 &Data);
 
 
 	CDataManageCenter(void);
@@ -168,5 +178,6 @@ private:
 	vector<sZongXiangChaZhi>    m_ZongXiangChaZhiList;    //双色球纵向差值列表
 	vector<sShuangSeQiu>        m_LianHaoHongQiu;         //双色球连号红球数值
 	vector<sShuangSeQiu>        m_LianHaoLanQiu;          //双色球连号篮球数值
+	vector<sData29>             m_Data29;                 //29组数据
 	BOOL                        m_SearchFlag;             //搜索标志
 };
