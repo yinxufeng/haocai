@@ -1006,10 +1006,10 @@ bool  CDataManageCenter::LoadDataFromFile(CString FilePath,bool IsChuHaoXunXu,bo
 		LoadDataFromFile(FilePath,m_ShuangSeQiuList);
 
 		//保存统计数据到csv文件中
-	//	SaveDataToCSVFile();
+		SaveDataToCSVFile();
 
 		//保存统计五期以内和五期以外数据到txt文件中
-	//	SaveFiveDataToTxtFile();
+		SaveFiveDataToTxtFile();
 	}
 	else
 	{
@@ -1039,6 +1039,7 @@ bool CDataManageCenter::LoadDataFromFile(CString FilePath,vector<sShuangSeQiu>& 
 	delete []Buffer;
 
 	CloseHandle(FileHandle);
+
 	//初始化横向差值
 /*	InitHengXiangChaZhi(m_ShuangSeQiuList);
 
@@ -1362,7 +1363,8 @@ int CDataManageCenter::GetWeiZhiParam(sShuangSeQiu& ShuangSeQiu)
 void CDataManageCenter::SaveDataToCSVFile()
 {
 
-	CString FilePath = GetAppCurrentPath2()+_T("\\chuqiushu.csv");
+
+	 CString FilePath = GetAppCurrentPath2()+_T("\\chuqiushu.csv");
 
 	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 	if(FileHandle == INVALID_HANDLE_VALUE)
@@ -1384,11 +1386,11 @@ void CDataManageCenter::SaveDataToCSVFile()
 	CString StrCSV2;
 	CString StrText2=_T("球\t次数\r\n");
 
-	for(int i = 0; i <= QIU_COUNT; i++)
+	for(int i = 0; i <= 33; i++)
 	{
 		CString Temp;
 		Temp.Format(_T("%02d"),i);
-		if( i != QIU_COUNT)
+		if( i != 33)
 			Temp+=_T(",");
 		else
 			Temp+=_T("\n");
@@ -1410,15 +1412,16 @@ void CDataManageCenter::SaveDataToCSVFile()
 		{
 			Index = m_ShuangSeQiuList.size();
 			IsLast = true;
+			
 		}
 
-		int DataArray[QIU_COUNT][QIU_COUNT]={0};
-		for(int i=0; i < QIU_COUNT; i++)
+		int DataArray[33][33]={0};
+		for(int i=0; i < 33; i++)
 		{
 			for(int j = 0 ; j < (int)Index; j++)
 			{
 				bool IsWant=false;
-				for(int k = 0; k < QIU_XUN; k++)
+				for(int k = 0; k < 6; k++)
 				{
 					if(m_ShuangSeQiuList[j].m_HongQiu[k] == i+1)
 						IsWant=true;
@@ -1428,7 +1431,7 @@ void CDataManageCenter::SaveDataToCSVFile()
 					continue;
 
 				int Max=0;
-				for(int k = 0; k < QIU_XUN; k++)
+				for(int k = 0; k < 6; k++)
 				{
 				/*	if(m_ShuangSeQiuList[j].m_HongQiu[k] == i+1)
 						continue;*/
@@ -1448,11 +1451,11 @@ void CDataManageCenter::SaveDataToCSVFile()
 
 		
 
-		/*for(int i = 0; i < QIU_COUNT; i++)
+		/*for(int i = 0; i < 33; i++)
 		{
 			CString Temp;
 			Temp.Format(_T("%02d,"),i+1);
-			for(int j =0; j < QIU_COUNT; j++)
+			for(int j =0; j < 33; j++)
 			{
 				CString Temp2;
 				Temp2.Format(_T("%02d"),DataArray[i][j]);
@@ -1466,11 +1469,11 @@ void CDataManageCenter::SaveDataToCSVFile()
 			StrCSV+=Temp;
 		}*/
 
-		int MaxData[QIU_COUNT]={0};
-		for(int i = 0; i < QIU_COUNT; i++)
+		int MaxData[33]={0};
+		for(int i = 0; i < 33; i++)
 		{
 			int TempMax=0;
-			for(int j =0; j < QIU_COUNT; j++)
+			for(int j =0; j < 33; j++)
 			{
 				if(TempMax < DataArray[i][j] && i != j)
 				{
@@ -1484,7 +1487,7 @@ void CDataManageCenter::SaveDataToCSVFile()
 		CString Temp;
 		CString Temp2;
 
-		for(int i = 0; i < QIU_COUNT; i++)
+		for(int i = 0; i < 33; i++)
 		{
 			/*CString Temp;
 			Temp.Format(_T("%02d,%02d,%02d,%02d\n"),i+1,MaxData[i],DataArray[i][i],Index);
@@ -1511,7 +1514,7 @@ void CDataManageCenter::SaveDataToCSVFile()
 		
 
 
-		for(int i = 0; i < QIU_COUNT; i++)
+		for(int i = 0; i < 33; i++)
 		{
 			
 			Temp2.Format(_T("%02d"),DataArray[i][i]);
@@ -1523,7 +1526,7 @@ void CDataManageCenter::SaveDataToCSVFile()
 
 			Temp += Temp2;
 
-			if(IsLast)
+		//	if(IsLast)
 			{
 				int TempData = DataArray[i][i];
 				TempMapList[TempData].push_back(i+1);
@@ -1531,9 +1534,51 @@ void CDataManageCenter::SaveDataToCSVFile()
 			
 		}
 		StrCSV2+=_T("出球次数,")+Temp;
+
+		if(Index !=  m_ShuangSeQiuList.size())
+			StrText2+=m_ShuangSeQiuList[Index].m_QiShu+=":\r\n";
+
+		
+		map<int,vector<int>>::iterator it=TempMapList.begin();
+		for(it; it != TempMapList.end(); it++)
+		{
+			CString FormatStr;
+			FormatStr.Format("%02d: ",it->first);
+			vector<int> TempData;
+			for(int i=0; i < it->second.size(); i++)
+			{
+				CString TempStr;
+				TempStr.Format(_T("%02d "),it->second[i]);
+				FormatStr+=TempStr;
+
+				for(int j=0; j < 6; j++)
+				{
+					if( Index !=  m_ShuangSeQiuList.size() && m_ShuangSeQiuList[Index].m_HongQiu[j] == it->second[i])
+						TempData.push_back(it->second[i]);
+				}
+			}
+
+			for(int i = FormatStr.GetLength(); i < 50;i++)
+				FormatStr+=" ";
+
+			StrText2 +=FormatStr+"==》";
+			for(int i = 0; i < TempData.size(); i++)
+			{
+				CString TempDataStr;
+				if( TempData[i]!=0)
+					TempDataStr.Format("%02d ",TempData[i]);
+				StrText2+=TempDataStr;
+			}
+
+			StrText2 +="\r\n";
+		}
+
+		StrText2+="\r\n\r\n";
+		TempMapList.clear();
+		
 	}
 
-	map<int,vector<int>>::iterator it=TempMapList.begin();
+	/*map<int,vector<int>>::iterator it=TempMapList.begin();
 	for(it; it != TempMapList.end(); it++)
 	{
 		for(int Index=0; Index < it->second.size(); Index++)
@@ -1542,7 +1587,7 @@ void CDataManageCenter::SaveDataToCSVFile()
 			TempStr.Format(_T("%02d\t%02d\r\n"),it->second[Index],it->first);
 			StrText2+=TempStr;
 		}
-	}
+	}*/
 
 	StrCSV +=_T("\n\n\n")+StrCSV2;
 	DWORD WriteBytes=0;
@@ -1554,8 +1599,8 @@ void CDataManageCenter::SaveDataToCSVFile()
 	CloseHandle(FileHandle);
 	CloseHandle(FileHandle2);
 
-	ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
-	ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
+	//ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
+	//ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }
 
 
@@ -1657,6 +1702,7 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
 	::WriteFile(FileHandle2,WriteStr2.GetBuffer(),WriteStr2.GetLength(),&WriteBytes,NULL);
 	CloseHandle(FileHandle2);
+//	ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }
 
 //保存29组统计数据到txt文件中
