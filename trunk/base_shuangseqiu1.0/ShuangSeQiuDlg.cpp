@@ -1214,7 +1214,9 @@ DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
 	CloseHandle(FileHandle);
 
 	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(true);
-	Self->OnBnClickedLoadDataBtn();
+
+	if(!InfoList.empty())
+		Self->OnBnClickedLoadDataBtn();
 	return 0;
 }
 
