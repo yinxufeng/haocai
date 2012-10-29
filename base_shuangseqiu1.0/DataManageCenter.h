@@ -107,6 +107,10 @@ public:
 
 	//获取AC差值
 	int GetACCount(sShuangSeQiu& ShuangSeQiu);
+
+	//获取胆组数据
+	vector<map<int,CString>>* GetDanZuDataList();
+
 public:
 	
 	//球是否在红球中
@@ -180,4 +184,5 @@ private:
 	vector<sShuangSeQiu>        m_LianHaoLanQiu;          //双色球连号篮球数值
 	vector<sData29>             m_Data29;                 //29组数据
 	BOOL                        m_SearchFlag;             //搜索标志
+	vector<map<int,CString>>    m_DanZu;                  //胆组数据
 };

@@ -28,14 +28,26 @@ protected:
 	void InitListHeader();
 
 
+	//填充区域数据
+	void FillQuData(sShuangSeQiu Data,int* DataArray,int DataCount);
+
+	//填充区域数据
+	void FillQuData(sShuangSeQiu Data,map<int,CString> MapData,int* DataArray,int DataCount);
+
 	DECLARE_MESSAGE_MAP()
 
+	//获取区号数据
+	CString GetQuDataStr(int QuHao);
 
 
 private:
 	CListCtrlEx m_ListCtrl;
 	BOOL      m_IsInitData;
+	BOOL      m_IsLiShan;
 	
 public:
 	afx_msg void OnBnClickedSearchBtn();
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton3();
 };

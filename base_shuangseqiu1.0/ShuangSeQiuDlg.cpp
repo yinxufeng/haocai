@@ -1274,9 +1274,11 @@ bool CShuangSeQiuDlg::PaseInfo(CString& Txt,sShuangSeQiuInfo& Info)
 
 	return true;
 }
+
 void CShuangSeQiuDlg::OnBnClickedButton14()
 {
-	
+	m_DlgZongXiangChaZhi.CenterWindow();
+	m_DlgZongXiangChaZhi.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedButton15()
