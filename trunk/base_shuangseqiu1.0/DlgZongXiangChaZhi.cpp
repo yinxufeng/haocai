@@ -23,6 +23,8 @@ CString GetAppCurrentPath4()
 #define BEGIN_FORMULA 24
 #define END_FORMULA   48
 
+const int ARRAY_COUNT=18;
+
 // CDlgZongXiangChaZhi 对话框
 
 IMPLEMENT_DYNAMIC(CDlgZongXiangChaZhi, CDialog)
@@ -31,6 +33,7 @@ CDlgZongXiangChaZhi::CDlgZongXiangChaZhi(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgZongXiangChaZhi::IDD, pParent)
 {
 	m_IsInitData = false;
+	 m_IsLiShan=true;
 }
 
 CDlgZongXiangChaZhi::~CDlgZongXiangChaZhi()
@@ -48,6 +51,9 @@ BEGIN_MESSAGE_MAP(CDlgZongXiangChaZhi, CDialog)
 	ON_WM_SHOWWINDOW()
 	ON_WM_CLOSE()
 
+	ON_BN_CLICKED(IDC_BUTTON1, &CDlgZongXiangChaZhi::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON4, &CDlgZongXiangChaZhi::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON3, &CDlgZongXiangChaZhi::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -55,18 +61,11 @@ END_MESSAGE_MAP()
 //初始化列表头
 void CDlgZongXiangChaZhi::InitListHeader()
 {
-	//CRect Rect;
-	////初始化应用程序列表控件
-	//
-	//m_ListCtrl.GetWindowRect(&Rect);
-	//int nWidth = Rect.Width()/10;
-	//m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	2*nWidth);
-	//m_ListCtrl.InsertColumn(2,_TEXT("杀红"),	LVCFMT_CENTER,	8*nWidth);
-
+	
 	CRect Rect;
 	//初始化应用程序列表控件
 	m_ListCtrl.GetWindowRect(&Rect);
-	int FormulCount = END_FORMULA-BEGIN_FORMULA;
+	int FormulCount = ARRAY_COUNT;
 	int nWidth = Rect.Width()/(FormulCount+2);
 
 	sItemStyle Style;
@@ -75,17 +74,19 @@ void CDlgZongXiangChaZhi::InitListHeader()
 	Style.m_DrawData.m_TextData.m_TextFont = NULL;
 	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
 
-	m_ListCtrl.InsertColumn(0,_TEXT("杀红"),    LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl.InsertColumn(0,_TEXT("期号"),    LVCFMT_CENTER,	2*nWidth);
 	m_ListCtrl.SetColumStyle(0,Style);
 
 	for(int Index = 1; Index < FormulCount+1; Index++)
 	{
-		m_ListCtrl.InsertColumn(Index,_TEXT("杀红"),    LVCFMT_CENTER,	nWidth);
+		CString Text;
+		Text.Format("%02d区",Index);
+		m_ListCtrl.InsertColumn(Index,Text,    LVCFMT_CENTER,	nWidth);
 		m_ListCtrl.SetColumStyle(Index,Style);
 	}
 
 	m_ListCtrl.SetRowHeight(30);
-	m_ListCtrl.ShowHeader(false);
+	m_ListCtrl.ShowHeader(true);
 
 	sItemBkData ItemBkData;
 	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
@@ -97,6 +98,118 @@ void CDlgZongXiangChaZhi::InitListHeader()
 
 }
 
+//填充区域数据
+void CDlgZongXiangChaZhi::FillQuData(sShuangSeQiu Data,int* DataArray,int DataCount)
+{
+	
+	CString QuArray[18];
+	QuArray[0]="01 02 03 04 05 06";
+	QuArray[1]="07 08 09 10 11 12";
+	QuArray[2]="13 14 15 16 17 18";
+	QuArray[3]="19 20 21 22 23 24";
+	QuArray[4]="25 26 27 28 29 30";
+	QuArray[5]="31 32 33";
+
+	QuArray[6] ="01 07 13 19 25 31";
+	QuArray[7] ="02 08 14 20 26 32";
+	QuArray[8] ="03 09 15 21 27 33";
+	QuArray[9] ="04 10 16 22 28";
+	QuArray[10]="05 11 17 23 29";
+	QuArray[11]="06 12 18 24 30";
+
+	QuArray[12]="01 08 15 22 29";
+	QuArray[13]="06 11 16 21 26 31";
+
+	QuArray[14]="07 13 14 19 20 25";
+	QuArray[15]="02 03 04 05 09 10";
+	QuArray[16]="12 17 18 23 24 30";
+	QuArray[17]="27 28 32 33";
+
+
+
+	memset(DataArray,0,sizeof(int)*DataCount);
+	for(int Index=0; Index < QIU_XUN; Index++)
+	{
+		CString Temp;
+		Temp.Format("%02d",Data.m_HongQiu[Index]);
+		for(int i=0; i < ARRAY_COUNT; i++)
+		{
+			if(QuArray[i].Find(Temp) != -1)
+			{
+				DataArray[i]++;
+			}
+		}
+	}
+}
+
+//填充区域数据
+void CDlgZongXiangChaZhi::FillQuData(sShuangSeQiu Data,map<int,CString> MapData,int* DataArray,int DataCount)
+{
+	memset(DataArray,0,sizeof(int)*DataCount);
+	for(int Index=0; Index < QIU_XUN; Index++)
+	{
+		CString Temp;
+		Temp.Format("%02d",Data.m_HongQiu[Index]);
+		map<int,CString>::iterator it=MapData.begin();
+		for(; it != MapData.end(); it++)
+		{
+			if(it->second.Find(Temp) != -1)
+			{
+				int Count=it->first;
+				DataArray[Count]++;
+			}
+		}
+	}
+}
+
+
+//获取区号数据
+CString CDlgZongXiangChaZhi::GetQuDataStr(int QuHao)
+{
+	if( m_IsLiShan)
+	{
+		CString QuArray[18];
+		QuArray[0]="01 02 03 04 05 06";
+		QuArray[1]="07 08 09 10 11 12";
+		QuArray[2]="13 14 15 16 17 18";
+		QuArray[3]="19 20 21 22 23 24";
+		QuArray[4]="25 26 27 28 29 30";
+		QuArray[5]="31 32 33";
+
+		QuArray[6] ="01 07 13 19 25 31";
+		QuArray[7] ="02 08 14 20 26 32";
+		QuArray[8] ="03 09 15 21 27 33";
+		QuArray[9] ="04 10 16 22 28";
+		QuArray[10]="05 11 17 23 29";
+		QuArray[11]="06 12 18 24 30";
+
+		QuArray[12]="01 08 15 22 29";
+		QuArray[13]="06 11 16 21 26 31";
+
+		QuArray[14]="07 13 14 19 20 25";
+		QuArray[15]="02 03 04 05 09 10";
+		QuArray[16]="12 17 18 23 24 30";
+		QuArray[17]="27 28 32 33";
+
+		return QuArray[QuHao];
+	}
+	else
+	{
+
+		vector<map<int,CString>>* DanZuList=CDataManageCenter::GetInstance()->GetDanZuDataList();
+	    int DataSize = DanZuList->size();
+		map<int,CString>::iterator it=(*DanZuList)[DataSize-1].begin();
+
+		for(it ; it != (*DanZuList)[DataSize-1].end(); it++)
+		{
+			if(it->first == QuHao)
+				return it->second;
+		}
+	}
+
+	return "";
+}
+
 void CDlgZongXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialog::OnShowWindow(bShow, nStatus);
@@ -104,78 +217,7 @@ void CDlgZongXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 	if(!m_IsInitData)
 	{
 		m_IsInitData = true;
-		sItemStyle Style;
-		Style.m_ItemType = TEXT_TYPE;
-		Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
-		Style.m_DrawData.m_TextData.m_TextFont = NULL;
-		Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
-
-		m_ListCtrl.DeleteAllItems();
-		vector<sFormulaInfo> FormulList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
-		int DataSize = CDataManageCenter::GetInstance()->GetDataList()->size();
-		for(int Index = 0; Index < DataSize; Index++)
-		{
-			m_ListCtrl.InsertItem(Index,_T(""));	
-		}
-
-	
-		for(int Index = BEGIN_FORMULA; Index < END_FORMULA; Index++)
-		{
-			for(int i = 0; i < FormulList[Index].m_DataList.size(); i++)
-			{
-				int TempIndex = Index -BEGIN_FORMULA;
-				if(TempIndex ==0)
-				{
-					m_ListCtrl.SetItemText(i,0,FormulList[Index].m_DataList[i].m_QiShu);
-				}
-				m_ListCtrl.SetItemText(i,TempIndex+1,FormulList[Index].m_DataList[i].m_Data);
-
-				if(FormulList[Index].m_DataList[i].m_IsTrue)
-				{
-					if(Index %2 == 0)
-						Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
-					else
-						Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
-
-					Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
-					m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
-				}
-				else
-				{
-
-					Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
-					Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
-					m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
-				}
-				/*if(FormulList[Index].m_DataList[i].m_IsTrue)
-				{
-					if(Index %2 == 0)
-						Style.m_DrawData.m_TextData.m_TextColor=RGB(22,22,22);
-					else
-						Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
-
-					m_ListCtrl.SetItemSpecialStyle(i,TempIndex+1,Style);
-				}
-				else
-				{
-				
-					Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
-					m_ListCtrl.SetItemSpecialStyle(i,TempIndex+1,Style);
-				}*/
-			}
-		}
-
-		m_ListCtrl.InsertItem(DataSize+1,_T(""));
-		m_ListCtrl.SetItemText(DataSize,0,_T("正确率"));
-		for(int Index = BEGIN_FORMULA; Index < END_FORMULA; Index++)
-		{
-			int TempIndex = Index - BEGIN_FORMULA;
-			CString Str;
-			Str.Format(_T("%d%%"),FormulList[Index].m_TrueCount*100/(FormulList[Index].m_ErrorCount+FormulList[Index].m_TrueCount));
-			m_ListCtrl.SetItemText(DataSize,TempIndex+1,Str);
-			Style.m_DrawData.m_TextData.m_TextColor=RGB(222,0,0);
-			m_ListCtrl.SetItemSpecialStyle(DataSize,TempIndex+1,Style);
-		}
+		OnBnClickedButton4();
 	}
 
 	//if(!m_IsInitData)
@@ -611,4 +653,109 @@ void CDlgZongXiangChaZhi::OnBnClickedSearchBtn()
 		LanQiu.Format("%d",(*DataList)[Index].m_LanQiuChaZhi);
 		m_ListCtrl.SetItemText(Index,7,LanQiu);
 	}*/
+}
+
+void CDlgZongXiangChaZhi::OnBnClickedButton1()
+{
+	CString Text;
+	GetDlgItem(IDC_EDIT1)->GetWindowText(Text);
+	if(Text.IsEmpty())
+	{
+		GetDlgItem(IDC_EDIT2)->SetWindowText("区号为空");
+		return;
+	}
+
+	int Data=atoi(Text.GetBuffer());
+	Text.ReleaseBuffer();
+	if(Data < 1 || Data > 18)
+	{
+		GetDlgItem(IDC_EDIT2)->SetWindowText("区号暂不支持");
+		return;
+	}
+
+
+	CString StrData=GetQuDataStr(Data-1);
+	GetDlgItem(IDC_EDIT2)->SetWindowText(StrData);
+}
+
+void CDlgZongXiangChaZhi::OnBnClickedButton4()
+{
+	 m_IsLiShan=true;
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+
+	m_ListCtrl.DeleteAllItems();
+	
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	
+	int DataSize = DataList->size();
+	for(int Index = 0; Index < DataSize; Index++)
+	{
+		m_ListCtrl.InsertItem(Index,_T(""));	
+		m_ListCtrl.SetItemText(Index,0,(*DataList)[Index].m_QiShu);
+		int DataArray[ARRAY_COUNT]={0};
+		FillQuData((*DataList)[Index],DataArray,ARRAY_COUNT);
+		for(int i=0; i < ARRAY_COUNT; i++)
+		{
+			CString Text;
+			if(DataArray[i])
+			{
+				Text.Format("%02d",DataArray[i]);
+				m_ListCtrl.SetItemText(Index,i+1,Text);
+				Style.m_DrawData.m_TextData.m_BGColor = RGB(205,250,213);
+				m_ListCtrl.SetItemSpecialStyle(Index,i+1,Style);
+			}
+			else
+			{
+				m_ListCtrl.SetItemText(Index,i+1,Text);
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(248,183,173);
+				m_ListCtrl.SetItemSpecialStyle(Index,i+1,Style);
+			}
+		}
+	}
+}
+
+void CDlgZongXiangChaZhi::OnBnClickedButton3()
+{
+	 m_IsLiShan=false;
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+
+	m_ListCtrl.DeleteAllItems();
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<map<int,CString>>* DanZuList=CDataManageCenter::GetInstance()->GetDanZuDataList();
+	int DataSize = DataList->size();
+	for(int Index = 0; Index < DataSize; Index++)
+	{
+		m_ListCtrl.InsertItem(Index,_T(""));	
+		m_ListCtrl.SetItemText(Index,0,(*DataList)[Index].m_QiShu);
+		int DataArray[ARRAY_COUNT]={0};
+		FillQuData((*DataList)[Index],(*DanZuList)[Index],DataArray,ARRAY_COUNT);
+		for(int i=0; i < ARRAY_COUNT; i++)
+		{
+			CString Text;
+			if(DataArray[i])
+			{
+				Text.Format("%02d",DataArray[i]);
+				m_ListCtrl.SetItemText(Index,i+1,Text);
+				Style.m_DrawData.m_TextData.m_BGColor = RGB(205,250,213);
+				m_ListCtrl.SetItemSpecialStyle(Index,i+1,Style);
+			}
+			else
+			{
+				m_ListCtrl.SetItemText(Index,i+1,Text);
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(248,183,173);
+				m_ListCtrl.SetItemSpecialStyle(Index,i+1,Style);
+			}
+		}
+	}
 }

@@ -1344,6 +1344,12 @@ int CDataManageCenter::GetACCount(sShuangSeQiu& ShuangSeQiu)
 	return Count-5;
 }
 
+//获取胆组数据
+vector<map<int,CString>>* CDataManageCenter::GetDanZuDataList()
+{
+	return &m_DanZu;
+}
+
 //获取尾数预测参数
 int CDataManageCenter::GetWeiZhiParam(sShuangSeQiu& ShuangSeQiu)
 {
@@ -1381,6 +1387,8 @@ void CDataManageCenter::SaveDataToCSVFile()
 		AfxMessageBox(_T("打开文件失败！"));
 		return;
 	}
+
+	m_DanZu.clear();
 
 	CString StrCSV;
 	CString StrCSV2;
@@ -1540,16 +1548,24 @@ void CDataManageCenter::SaveDataToCSVFile()
 
 		
 		map<int,vector<int>>::iterator it=TempMapList.begin();
+
+		
+		int QuCount=0;
+		map<int,CString> TempMap;
+
 		for(it; it != TempMapList.end(); it++)
 		{
 			CString FormatStr;
 			FormatStr.Format("%02d: ",it->first);
+			CString MapStr;
+
 			vector<int> TempData;
 			for(int i=0; i < it->second.size(); i++)
 			{
 				CString TempStr;
 				TempStr.Format(_T("%02d "),it->second[i]);
 				FormatStr+=TempStr;
+				MapStr+=TempStr;
 
 				for(int j=0; j < 6; j++)
 				{
@@ -1557,6 +1573,12 @@ void CDataManageCenter::SaveDataToCSVFile()
 						TempData.push_back(it->second[i]);
 				}
 			}
+
+
+			TempMap[QuCount]=MapStr;
+			QuCount++;
+
+
 
 			for(int i = FormatStr.GetLength(); i < 50;i++)
 				FormatStr+=" ";
@@ -1573,10 +1595,13 @@ void CDataManageCenter::SaveDataToCSVFile()
 			StrText2 +="\r\n";
 		}
 
+		m_DanZu.push_back(TempMap);
 		StrText2+="\r\n\r\n";
 		TempMapList.clear();
 		
 	}
+
+	
 
 	/*map<int,vector<int>>::iterator it=TempMapList.begin();
 	for(it; it != TempMapList.end(); it++)

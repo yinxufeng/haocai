@@ -32,6 +32,7 @@
 #define IDC_SEARCH_BTN                  1007
 #define IDC_EDIT25                      1007
 #define IDC_FIRST_BTN                   1007
+#define IDC_EDIT8                       1007
 #define IDC_BUTTON4                     1008
 #define IDC_BLUE_BALL_BTN3              1008
 #define IDC_STATIC1                     1008
