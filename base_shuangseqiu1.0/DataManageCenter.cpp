@@ -1246,6 +1246,8 @@ void CDataManageCenter::ParseData(CString& StrData,vector<sShuangSeQiu>& VectorD
 			break;
 
 		CString Temp=StrData.Mid(StartPos,EndPos-StartPos);
+		if(Temp.Find("\n"))
+			Temp=Temp.Mid(Temp.Find("\n")+1);
 		if(!Temp.IsEmpty())
 		{
 			sShuangSeQiu ShuangSeQiu = GetShuangSeQiuByStr(Temp);
@@ -1634,17 +1636,21 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 {
 	CString  WriteStr;
 	CString  WriteStr2=_T("\r\n\r\n\r\n");
+	CString WuQiStr;
 	for(int Index =4; Index < m_ShuangSeQiuList.size(); Index++)
 	{
 		
 
 		int Data[33]={0};
+		int DataArray[33][5];
+		memset(DataArray,0,33*5*sizeof(int));
 
 		for(int i=4; i >= 0; i--)
 		{
 			for(int j=0; j < 6; j++)
 			{
 				int TempData = m_ShuangSeQiuList[Index-i].m_HongQiu[j]-1;
+				DataArray[TempData][i]=1;
 				if(TempData >= 0)
 					Data[TempData]++;
 			}
@@ -1653,6 +1659,34 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 		int Count=0;
 		CString WuQiYiWai;
 	    CString WuQiYiNei;
+		
+		CString TempWuQi=m_ShuangSeQiuList[Index].m_QiShu+"：\r\n";;
+		for(int i=0; i < 5; i++)
+		{
+			for(int j=1; j < 5; j++)
+			{
+
+			}
+
+			CString TempStr;
+			TempStr.Format("%02d： ",i);
+			CString TempStr2;
+			for(int k=0; k < 33; k++)
+			{
+				if(DataArray[k][i])
+				{
+					CString TempStr3;
+					TempStr3.Format("%02d ",k+1);
+					TempStr2+=TempStr3;
+
+				}
+			}
+			TempStr2+="\r\n";
+			TempStr+=TempStr2;
+			TempWuQi+=TempStr;
+		}
+
+		WuQiStr+=TempWuQi+"\r\n\r\n";
 		for(int k=0; k < 33; k++)
 		{
 			CString TempStr;
@@ -1722,11 +1756,20 @@ void CDataManageCenter::SaveFiveDataToTxtFile()
 		AfxMessageBox(_T("打开文件失败！"));
 		return;
 	}
+	CString FilePath3=GetAppCurrentPath2()+_T("\\wuqixiangqing.txt");
+	HANDLE FileHandle3=CreateFile(FilePath3,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle3 == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox(_T("打开文件失败！"));
+		return;
+	}
 		
 	DWORD WriteBytes=0;
 	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
 	::WriteFile(FileHandle2,WriteStr2.GetBuffer(),WriteStr2.GetLength(),&WriteBytes,NULL);
+	::WriteFile(FileHandle3,WuQiStr.GetBuffer(), WuQiStr.GetLength(),&WriteBytes,NULL);
 	CloseHandle(FileHandle2);
+	CloseHandle(FileHandle3);
 //	ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }
 

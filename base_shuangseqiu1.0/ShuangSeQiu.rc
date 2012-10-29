@@ -141,13 +141,15 @@ BEGIN
     PUSHBUTTON      "篮球分布图",IDC_LAN_BTN,420,245,62,16
 END
 
-IDD_SHUANGSEQIU_DIALOG1 DIALOGEX 0, 0, 623, 258
+IDD_SHUANGSEQIU_DIALOG1 DIALOGEX 0, 0, 623, 277
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW | WS_EX_NOACTIVATE
 CAPTION "妍儿"
 FONT 10, "微软雅黑", 400, 0, 0x0
 BEGIN
-    CONTROL         "",IDC_LIST1,"SysListView32",LVS_REPORT | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,615,250
+    CONTROL         "",IDC_LIST1,"SysListView32",LVS_REPORT | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,3,2,615,250
+    PUSHBUTTON      "前三后三尾",IDC_BUTTON1,224,256,50,14
+    PUSHBUTTON      "前三后三合",IDC_BUTTON2,322,256,50,14
 END
 
 IDD_SHUANGSEQIU_DIALOG2 DIALOGEX 0, 0, 605, 256
@@ -391,12 +393,12 @@ BEGIN
         BLOCK "080403a8"
         BEGIN
             VALUE "CompanyName", "潇离"
-            VALUE "FileDescription", "六合彩篮球分析"
+            VALUE "FileDescription", "潇离之双色球分析"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "六合彩之篮球分析.exe"
+            VALUE "InternalName", "潇离之双色球分析.exe"
             VALUE "LegalCopyright", "潇离: (C) 保留所有权利。"
-            VALUE "OriginalFilename", "六合彩之篮球分析.exe"
-            VALUE "ProductName", "六合彩之篮球分析"
+            VALUE "OriginalFilename", "潇离之双色球分析.exe"
+            VALUE "ProductName", "潇离之双色球分析"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END
@@ -443,7 +445,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 615
         TOPMARGIN, 7
-        BOTTOMMARGIN, 251
+        BOTTOMMARGIN, 270
     END
 
     IDD_SHUANGSEQIU_DIALOG2, DIALOG
@@ -536,7 +538,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_ABOUTBOX            "关于 ShuangSeQiu(&A)..."
+    IDS_ABOUTBOX            "潇离"
 END
 
 #endif    // 中文(中华人民共和国) resources

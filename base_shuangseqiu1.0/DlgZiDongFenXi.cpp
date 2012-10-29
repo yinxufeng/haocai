@@ -31,6 +31,7 @@ void CDlgZiDongFenXi::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDlgZiDongFenXi, CDialog)
 	ON_WM_CLOSE()
 	ON_WM_SHOWWINDOW()
+	ON_BN_CLICKED(IDC_SEARCH_BTN, &CDlgZiDongFenXi::OnBnClickedSearchBtn)
 END_MESSAGE_MAP()
 
 
@@ -242,4 +243,8 @@ void CDlgZiDongFenXi::InitListHeader()
 	ItemBkData.m_HeightColor = RGB(100,100,100);
 	ItemBkData.m_BkColor = RGB(222,222,222);
 	m_ListCtrl.SetItemBkData(ItemBkData);
+}
+void CDlgZiDongFenXi::OnBnClickedSearchBtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }
