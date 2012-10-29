@@ -179,7 +179,7 @@ void CDlgLianHaoLanQiu::OnBnClickedSearchBtn()
 	if(!Text.IsEmpty())
 		Data1=atoi(Text.GetBuffer());
 	m_CurrentIndex=0;
-	m_FormulaInfoList=CFormulaCenter::GetInstance()->SearchFormulaInfoByType(FORMULA_SHA_LAN,eSearchVType(Cursel),Data,Data1);
+	m_FormulaInfoList=CFormulaCenter::GetInstance()->SearchFormulaInfoByType(m_FormulaType,eSearchVType(Cursel),Data,Data1);
 	FillData(m_FormulaInfoList);
 	UpdateBtnStatus();
 }

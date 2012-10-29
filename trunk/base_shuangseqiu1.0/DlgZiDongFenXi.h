@@ -34,4 +34,6 @@ private :
 
 	CListCtrlEx m_ListCtrl;
 	BOOL      m_IsInitData;
+public:
+	afx_msg void OnBnClickedSearchBtn();
 };

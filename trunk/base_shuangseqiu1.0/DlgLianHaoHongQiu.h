@@ -37,4 +37,6 @@ public:
 	afx_msg void OnBnClickedSearchBtn();
 
 	void AddFlag(CString& Str,bool IsTrue);
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
 };
