@@ -152,6 +152,9 @@ private:
 	//运行杀蓝V公式
 	void ExecShaLanVFormula();
 
+	//运行杀龙凤尾公式
+	void ExecShaLongTouFormula();
+
 
 
 private:
