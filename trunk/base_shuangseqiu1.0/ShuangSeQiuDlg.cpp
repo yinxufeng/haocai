@@ -1283,7 +1283,8 @@ void CShuangSeQiuDlg::OnBnClickedButton14()
 
 void CShuangSeQiuDlg::OnBnClickedButton15()
 {
-	
+	m_DlgLianHaoLanQiu.SetWondowsTitle("¿ñÉ±Áú·ï",FORMULA_SHA_LONG_TOU);
+	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedButton16()

@@ -1903,6 +1903,35 @@ bool CDataManageCenter::IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 	return Ret;
 }
 
+//球是否在位数中
+bool CDataManageCenter::IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if(QiuData.m_HongQiu[Index] == Data && Index == WeiShu)
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(QiuData.m_HongQiu[Index]%10 == Data%10 && Index ==WeiShu)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+
 //球是否在篮球中
 bool CDataManageCenter::IsLanQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 {
