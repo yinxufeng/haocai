@@ -761,8 +761,7 @@ vector<int> CsuoshuiDlg::GetDataList(CString& StrData)
 		CString Temp = StrData.Mid(StartPos,EndPos-StartPos);
 		int TempData = atoi(Temp.GetBuffer());
 		Temp.ReleaseBuffer();
-		if(TempData != 0)
-			DataList.push_back(TempData);
+		DataList.push_back(TempData);
 		StartPos = EndPos+1;
 	}
 
