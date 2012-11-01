@@ -119,6 +119,9 @@ public:
 	//球是否在位数中
 	static bool IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV=false);
 
+	//红球同出
+	static bool IsHongQiuTongChu(sShuangSeQiu QiuData,vector<int> Data,bool IsV=false);
+
 	//球是否在篮球中
 	static bool IsLanQiuInData(sShuangSeQiu QiuData,int Data,bool IsV=false);
 

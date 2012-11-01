@@ -87,6 +87,9 @@ private:
 	//初始化列表头
 	void InitListHeader();
 
+	//初始化杀类型
+	void InitShaMap();
+
 
 
 private:
@@ -115,6 +118,10 @@ private:
 	CButton m_CheckBtn;
 	CComboBox m_ComboBox;
 	bool      m_IsShowByChuQiu;
+	CComboBox m_ShaComboBox;
+	map<CString,int> m_MapList;
+
+
 public:
 	afx_msg void OnBnClickedBlueBallBtn();
 	afx_msg void OnBnClickedButton13();
@@ -140,4 +147,6 @@ public:
 
 	//组合数据
 	static void Combine(map<CString,vector<int>> MapData);
+	
+	afx_msg void OnCbnSelchangeCombo2();
 };

@@ -213,17 +213,22 @@ void CDlgLianHaoHongQiu::OnBnClickedButton1()
 			CString HouVCSV;
 			CString QiuVCSV;
 			CString QiuHouVCSV;
+			
+			int TempArray[10];
+			memset(TempArray,0,10*sizeof(int));
 
 			for(int i=0; i < 6; i++)
 			{
 				int V=(*DataList)[Index].m_HongQiu[i]%10;
 				int V2=(*QiuShun)[Index].m_HongQiu[i]%10;
 				VCount+=V;
+				TempArray[V]++;
 
 				CString StrV;
 				StrV.Format("%d",V);
 				CString StrV2;
 				StrV2.Format("%d",V2);
+			
 				if(i < 3)
 				{
 					QiuV+=StrV;
@@ -254,6 +259,16 @@ void CDlgLianHaoHongQiu::OnBnClickedButton1()
 				}
 			}
 
+			CString AllV;
+			for(int j=0; j < 10; j++)
+			{
+				if(TempArray[j])
+				{
+					CString Temp;
+					Temp.Format("%d",j);
+					AllV+=Temp;
+				}
+			}
 			HeV.Format("%d",VCount);
 			KuaDu.Format("%d",(*DataList)[Index].m_HongQiu[5]-(*DataList)[Index].m_HongQiu[0]);
 
@@ -298,6 +313,7 @@ void CDlgLianHaoHongQiu::OnBnClickedButton1()
 			m_ListCtrl.SetItemText(InsertItemPos,4,QiuHouV);
 			m_ListCtrl.SetItemText(InsertItemPos,5,KuaDu);
 			m_ListCtrl.SetItemText(InsertItemPos,6,HeV);
+			m_ListCtrl.SetItemText(InsertItemPos,7,AllV);
 		
 		}
 
