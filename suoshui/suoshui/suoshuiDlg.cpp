@@ -382,7 +382,29 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						RealWantCount++;
 					  continue;
 				  }
-				  
+				 
+				  if(it->first.Find("杀胆V") != -1)
+				  {
+					  WantCount++;
+					  int QieCount=0;
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 QieCount++;
+								 break;
+							  }
+						  }
+					  }
+
+					  if(QieCount < it->second.size() )
+						RealWantCount++;
+					  continue;
+				  }
+
 				  if(it->first.Find("杀号") != -1)
 				  {
 					  WantCount++;
@@ -695,6 +717,9 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						OutStr+=Temp;
 					}
 
+				   CString LanQiu;
+				   LanQiu.Format("%02d",MapData["蓝球"][0]);
+				   OutStr+=LanQiu;
 				   OutStr+="\r\n";
 				   WriteStr+=OutStr;
 				   count++;
@@ -723,12 +748,25 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 	 delete[] order;
 
+    CString FilePath2 = GetAppCurrentPath()+_T("\\goumai.txt");
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox(_T("打开文件失败！"));
+		return;
+	}
+
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	WriteStr.ReleaseBuffer();
+	CloseHandle(FileHandle2);
+
 	 CString Header;
 	 Header.Format("总注数：%02d 缩水后：%02d\r\n",AllCount,count);
 	 WriteStr=Header+WriteStr;
 
 
-	 CString FilePath = GetAppCurrentPath()+_T("\\suoshui.txt");
+    CString FilePath = GetAppCurrentPath()+_T("\\suoshui.txt");
 	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 	if(FileHandle == INVALID_HANDLE_VALUE)
 	{
@@ -736,8 +774,9 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 		return;
 	}
 		
-	DWORD WriteBytes=0;
+	WriteBytes=0;
 	::WriteFile(FileHandle,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	WriteStr.ReleaseBuffer();
 	CloseHandle(FileHandle);
 	ShellExecute(NULL, "open",FilePath, NULL, NULL, SW_SHOWNORMAL);
 
