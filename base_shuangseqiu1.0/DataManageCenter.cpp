@@ -2493,3 +2493,10 @@ void CDataManageCenter::InitOneData(sData29 &Data)
 
 	}
 }
+
+//ºìÇòÍ¬³ö
+bool CDataManageCenter::IsHongQiuTongChu(sShuangSeQiu QiuData,vector<int> Data,bool IsV)
+{
+	//for(int i=0; i < QIU_XUN;
+	return true;
+}

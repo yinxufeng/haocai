@@ -81,6 +81,7 @@ void CShuangSeQiuDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST3, m_ListCtrl3);
 	DDX_Control(pDX, IDC_CHECK1, m_CheckBtn);
 	DDX_Control(pDX, IDC_COMBO1, m_ComboBox);
+	DDX_Control(pDX, IDC_COMBO2, m_ShaComboBox);
 }
 
 BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
@@ -111,6 +112,7 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON14, &CShuangSeQiuDlg::OnBnClickedButton14)
 	ON_BN_CLICKED(IDC_BUTTON15, &CShuangSeQiuDlg::OnBnClickedButton15)
 	ON_BN_CLICKED(IDC_BUTTON16, &CShuangSeQiuDlg::OnBnClickedButton16)
+	ON_CBN_SELCHANGE(IDC_COMBO2, &CShuangSeQiuDlg::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
@@ -189,6 +191,17 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_ComboBox.InsertString(1,_T("搜索篮球"));
 	m_ComboBox.InsertString(2,_T("搜索龙头"));
 	m_ComboBox.InsertString(3,_T("搜索尾值"));
+
+	InitShaMap();
+	map<CString,int>::iterator it=this->m_MapList.begin();
+	int Count=0;
+	while(it != m_MapList.end())
+	{
+		m_ShaComboBox.InsertString(Count,it->first);
+		Count++;
+		it++;
+	}
+	m_ShaComboBox.SetCurSel(0);
 	CenterWindow();
 
 	OnBnClickedLoadDataBtn();
@@ -262,6 +275,47 @@ void CShuangSeQiuDlg::OnBnClickedLoadDataBtn()
 	{
 		InsertAndSetText(Index,(*DataList)[Index]);
 	}
+}
+
+//初始化杀类型
+void CShuangSeQiuDlg::InitShaMap()
+{
+		//篮球相关类型
+	//FORMULA_SHA_LAN             ,     //杀篮球
+	//FORMULA_SHA_LAN_WEI         ,     //杀蓝尾
+	//FORMULA_SHA_LAN_LUSHU       ,     //杀篮球路数
+	//FORMULA_SHA_LAN_FANWEI      ,     //杀篮球范围 
+
+	//FORMULA_DING_LAN            ,     //定篮球
+	//FORMULA_DING_LAN_WEI        ,     //定篮球尾
+	//FORMULA_DING_LAN_FANWEI     ,     //定篮球范围
+	//FORMULA_DING_LAN_LUSHU      ,     //定篮球路数
+
+	////龙头相关类型
+	//FORMULA_SHA_LONG_TOU        ,     //杀龙头
+	//FORMULA_SHA_LONG_TOU_WEI    ,     //杀龙头V
+	//FORMULA_SHA_LONG_TOU_LUSHU  ,     //杀龙头路数
+
+	//FORMULA_DING_LONG_TOU       ,     //定龙头范围
+
+	////凤尾相关类型
+	//FORMULA_SHA_FENG_WEI        ,     //杀凤尾
+	//FORMULA_SHA_FENG_WEI_WEI    ,     //杀凤尾V
+	//FORMULA_SHA_FENG_WEI_LUSHU  ,     //杀凤尾路数
+
+	//FORMULA_DING_FENG_WEI       ,     //定凤尾范围
+
+	////红球相关类型
+	//FORMULA_SHA_HONG            ,    //杀红球
+	//FORMULA_SHA_HONG_WEI        ,    //杀红球V
+
+	//FORMULA_DING_HONG_DIAN      ,    //红球点位
+	//FORMULA_DING_HONG_WEI       ,    //定红球V
+	m_MapList["狂杀红球"]=FORMULA_SHA_HONG;
+	m_MapList["狂杀篮球"]=FORMULA_SHA_LAN ;
+	m_MapList["狂杀龙头"]=FORMULA_SHA_LONG_TOU;
+	m_MapList["狂杀凤尾"]=FORMULA_SHA_FENG_WEI;
+	m_MapList["尾不同出"]=FORMULA_WEI_BU_TONG_CHU;
 }
 
 //初始化列表头
@@ -1063,8 +1117,26 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn()
 
 void CShuangSeQiuDlg::OnBnClickedButton13()
 {
-	m_DlgLianHaoLanQiu.SetWondowsTitle("狂杀红球",FORMULA_SHA_HONG);
-	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+	//m_ShaComboBox.InsertString(0,"狂杀红球");
+	//m_ShaComboBox.InsertString(1,"狂杀篮球");
+	//m_ShaCmoboBox.InsertString(2,"狂杀龙头");
+	//m_ShaCmoboBox.InsertString(3,"狂杀凤尾");
+	//m_ShaCmoboBox.InsertString(4,"尾不同出");
+
+	CString Text;
+	m_ShaComboBox.GetWindowText(Text);
+	map<CString,int>::iterator it= this->m_MapList.begin();
+	for(it ; it != m_MapList.end(); it++)
+	{
+		if(it->first == Text)
+		{
+			m_DlgLianHaoLanQiu.SetWondowsTitle(Text,(eFormulaType)it->second);
+			m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+			break;
+		}
+	}
+
+	
 	//this->m_DlgShiFaDingHong.ShowWindow(SW_SHOW);
 }
 
@@ -1176,8 +1248,11 @@ DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
 			}
 
 			if(Txt.Find("对不起没有找到该页面") !=-1)
+			{
+				File->Close();
+				delete File; File = NULL;
 				break;
-
+			}
 			sShuangSeQiuInfo Info;
 			Info.m_QiHao = QiHao;
 			PaseInfo(Txt,Info);
@@ -1915,4 +1990,9 @@ vector<int> CShuangSeQiuDlg::GetDataList(CString& StrData)
 	}
 
 	return DataList;
+}
+
+void CShuangSeQiuDlg::OnCbnSelchangeCombo2()
+{
+	
 }

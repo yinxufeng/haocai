@@ -43,6 +43,8 @@ enum eFormulaType
 
 	FORMULA_DING_HONG_DIAN      ,    //红球点位
 	FORMULA_DING_HONG_WEI       ,    //定红球V
+
+	FORMULA_WEI_BU_TONG_CHU     ,    //尾不同出
 };
 
 //公式描述数据
@@ -155,12 +157,16 @@ private:
 	//运行杀龙凤尾公式
 	void ExecShaLongTouFormula();
 
-
+	//运行尾不同出公式
+	void ExecWeiBuTongChuFormula();
 
 private:
 
 	//整形转化到字符串
 	CString DataToStr(int Data);
+
+	//整形转化到字符串
+	CString DataToStr(vector<int> Data);
 
 	//字符串转化到整形
 	int StrToData(CString DataStr);
