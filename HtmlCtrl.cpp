@@ -188,16 +188,61 @@ void CHtmlCtrl::OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 	CString mainUrl;
 	GetCurrentUrl(mainUrl);
 
-	if(m_IsRecordSession)
+
+	CComPtr < IDispatch > spDispDoc;
+	m_pBrowserApp->get_Document(&spDispDoc);
+	m_spHtmlDoc=spDispDoc;
+	CString Session;
+	if(m_spHtmlDoc != NULL )
 	{
-		m_Session=GetSession();
-		::SendMessage(GetParent()->GetSafeHwnd(),WM_ADD_URL_MSG,(WPARAM)szUrl,(LPARAM)(LPCTSTR)m_Session);
+		//m_spHtmlDoc->get_cookie(&Cookie);
+		//char*pCookie=_com_util::ConvertBSTRToString(Cookie);
+		IHTMLElement*pHTMLBodyElement=NULL;  
+		m_spHtmlDoc->get_body(&pHTMLBodyElement);
+		if(pHTMLBodyElement != NULL)
+		{
+			BSTR b;  
+		//	pHTMLBodyElement->get_innerText(&b);  
+			pHTMLBodyElement->get_innerHTML(&b);
+
+			::SendMessage(GetParent()->GetSafeHwnd(),WM_HTML_DOC_MSG,(WPARAM)b,NULL);
+			
+		}
 	}
-	else
-		::SendMessage(GetParent()->GetSafeHwnd(),WM_ADD_URL_MSG,(WPARAM)szUrl,0);
-//	::CloseProgressBar(m_ProgressHwnd);
-	
-	
+
+
+ //  
+	//IHTMLDocument2*pDoc=NULL;
+	//HRESULT hr2=GetDHtmlDocument(&pDoc);
+
+ //   IHTMLElement*pHTMLBodyElement=NULL;  
+ //   if(pDoc!=NULL)    
+ //   {    
+ //       HRESULT hr=pDoc->get_body(&pHTMLBodyElement);  
+ //       if(SUCCEEDED(hr)&&pHTMLBodyElement!=NULL)    
+ //       {    
+ //             
+ //             
+ //           BSTR b;  
+ //           pHTMLBodyElement->get_innerText(&b);  
+ //           CString strHtml(b);  
+ //           //×Ô¼ºÌí¼Ó   
+ //          // m_strInnerText=strHtml;  
+ //         //  AfxMessageBox(m_strInnerText);  
+ //          // UpdateData(FALSE);  
+ //             
+ //       }     
+ //   }     
+
+
+//	if(m_IsRecordSession)
+//	{
+//		m_Session=GetSession();
+//		::SendMessage(GetParent()->GetSafeHwnd(),WM_ADD_URL_MSG,(WPARAM)szUrl,(LPARAM)(LPCTSTR)m_Session);
+//	}
+//	else
+//		::SendMessage(GetParent()->GetSafeHwnd(),WM_ADD_URL_MSG,(WPARAM)szUrl,0);
+////	::CloseProgressBar(m_ProgressHwnd);	
 }
 
 void CHtmlCtrl::OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl)

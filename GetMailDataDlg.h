@@ -6,6 +6,7 @@
 
 #include "HtmlCtrl.h"
 #include <map>
+#include "afxcmn.h"
 using std::map;
 
 // CGetMailDataDlg 对话框
@@ -48,7 +49,17 @@ protected:
 	//解析文件
 	static void PaseEmailTxt(CString Text,map<CString,int>& EmailMap);
 
+	//解析完毕消息
 	LRESULT OnParseOverMsg(WPARAM wParam,LPARAM lParam);
+
+	//解析进行中消息
+	LRESULT OnParseGoingMsg(WPARAM wParam,LPARAM lParam);
+
+	//开始解析
+	LRESULT OnStartParseMsg(WPARAM wParam,LPARAM lParam);
+
+    //保存email到文件中
+	static void SaveEmailToFile(CString Name,map<CString,int>& EmailMap);
 
 public:
 	afx_msg void OnBnClickedSearchBtn();
@@ -56,4 +67,9 @@ public:
 
 private:
 	CHtmlCtrl* m_HtmlCtrl;
+	HANDLE m_StopEvent;
+	HANDLE m_ThreadHandle;
+	CProgressCtrl m_ProgressCtrl;
+public:
+	afx_msg void OnBnClickedStopBtn();
 };

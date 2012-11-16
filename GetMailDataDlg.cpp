@@ -16,6 +16,7 @@
 
 
 #define WM_PARSE_OVER_MSG WM_USER+1         //解析完毕
+#define WM_PARSE_GOING_MSG WM_USER+2        //解析中
 
 //获取模块路径
 CString GetAppCurrentPath()
@@ -80,9 +81,10 @@ END_MESSAGE_MAP()
 //线程参数
 struct sThreadParam
 {
-	HWND      m_hWnd;         //窗口句柄
-	vector<CString> m_RequestUrl;   //请求Url
-	int      m_ParseType;
+	HWND             m_hWnd;         //窗口句柄
+	vector<CString>  m_RequestUrl;   //请求Url
+	HANDLE           m_StopEvent;    //停止事件
+	int              m_ParseType;    //解析类型
 };
 
 CGetMailDataDlg::CGetMailDataDlg(CWnd* pParent /*=NULL*/)
@@ -90,11 +92,14 @@ CGetMailDataDlg::CGetMailDataDlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_HtmlCtrl=NULL;
+	m_StopEvent=::CreateEvent(NULL,true,false,_T(""));
+	m_ThreadHandle = INVALID_HANDLE_VALUE;
 }
 
 void CGetMailDataDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROGRESS1, m_ProgressCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CGetMailDataDlg, CDialog)
@@ -102,8 +107,12 @@ BEGIN_MESSAGE_MAP(CGetMailDataDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_MESSAGE(WM_PARSE_OVER_MSG,&CGetMailDataDlg::OnParseOverMsg)
+	ON_MESSAGE(WM_PARSE_GOING_MSG,&CGetMailDataDlg::OnParseGoingMsg)
+	ON_MESSAGE(WM_HTML_DOC_MSG,&CGetMailDataDlg::OnStartParseMsg)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_SEARCH_BTN, &CGetMailDataDlg::OnBnClickedSearchBtn)
+
+	ON_BN_CLICKED(IDC_STOP_BTN, &CGetMailDataDlg::OnBnClickedStopBtn)
 END_MESSAGE_MAP()
 
 
@@ -140,8 +149,8 @@ BOOL CGetMailDataDlg::OnInitDialog()
 
 
 	//创建新HTML控件
-	//CreateNewHtmlCtrl(_T("http://www.google.com.hk"),_T(""));
-
+	CreateNewHtmlCtrl(_T("http://www.baidu.com"),_T(""));
+	GetDlgItem(IDC_TEST_STATIC)->SetWindowText(_T("准备"));
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -215,9 +224,13 @@ void CGetMailDataDlg::OnBnClickedSearchBtn()
 	sThreadParam* Param = new sThreadParam();
 	Param->m_hWnd = this->GetSafeHwnd();
 	Param->m_RequestUrl.push_back(Url);
+	Param->m_StopEvent=m_StopEvent;
 	Param->m_ParseType = 0;
 	//= Url;
-	::CreateThread(NULL,0,RequestDataInfoThread,(LPVOID)Param,0,0);
+
+	this->m_ProgressCtrl.SetPos(0);
+	::ResetEvent(m_StopEvent);
+	m_ThreadHandle=::CreateThread(NULL,0,RequestDataInfoThread,(LPVOID)Param,0,0);
 
 	CreateNewHtmlCtrl(Url,_T(""));
 }
@@ -245,9 +258,9 @@ void CGetMailDataDlg::CreateNewHtmlCtrl(CString URL,CString PostData)
 	CRect ClientRect;
 	GetClientRect(ClientRect);
 	CRect Rect;
-	Rect.top = ClientRect.top+40;
+	Rect.top = ClientRect.top+10;
 	Rect.left = ClientRect.left + 10;
-	Rect.bottom = ClientRect.bottom-3;
+	Rect.bottom = ClientRect.bottom-60;
 	Rect.right = ClientRect.right-3;
 	m_HtmlCtrl->MoveWindow(Rect);
 	m_HtmlCtrl->ShowWindow(SW_SHOW);
@@ -259,8 +272,20 @@ void CGetMailDataDlg::CreateNewHtmlCtrl(CString URL,CString PostData)
 //解析数据
 void CGetMailDataDlg::PaseText(CString Text,vector<CString>& List)
 {
-	int StartPos= Text.Find(_T("<a"));
-	int EndPos =Text.Find(_T("/a"),StartPos+1);
+	CString FindStartStr=_T("<a");
+	CString FindEndStr=_T("/a");
+
+	int StartPos= Text.Find(FindStartStr);
+	int EndPos =Text.Find(FindEndStr,StartPos+1);
+
+	if(StartPos == -1 )
+	{
+		FindStartStr=_T("<A");
+		FindEndStr=_T("/A");
+		StartPos= Text.Find(FindStartStr);
+		EndPos =Text.Find(FindEndStr,StartPos+1);
+	}
+
 	while(true)
 	{
 		
@@ -277,8 +302,8 @@ void CGetMailDataDlg::PaseText(CString Text,vector<CString>& List)
 					List.push_back(Url);
 			}
 
-			StartPos= Text.Find(_T("<a"),EndPos+1);
-			EndPos =Text.Find(_T("/a"),StartPos+1);
+			StartPos= Text.Find(FindStartStr,EndPos+1);
+			EndPos =Text.Find(FindEndStr,StartPos+1);
 
 
 		}
@@ -360,6 +385,9 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 	for(int Index=0; Index < Param->m_RequestUrl.size(); Index++)
 	{
 
+		if(WaitForSingleObject(Param->m_StopEvent,0) == 0)
+			break;
+
 	    CString Url = Param->m_RequestUrl[Index];
 		CHttpFile* File= NULL;
 		CString Txt;
@@ -384,7 +412,9 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 			bool IsCompare=true;
 			if(Len == 0)
 			{
-				Len = 100*1024;
+				File->Close();
+		    	delete File; File = NULL;
+				continue;
 				IsCompare=false;
 			}
 
@@ -427,28 +457,13 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 				if(!EmailMap.empty())
 				{
 				    CString FilePath = GetAppCurrentPath()+_T("\\email.tmp");
-					HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING ,FILE_ATTRIBUTE_NORMAL,NULL);
-					if(FileHandle == INVALID_HANDLE_VALUE)
-					{
-						FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS ,FILE_ATTRIBUTE_NORMAL,NULL);
-					}
-				
-					::SetFilePointer(FileHandle,0,0,FILE_END);
-					map<CString,int>::iterator it=EmailMap.begin();
-					CString WriteStr;
-					for(; it != EmailMap.end(); it++)
-					{
-						WriteStr +=it->first+_T("\r\n");
-					}
-					
-					char* Byte=UnicodeToUTF8(WriteStr.GetBuffer());
-					int ByteLen=strlen(Byte);
-					DWORD WriteBytes=0;
-					::WriteFile(FileHandle,Byte,ByteLen,&WriteBytes,NULL);
-					delete []Byte;
-					WriteStr.ReleaseBuffer();
-					CloseHandle(FileHandle);
+					SaveEmailToFile(FilePath,EmailMap);
 				}
+				
+				if(::IsWindow(Param->m_hWnd))
+					::PostMessage(Param->m_hWnd,WM_PARSE_GOING_MSG,Index,Param->m_RequestUrl.size());
+				
+
 			}
 			
 			File->Close();
@@ -460,8 +475,6 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 				File->Close();
 				delete File; File = NULL;
 			}
-
-		//	break;
 		
 		}
 	}
@@ -480,14 +493,15 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 
 	if(Param->m_ParseType == 1)
 	{
-		//::MessageBox(Param->m_hWnd,_T("获取完毕！"),_T("提示"),MB_OK);
-		::PostMessage(Param->m_hWnd,WM_PARSE_OVER_MSG,0,0);
+		if(::IsWindow(Param->m_hWnd))
+			::PostMessage(Param->m_hWnd,WM_PARSE_OVER_MSG,0,0);
 	}
 
 	delete Param;
 	return 0;
 }
 
+//解析完毕消息
 LRESULT CGetMailDataDlg::OnParseOverMsg(WPARAM wParam,LPARAM lParam)
 {
 	CString FilePath = GetAppCurrentPath()+_T("\\email.tmp");
@@ -505,32 +519,120 @@ LRESULT CGetMailDataDlg::OnParseOverMsg(WPARAM wParam,LPARAM lParam)
 	PaseEmailTxt(StrData,EmailMap);
 	if(!EmailMap.empty())
 	{
-	    CString FilePath = GetAppCurrentPath()+_T("\\email.txt");
-		HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING ,FILE_ATTRIBUTE_NORMAL,NULL);
-		if(FileHandle == INVALID_HANDLE_VALUE)
-		{
-			FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS ,FILE_ATTRIBUTE_NORMAL,NULL);
-		}
-	
-		::SetFilePointer(FileHandle,0,0,FILE_END);
-		map<CString,int>::iterator it=EmailMap.begin();
-		CString WriteStr;
-		for(; it != EmailMap.end(); it++)
-		{
-			WriteStr +=it->first+_T("\r\n");
-		}
-		
-		char* Byte=UnicodeToUTF8(WriteStr.GetBuffer());
-		int ByteLen=strlen(Byte);
-		DWORD WriteBytes=0;
-		::WriteFile(FileHandle,Byte,ByteLen,&WriteBytes,NULL);
-		delete []Byte;
-		WriteStr.ReleaseBuffer();
-		CloseHandle(FileHandle);
+		CString Name = GetAppCurrentPath()+_T("\\email.txt");
+		SaveEmailToFile(Name,EmailMap);
 	}
 	delete []Buffer;
 	CloseHandle(FileHandle);
 
+	::DeleteFile(FilePath);
+
+	GetDlgItem(IDC_TEST_STATIC)->SetWindowText(_T("完毕"));
 	return 0;
 
+}
+
+//解析进行中消息
+LRESULT CGetMailDataDlg::OnParseGoingMsg(WPARAM wParam,LPARAM lParam)
+{
+	int Pos = wParam;
+	int AllPos=lParam;
+	if(AllPos != 0)
+	{
+		int TempPos=100*Pos/AllPos;
+		m_ProgressCtrl.SetPos(TempPos);
+		CString Text;
+		Text.Format(_T("%d/%d"),wParam,lParam);
+		GetDlgItem(IDC_TEST_STATIC)->SetWindowText(Text);
+	}
+	return 0;
+}
+
+//开始解析
+LRESULT CGetMailDataDlg::OnStartParseMsg(WPARAM wParam,LPARAM lParam)
+{
+	static int StartFlag=0;
+	if(StartFlag == 0)
+	{
+		StartFlag=1;
+		return 0;
+	}
+
+	BSTR b=(BSTR)wParam;
+	CString Text=CString(b);
+	vector<CString> List;
+	map<CString,int> EmailMap;
+	PaseText(Text,List);
+	PaseEmail(Text,EmailMap);
+	if(!EmailMap.empty())
+	{
+	    CString FilePath = GetAppCurrentPath()+_T("\\email.tmp");
+		SaveEmailToFile(FilePath,EmailMap);
+	}
+
+	if(List.empty())
+	{
+		GetDlgItem(IDC_TEST_STATIC)->SetWindowText(_T("完毕"));
+		return 0;
+	}
+		
+
+	CString Text2;
+	Text.Format(_T("0/%d"),List.size());
+	GetDlgItem(IDC_TEST_STATIC)->SetWindowText(Text2);
+
+
+	m_ProgressCtrl.SetPos(0);
+	sThreadParam* Param2 = new sThreadParam();
+	Param2->m_hWnd =m_hWnd;
+	Param2->m_RequestUrl.insert(Param2->m_RequestUrl.end(),List.begin(),List.end());
+	Param2->m_ParseType = 1;
+	if(m_ThreadHandle != INVALID_HANDLE_VALUE)
+	{
+		::SetEvent(m_StopEvent);
+		if(0 != ::WaitForSingleObject(m_ThreadHandle,1000))
+			::TerminateThread(m_ThreadHandle,0);
+		::ResetEvent(m_StopEvent);
+	}
+	m_ThreadHandle=::CreateThread(NULL,0,RequestDataInfoThread,(LPVOID)Param2,0,0);
+
+	return 0;
+}
+
+
+void CGetMailDataDlg::OnBnClickedStopBtn()
+{
+	if(m_ThreadHandle != INVALID_HANDLE_VALUE)
+	{
+		::SetEvent(m_StopEvent);
+		if(0 != ::WaitForSingleObject(m_ThreadHandle,1000))
+			::TerminateThread(m_ThreadHandle,0);
+		::ResetEvent(m_StopEvent);
+	}
+}
+
+//保存email到文件中
+void CGetMailDataDlg::SaveEmailToFile(CString FilePath,map<CString,int>& EmailMap)
+{
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING ,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+	{
+		FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS ,FILE_ATTRIBUTE_NORMAL,NULL);
+	}
+
+	::SetFilePointer(FileHandle,0,0,FILE_END);
+	map<CString,int>::iterator it=EmailMap.begin();
+	CString WriteStr;
+	for(; it != EmailMap.end(); it++)
+	{
+		WriteStr +=it->first+_T("\r\n");
+	}
+	
+	char* Byte=UnicodeToUTF8(WriteStr.GetBuffer());
+	int ByteLen=strlen(Byte);
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle,Byte,ByteLen,&WriteBytes,NULL);
+	delete []Byte;
+	WriteStr.ReleaseBuffer();
+	CloseHandle(FileHandle);
 }

@@ -23,6 +23,7 @@ using std::vector;
 #define WM_ADD_URL_MSG            WM_USER+3000        //新增URL消息
 #define WM_DOWNLOAD_FILE_MSG      WM_USER+3001        //文件下载消息
 #define WM_HTML_ERROR_MSG         WM_USER+3002        //HTML错误消息
+#define WM_HTML_DOC_MSG           WM_USER+3003        //HTML文本内容
 
 class CHtmlCtrl : public CDHtmlDialog
 {
