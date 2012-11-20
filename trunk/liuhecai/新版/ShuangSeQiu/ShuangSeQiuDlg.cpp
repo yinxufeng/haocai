@@ -396,7 +396,7 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn2()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn4()
 {
-//	m_DlgLianHaoHongQiu.ShowWindow(SW_SHOW);
+	m_DlgLianHaoHongQiu.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn3()
