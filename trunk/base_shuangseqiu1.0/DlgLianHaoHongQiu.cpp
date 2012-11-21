@@ -25,6 +25,7 @@ void CDlgLianHaoHongQiu::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_ListCtrl);
+	DDX_Control(pDX, IDC_LIST2, m_ListCtrl2);
 }
 
 
@@ -34,6 +35,8 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoHongQiu, CDialog)
 
 	ON_BN_CLICKED(IDC_BUTTON1, &CDlgLianHaoHongQiu::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CDlgLianHaoHongQiu::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_WEI_FEN_BTN, &CDlgLianHaoHongQiu::OnBnClickedWeiFenBtn)
+	ON_BN_CLICKED(IDC_HE_FEN_BTN, &CDlgLianHaoHongQiu::OnBnClickedHeFenBtn)
 END_MESSAGE_MAP()
 
 
@@ -56,6 +59,8 @@ void CDlgLianHaoHongQiu::InitListHeader()
 
 	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	2*nWidth);
 	m_ListCtrl.SetColumStyle(0,Style);
+	m_ListCtrl2.SetColumStyle(0,Style);
+	m_ListCtrl2.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	nWidth);
 
 	for(int Index = 1; Index <= ColoCount; Index++)
 	{
@@ -70,9 +75,28 @@ void CDlgLianHaoHongQiu::InitListHeader()
 	m_ListCtrl.InsertColumn(ColoCount+2,"对错",    LVCFMT_CENTER,	nWidth);
 	m_ListCtrl.SetColumStyle(ColoCount+2,Style);
 
+
+	m_ListCtrl.InsertColumn(0,_TEXT("期数"),    LVCFMT_CENTER,	2*nWidth);
+	m_ListCtrl.SetColumStyle(0,Style);
+
+	int TempCount=70;
+	nWidth=21;
+	for(int Index = 1; Index <=TempCount; Index++)
+	{
+		CString Str;
+		Str.Format("%02d",Index);
+		m_ListCtrl2.InsertColumn(Index,Str,    LVCFMT_CENTER,	nWidth);
+		m_ListCtrl2.SetColumStyle(Index,Style);
+	}
+
+	
+
 	
 	m_ListCtrl.SetRowHeight(30);
 	m_ListCtrl.ShowHeader(true);
+
+	m_ListCtrl2.SetRowHeight(21);
+	m_ListCtrl2.ShowHeader(true);
 
 	sItemBkData ItemBkData;
 	ItemBkData.m_BkFillMode = MODE_FILL_RGB;
@@ -81,6 +105,9 @@ void CDlgLianHaoHongQiu::InitListHeader()
 	ItemBkData.m_HeightColor = RGB(100,100,100);
 	ItemBkData.m_BkColor = RGB(222,222,222);
 	m_ListCtrl.SetItemBkData(ItemBkData);
+	m_ListCtrl2.SetItemBkData(ItemBkData);
+
+	m_ListCtrl2.SetShowHScrollBar(false);
 
 
 }
@@ -156,6 +183,13 @@ void CDlgLianHaoHongQiu::AddFlag(CString& Str,bool IsTrue)
 		Str+="F";
 }
 
+int CDlgLianHaoHongQiu::TransDataByInt(CString DataStr,int Data2 )
+{
+	int TempData = atoi(DataStr.GetBuffer());
+	int Temp=TempData*Data2;
+	return Temp%1000;
+}
+
 CString CDlgLianHaoHongQiu::TransData(CString DataStr,float Data)
 {
 	int TempData = atoi(DataStr.GetBuffer());
@@ -172,7 +206,10 @@ CString CDlgLianHaoHongQiu::TransData(CString DataStr,float Data)
 
 void CDlgLianHaoHongQiu::OnBnClickedButton1()
 {
-	m_ListCtrl.DeleteAllItems();
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
+	    m_ListCtrl.DeleteAllItems();
 		m_ListCtrl.InsertItem(0,"");
 		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 		vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
@@ -326,6 +363,9 @@ void CDlgLianHaoHongQiu::OnBnClickedButton1()
 
 void CDlgLianHaoHongQiu::OnBnClickedButton2()
 {
+	m_ListCtrl.ShowWindow(SW_SHOW);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+
 m_ListCtrl.DeleteAllItems();
 		m_ListCtrl.InsertItem(0,"");
 		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
@@ -462,4 +502,2540 @@ m_ListCtrl.DeleteAllItems();
 		::WriteFile(FileHandle,WriteCSV.GetBuffer(),WriteCSV.GetLength(),&WriteBytes,NULL);
 		WriteCSV.ReleaseBuffer();
 		CloseHandle(FileHandle);
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedWeiFenBtn()
+{
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_SHOW);
+
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+
+	COLORREF Yelow=RGB(255,192,0);
+	COLORREF ZiSe=RGB(112,48,160);
+	COLORREF Write=RGB(255,255,255);
+	COLORREF Red=RGB(255,0,0);
+
+	    m_ListCtrl2.DeleteAllItems();
+		m_ListCtrl2.InsertItem(0,"");
+		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+		vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+		
+		CString WriteCSV="期数,球顺前三V, , ,球顺后三V, , ,球前三V, , ,球后三V, , ,跨度,和尾,球顺前三*3.14,球顺前三*6.18,球顺后三V*3.14,球顺后三V*6.18,球前三V*3.14,球前三V*6.18,球后三V*3.14,球后三V*6.18\n";
+		for(int Index = 0; Index < (int)DataList->size(); Index++)
+		{
+			
+			m_ListCtrl2.InsertItem(Index,"");
+
+			CString ShunV;
+			CString HouV;
+			CString QiuV;
+			CString QiuHouV;
+			CString KuaDu;
+			CString HeV;
+
+			int VCount=0;
+
+			CString ShunVCSV;
+			CString HouVCSV;
+			CString QiuVCSV;
+			CString QiuHouVCSV;
+
+			vector<int> ShunVInt;
+			vector<int> HouVInt;
+			vector<int> QiuVInt;
+			vector<int> QiuHouVInt;
+			
+			int TempArray[10];
+			memset(TempArray,0,10*sizeof(int));
+
+			for(int i=0; i < 6; i++)
+			{
+				int V=(*DataList)[Index].m_HongQiu[i]%10;
+				int V2=(*QiuShun)[Index].m_HongQiu[i]%10;
+				VCount+=V;
+				TempArray[V]++;
+
+				CString StrV;
+				StrV.Format("%d",V);
+				CString StrV2;
+				StrV2.Format("%d",V2);
+			
+				if(i < 3)
+				{
+					QiuV+=StrV;
+					ShunV+=StrV2;
+
+					ShunVInt.push_back(V2);
+					QiuVInt.push_back(V);
+
+					if(QiuVCSV.IsEmpty())
+						QiuVCSV+=StrV;
+					else 
+						QiuVCSV+=","+StrV;
+					if(ShunVCSV.IsEmpty())
+						ShunVCSV+=StrV2;
+					else
+						ShunVCSV+=","+StrV2;
+				}
+				else
+				{
+					QiuHouV+=StrV;
+					HouV+=StrV2;
+
+					HouVInt.push_back(V2);
+					QiuHouVInt.push_back(V);
+
+					if(QiuHouVCSV.IsEmpty())
+						QiuHouVCSV+=StrV;
+					else 
+						QiuHouVCSV+=","+StrV;
+					if(HouVCSV.IsEmpty())
+						HouVCSV+=StrV2;
+					else
+						HouVCSV+=","+StrV2;
+
+				}
+			}
+
+			CString AllV;
+			for(int j=0; j < 10; j++)
+			{
+				if(TempArray[j])
+				{
+					CString Temp;
+					Temp.Format("%d",j);
+					AllV+=Temp;
+				}
+			}
+
+			
+			
+			int List2Index=0;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,(*DataList)[Index].m_QiShu+" "+AllV);
+			List2Index++;
+			bool IsWrite=false;
+
+			int HeCount=0;
+			int KuaDuCount=0;
+			int MaxData=0;
+			int MinData=100;
+
+			for(int j=0; j < ShunVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",ShunVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],ShunVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+=ShunVInt[j];
+				if(MaxData < ShunVInt[j])
+					MaxData=ShunVInt[j];
+				
+				if(MinData > ShunVInt[j])
+					MinData=ShunVInt[j];
+
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			CString TempHe;
+			CString TempKuai;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+			for(int j=0; j < HouVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",HouVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HouVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+=HouVInt[j];
+				if(MaxData < HouVInt[j])
+					MaxData=HouVInt[j];
+				
+				if(MinData > HouVInt[j])
+					MinData=HouVInt[j];
+
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+			for(int j=0; j < QiuVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",QiuVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],QiuVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+= QiuVInt[j];
+				if(MaxData <  QiuVInt[j])
+					MaxData= QiuVInt[j];
+				
+				if(MinData >  QiuVInt[j])
+					MinData= QiuVInt[j];
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+			for(int j=0; j < QiuHouVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",QiuHouVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],QiuHouVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+=QiuHouVInt[j];
+				if(MaxData < QiuHouVInt[j])
+					MaxData=QiuHouVInt[j];
+				
+				if(MinData > QiuHouVInt[j])
+					MinData=QiuHouVInt[j];
+
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			int TempData=TransDataByInt(ShunV,314);
+			int TempData2=TempData/100;
+
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+
+			CString Str;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(ShunV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(HouV,314);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+		
+
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(HouV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuV,314);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+			//
+			
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuHouV,314);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuHouV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+		
+		}
+
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedHeFenBtn()
+{
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_SHOW);
+
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_SHOW);
+
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+
+	COLORREF Yelow=RGB(255,192,0);
+	COLORREF ZiSe=RGB(112,48,160);
+	COLORREF Write=RGB(255,255,255);
+	COLORREF Red=RGB(255,0,0);
+
+	    m_ListCtrl2.DeleteAllItems();
+		m_ListCtrl2.InsertItem(0,"");
+		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+		vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+		
+		CString WriteCSV="期数,球顺前三V, , ,球顺后三V, , ,球前三V, , ,球后三V, , ,跨度,和尾,球顺前三*3.14,球顺前三*6.18,球顺后三V*3.14,球顺后三V*6.18,球前三V*3.14,球前三V*6.18,球后三V*3.14,球后三V*6.18\n";
+		for(int Index = 0; Index < (int)DataList->size(); Index++)
+		{
+			
+			m_ListCtrl2.InsertItem(Index,"");
+
+			CString ShunV;
+			CString HouV;
+			CString QiuV;
+			CString QiuHouV;
+			CString KuaDu;
+			CString HeV;
+
+			int VCount=0;
+
+			CString ShunVCSV;
+			CString HouVCSV;
+			CString QiuVCSV;
+			CString QiuHouVCSV;
+
+			vector<int> ShunVInt;
+			vector<int> HouVInt;
+			vector<int> QiuVInt;
+			vector<int> QiuHouVInt;
+			
+			int TempArray[10];
+			memset(TempArray,0,10*sizeof(int));
+
+			for(int i=0; i < 6; i++)
+			{
+				int V=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
+				V=V%10;
+				int V2=(*QiuShun)[Index].m_HongQiu[i]%10+(*QiuShun)[Index].m_HongQiu[i]/10;
+				V2=V2%10;
+				VCount+=V;
+				TempArray[V]++;
+
+				CString StrV;
+				StrV.Format("%d",V);
+				CString StrV2;
+				StrV2.Format("%d",V2);
+			
+				if(i < 3)
+				{
+					QiuV+=StrV;
+					ShunV+=StrV2;
+
+					ShunVInt.push_back(V2);
+					QiuVInt.push_back(V);
+
+					if(QiuVCSV.IsEmpty())
+						QiuVCSV+=StrV;
+					else 
+						QiuVCSV+=","+StrV;
+					if(ShunVCSV.IsEmpty())
+						ShunVCSV+=StrV2;
+					else
+						ShunVCSV+=","+StrV2;
+				}
+				else
+				{
+					QiuHouV+=StrV;
+					HouV+=StrV2;
+
+					HouVInt.push_back(V2);
+					QiuHouVInt.push_back(V);
+
+					if(QiuHouVCSV.IsEmpty())
+						QiuHouVCSV+=StrV;
+					else 
+						QiuHouVCSV+=","+StrV;
+					if(HouVCSV.IsEmpty())
+						HouVCSV+=StrV2;
+					else
+						HouVCSV+=","+StrV2;
+
+				}
+			}
+
+			CString AllV;
+			for(int j=0; j < 10; j++)
+			{
+				if(TempArray[j])
+				{
+					CString Temp;
+					Temp.Format("%d",j);
+					AllV+=Temp;
+				}
+			}
+
+			
+			
+			int List2Index=0;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,(*DataList)[Index].m_QiShu+" "+AllV);
+			List2Index++;
+			bool IsWrite=false;
+
+			int HeCount=0;
+			int KuaDuCount=0;
+			int MaxData=0;
+			int MinData=100;
+
+			for(int j=0; j < ShunVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",ShunVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],ShunVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+=ShunVInt[j];
+				if(MaxData < ShunVInt[j])
+					MaxData=ShunVInt[j];
+				
+				if(MinData > ShunVInt[j])
+					MinData=ShunVInt[j];
+
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			CString TempHe;
+			CString TempKuai;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+			for(int j=0; j < HouVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",HouVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HouVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+=HouVInt[j];
+				if(MaxData < HouVInt[j])
+					MaxData=HouVInt[j];
+				
+				if(MinData > HouVInt[j])
+					MinData=HouVInt[j];
+
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+			for(int j=0; j < QiuVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",QiuVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],QiuVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+= QiuVInt[j];
+				if(MaxData <  QiuVInt[j])
+					MaxData= QiuVInt[j];
+				
+				if(MinData >  QiuVInt[j])
+					MinData= QiuVInt[j];
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+			for(int j=0; j < QiuHouVInt.size(); j++)
+			{
+				CString Str;
+				Str.Format("%d",QiuHouVInt[j]);
+				m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+				IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],QiuHouVInt[j],true);
+				if(IsWrite)
+					Style.m_DrawData.m_TextData.m_BGColor = Write;
+				else
+					Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+				m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+				HeCount+=QiuHouVInt[j];
+				if(MaxData < QiuHouVInt[j])
+					MaxData=QiuHouVInt[j];
+				
+				if(MinData > QiuHouVInt[j])
+					MinData=QiuHouVInt[j];
+
+				List2Index++;
+			}
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			int TempData=TransDataByInt(ShunV,314);
+			int TempData2=TempData/100;
+
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+
+			CString Str;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(ShunV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(HouV,314);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+		
+
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(HouV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuV,314);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+
+			//
+			
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuHouV,314);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+
+			//
+			HeCount=0;
+			KuaDuCount=0;
+			MaxData=0;
+			MinData=100;
+			TempHe.Empty();
+			TempKuai.Empty();
+
+
+			TempData=TransDataByInt(QiuHouV,618);
+			TempData2=TempData/100;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			
+			TempData2=TempData/10%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			Str.Empty();
+			List2Index++;
+
+			TempData2=TempData%10;
+			HeCount+=TempData2;
+			if(MaxData < TempData2)
+				MaxData=TempData2;
+				
+			if(MinData > TempData2)
+				MinData=TempData2;
+			Str.Format("%d",TempData2);
+			m_ListCtrl2.SetItemText(Index,List2Index,Str);
+
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+
+			List2Index++;
+			Str.Empty();
+
+			KuaDuCount=MaxData-MinData;
+			TempHe.Format("%d",HeCount);
+			TempKuai.Format("%d",KuaDuCount);
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempKuai);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],KuaDuCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+		
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+
+			m_ListCtrl2.SetItemText(Index,List2Index,TempHe);
+			IsWrite = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount,true);
+			if(IsWrite)
+				Style.m_DrawData.m_TextData.m_BGColor = Write;
+			else
+			{
+
+				Style.m_DrawData.m_TextData.m_BGColor = ZiSe;
+
+				bool IsWrite1 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount/10,true);
+				bool IsWrite2 = Index+1 >= DataList->size() ? true:!CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],HeCount%10,true);
+
+				if(!IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Yelow;
+
+				if(!IsWrite1 &&  IsWrite2 || IsWrite1 &&  !IsWrite2)
+					Style.m_DrawData.m_TextData.m_BGColor = Red;
+
+					
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(Index,List2Index,Style);
+			List2Index++;
+			Str.Empty();
+		
+		
+
+
+
+		}
 }

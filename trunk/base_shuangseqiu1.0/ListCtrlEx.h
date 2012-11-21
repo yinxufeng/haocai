@@ -282,6 +282,9 @@ public:
 	//
 	void SetShowOther(bool showOther){m_ShowOther = showOther;};
 
+	//设置是否显示横向滚动条
+	void SetShowHScrollBar(bool IsShow){m_HScrollBar = IsShow;}
+
 	//屏蔽列表头移动事件
 	afx_msg BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 
@@ -358,6 +361,7 @@ protected:
 	BOOL                 m_IsVirtualMode;     //是否为虚模式
 	int                  m_VirtualID;         //虚模式ID
 	CSkinHeaderCtrl      m_HeaderCtrl;        //头部控件
+	BOOL                 m_HScrollBar;        //是否显示横向滚动条
 	
 	vector<sItemIndex>   m_RowIndex;          //行索引
 	vector<sItemIndex>   m_ColumnIndex;       //列索引
