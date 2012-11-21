@@ -1295,6 +1295,125 @@ DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
 	return 0;
 }
 
+
+//DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
+//{
+//   /* CShuangSeQiuDlg* Self=(CShuangSeQiuDlg*)lpVoid;
+//
+//	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(false);
+//
+//	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+//	int StartQiShu=0;
+//	if(DataList->empty())
+//	{
+//		__time32_t aa=time(NULL);
+//		COleDateTime TempTime(aa);
+//		StartQiShu=TempTime.GetYear();
+//		StartQiShu=StartQiShu*1000;
+//		StartQiShu++;
+//	}
+//	else
+//	{
+//		int TempIndex=DataList->size()-1;
+//		CString QiShu=(*DataList)[TempIndex].m_QiShu;
+//		StartQiShu=atoi(QiShu.GetBuffer());
+//		QiShu.ReleaseBuffer();
+//		StartQiShu++;
+//	}
+//
+//	vector<sShuangSeQiuInfo> InfoList;
+//	while(true)
+//	{*/
+//		CString Url;
+//		CString QiHao;
+//	//	QiHao.Format(_T("%d"),StartQiShu);
+//		Url=_T("http://www.google.com.hk");//,StartQiShu;
+//		CHttpFile* File= NULL;
+//		try
+//		{
+//			//获取服务器列表文件
+//			CInternetSession Session;
+//			File=(CHttpFile*)Session.OpenURL(Url);
+//			if(NULL == File) 
+//				return -1;
+//
+//			DWORD Len=0;
+//			DWORD   Status; 
+//			DWORD   StatusSize   =   sizeof(Status); 
+//			DWORD   ContentLen=0,   ContentLenSize   =   sizeof(ContentLenSize); 
+//			if(File->QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_STATUS_CODE,  &Status,   &StatusSize,   NULL) &&   Status   ==   HTTP_STATUS_OK) 
+//				File-> QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_CONTENT_LENGTH,   &Len,   &ContentLenSize);	
+//
+//			char Buffer[10*1024+1];
+//			memset(Buffer,0,10*1024+1);
+//			DWORD AllLen = 0;
+//			CString Txt;
+//			while(true)
+//			{
+//				char Buffer[1024*10+1]={0};
+//				memset(Buffer,0,1024*10+1);
+//				DWORD ReadLen= Len - AllLen > 10*1024 ? 10*1024 : Len - AllLen;
+//				DWORD ReadBytes=File->Read(Buffer,ReadLen);
+//				if(ReadBytes == -1)
+//					break;
+//				AllLen += ReadBytes;
+//				CString TempTxt=CString(Buffer);
+//				Txt+=TempTxt;
+//
+//				if(AllLen == Len )
+//					break;
+//				
+//
+//			}
+//
+//			if(Txt.Find("对不起没有找到该页面") !=-1)
+//			{
+//				File->Close();
+//				delete File; File = NULL;
+//			//	break;
+//			}
+//			sShuangSeQiuInfo Info;
+//			Info.m_QiHao = QiHao;
+//			PaseInfo(Txt,Info);
+////			InfoList.push_back(Info);
+//			File->Close();
+//			delete File; File = NULL;
+//		}catch(...)
+//		{
+//			if(File)
+//			{
+//				File->Close();
+//				delete File; File = NULL;
+//			}
+//
+//			//break;
+//		
+//		}
+//
+//	//	StartQiShu++;
+//	//}
+//
+//	CString FileName=GetAppCurrentPath()+_T("Data.txt");
+//	HANDLE FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+//	if(FileHandle == INVALID_HANDLE_VALUE)
+//	{
+//		FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+//	}
+//	::SetFilePointer(FileHandle,0,0,FILE_END);
+//	/*for(int i = 0; i < InfoList.size(); i++)
+//	{
+//		DWORD WriteByte=0;
+//		::WriteFile(FileHandle,InfoList[i].m_ChuQiuShuanXu.GetBuffer(),InfoList[i].m_ChuQiuShuanXu.GetLength(),&WriteByte,NULL);
+//	}*/
+//	CloseHandle(FileHandle);
+//
+////	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(true);
+//
+//	//if(!InfoList.empty())
+//	//	Self->OnBnClickedLoadDataBtn();
+//	return 0;
+//}
+
 //解析数据
 bool CShuangSeQiuDlg::PaseInfo(CString& Txt,sShuangSeQiuInfo& Info)
 {
@@ -1358,8 +1477,10 @@ void CShuangSeQiuDlg::OnBnClickedButton14()
 
 void CShuangSeQiuDlg::OnBnClickedButton15()
 {
-	m_DlgLianHaoLanQiu.SetWondowsTitle("狂杀龙凤",FORMULA_SHA_LONG_TOU);
-	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+	//m_DlgLianHaoLanQiu.SetWondowsTitle("狂杀龙凤",FORMULA_SHA_LONG_TOU);
+	//m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+	m_DlgHengXiangChaZhi.ShowWindow(SW_SHOW);
+
 }
 
 void CShuangSeQiuDlg::OnBnClickedButton16()

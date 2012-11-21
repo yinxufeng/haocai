@@ -25,6 +25,7 @@ CListCtrlEx::CListCtrlEx()
 	m_VirtualID = 0;
 	m_ShowVedio = false;
 	m_ShowOther = false;
+	m_HScrollBar=false;
 
 }
 
@@ -1314,7 +1315,7 @@ void CListCtrlEx::SetSelProperty(int iRow)
 void CListCtrlEx::OnSize(UINT nType, int cx, int cy)
 {
 	CListCtrl::OnSize(nType, cx, cy);
-	ShowScrollBar(SB_HORZ,FALSE);
+	ShowScrollBar(SB_HORZ,m_HScrollBar);
 }
 
 void CListCtrlEx::OnLvnItemchanged(NMHDR *pNMHDR, LRESULT *pResult)

@@ -29,9 +29,11 @@ protected:
 	//初始化列表头
 	void InitListHeader();
 
+	int TransDataByInt(CString DataStr,int Data2 );
 	CString TransData(CString DataStr,float Data);
 private:
 	CListCtrlEx m_ListCtrl;
+	CListCtrlEx m_ListCtrl2;
 	BOOL      m_IsInitData;
 public:
 	afx_msg void OnBnClickedSearchBtn();
@@ -39,4 +41,9 @@ public:
 	void AddFlag(CString& Str,bool IsTrue);
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedWeiFenBtn();
+	afx_msg void OnBnClickedHeFenBtn();
+
+
+	
 };

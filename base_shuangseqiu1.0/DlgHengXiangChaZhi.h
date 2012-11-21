@@ -32,6 +32,9 @@ protected:
 	//获取路数
 	int GetLuShu(int Data);
 
+	//获取颜色值
+	COLORREF GetColor(int Data);
+
 	CString GetDataStr(int LuShu);
 
 private:
