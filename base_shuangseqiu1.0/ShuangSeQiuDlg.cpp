@@ -113,6 +113,7 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON15, &CShuangSeQiuDlg::OnBnClickedButton15)
 	ON_BN_CLICKED(IDC_BUTTON16, &CShuangSeQiuDlg::OnBnClickedButton16)
 	ON_CBN_SELCHANGE(IDC_COMBO2, &CShuangSeQiuDlg::OnCbnSelchangeCombo2)
+	ON_BN_CLICKED(IDC_BUTTON17, &CShuangSeQiuDlg::OnBnClickedButton17)
 END_MESSAGE_MAP()
 
 
@@ -1469,6 +1470,121 @@ bool CShuangSeQiuDlg::PaseInfo(CString& Txt,sShuangSeQiuInfo& Info)
 	return true;
 }
 
+bool CShuangSeQiuDlg::PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info,CString ParseFlag)
+{
+    int StartPos=0;
+	int EndPos=0;
+	CString TempStr;
+
+	//获取高人气号
+	CString FindStr=ParseFlag;
+	StartPos=Txt.Find(FindStr,0);
+	FindStr=_T("<td><span class=\"red_ball\">");
+
+	CString LanQiu;
+	for(int Index = 0; Index < 7; Index++)
+	{
+		if(Index == 6)
+			FindStr=_T("<td><span class=\"blue_ball\">");
+
+		StartPos=Txt.Find(FindStr,StartPos);
+		if(StartPos != -1)
+		{
+			EndPos=Txt.Find(_T("</"),StartPos+FindStr.GetLength()+1);
+			if(EndPos != -1)
+			{
+				CString Value=Txt.Mid(StartPos+FindStr.GetLength(),EndPos-StartPos-FindStr.GetLength());
+				sWangYiData TempData;
+				TempData.m_Count= 0;
+				TempData.m_Data = atoi(Value.GetBuffer());
+				Value.ReleaseBuffer();
+
+				CString Value2;
+				int TempPos=Txt.Find(_T("<td><em"),EndPos);
+				if(TempPos != -1)
+				{
+					int TempStartPos=Txt.Find(_T("<td>"),TempPos+7);
+					int TempEndPos =Txt.Find(_T("</td>"),TempStartPos+4);
+					CString TempDataStr = Txt.Mid(TempStartPos+4,TempEndPos-TempStartPos-4);
+					TempData.m_Count= atoi(TempDataStr.GetBuffer());
+					TempDataStr.ReleaseBuffer();
+					
+				}
+
+				Info.m_WangYiData.push_back(TempData);
+			}
+		}
+		StartPos = EndPos+1;
+	}
+
+	return true;
+}
+
+bool CShuangSeQiuDlg::PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info)
+{
+	int StartPos=0;
+	int EndPos=0;
+	CString TempStr;
+
+	//获取期号
+	CString FindStr=_T("&nbsp; <b class=\"c_ba2636\">");
+	CString EndStr=_T("/b>");
+	StartPos=Txt.Find(FindStr,0);
+	EndPos = Txt.Find(EndStr,StartPos+FindStr.GetLength());
+	CString Value = Txt.Mid(StartPos+FindStr.GetLength()+7,EndPos-StartPos+FindStr.GetLength());
+	int QiShu=atoi(Value.GetBuffer());
+	Value.ReleaseBuffer();
+	QiShu+=1;
+
+	__time32_t aa=time(NULL);
+	COleDateTime TempTime(aa);
+	CString QiShuStr;
+	QiShuStr.Format(_T("%d%d"),TempTime.GetYear(),QiShu);
+
+
+	//获取高人气号
+	sWangYiDataInfo Info1;
+	Info1.m_QiShu = QiShuStr;
+	Info1.m_GetTime=aa;
+	Info1.m_Type = TYPE_GAO_REN_QI;
+	PaseWangYiInfo(Txt,Info1,_T("<div class=\"num_detail\" id=\"hotCoolCon1\">"));
+
+	//获取低人气号
+	sWangYiDataInfo Info2;
+	Info2.m_QiShu = QiShuStr;
+	Info2.m_GetTime=aa;
+	Info2.m_Type = TYPE_DI_REN_QI;
+	PaseWangYiInfo(Txt,Info2,_T("<div class=\"num_detail\" id=\"hotCoolCon2\" style=\"display:none\">"));
+
+	//获取热号
+	sWangYiDataInfo Info3;
+	Info3.m_QiShu = QiShuStr;
+	Info3.m_GetTime=aa;
+	Info3.m_Type = TYPE_RE_HAO;
+	PaseWangYiInfo(Txt,Info3,_T("<div class=\"num_detail\" id=\"hotCoolCon3\" style=\"display:none\">"));
+
+	//获取冷号
+	sWangYiDataInfo Info4;
+	Info4.m_QiShu = QiShuStr;
+	Info4.m_GetTime=aa;
+	Info4.m_Type = TYPE_LENG_HAO;
+	PaseWangYiInfo(Txt,Info4,_T("<div class=\"num_detail\" id=\"hotCoolCon4\" style=\"display:none\">"));
+
+
+	CString FilePath2 = GetAppCurrentPath()+_T("\\net.txt");
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,  OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+		FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,  	CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+
+	::SetFilePointer(FileHandle2,0,0,FILE_END);
+	CString WriteStr;
+	WriteStr=Info1.ToString()+_T("\r\n")+Info2.ToString()+_T("\r\n")+Info3.ToString()+_T("\r\n")+Info4.ToString()+_T("\r\n");
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	CloseHandle(FileHandle2);
+	return true;
+}
+
 void CShuangSeQiuDlg::OnBnClickedButton14()
 {
 	m_DlgZongXiangChaZhi.CenterWindow();
@@ -2116,4 +2232,76 @@ vector<int> CShuangSeQiuDlg::GetDataList(CString& StrData)
 void CShuangSeQiuDlg::OnCbnSelchangeCombo2()
 {
 	
+}
+
+void CShuangSeQiuDlg::OnBnClickedButton17()
+{
+	::CreateThread(NULL,0,RequestDataWangYiThread,this,0,0);
+}
+
+
+//爬取网易数据
+DWORD CShuangSeQiuDlg::RequestDataWangYiThread(LPVOID lpVoid)
+{
+	
+		CString Url;
+		Url="http://caipiao.163.com/order/preBet_ssq.html";
+		CHttpFile* File= NULL;
+		try
+		{
+			//获取服务器列表文件
+			CInternetSession Session;
+			File=(CHttpFile*)Session.OpenURL(Url);
+			if(NULL == File) 
+				return -1;
+
+			DWORD Len=0;
+			DWORD   Status; 
+			DWORD   StatusSize   =   sizeof(Status); 
+			DWORD   ContentLen=0,   ContentLenSize   =   sizeof(ContentLenSize); 
+			if(File->QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_STATUS_CODE,  &Status,   &StatusSize,   NULL) &&   Status   ==   HTTP_STATUS_OK) 
+				File-> QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_CONTENT_LENGTH,   &Len,   &ContentLenSize);	
+
+			char Buffer[10*1024+1];
+			memset(Buffer,0,10*1024+1);
+			DWORD AllLen = 0;
+			CString Txt;
+			while(true)
+			{
+				char Buffer[1024*10+1]={0};
+				memset(Buffer,0,1024*10+1);
+				//DWORD ReadLen= Len - AllLen > 10*1024 ? 10*1024 : Len - AllLen;
+				DWORD ReadLen=10*1024;
+				DWORD ReadBytes=File->Read(Buffer,ReadLen);
+				if(ReadBytes == -1)
+					break;
+				AllLen += ReadBytes;
+				CString TempTxt=CString(Buffer);
+				Txt+=TempTxt;
+
+				if(TempTxt.Find("</body>") != -1 || TempTxt.Find("</BODY>") != -1)
+					break;
+			}
+
+			if(Txt.IsEmpty())
+			{
+				File->Close();
+				delete File; File = NULL;
+			}
+			
+			sWangYiDataInfo Info;
+			PaseWangYiInfo(Txt,Info);
+			File->Close();
+			delete File; File = NULL;
+		}catch(...)
+		{
+			if(File)
+			{
+				File->Close();
+				delete File; File = NULL;
+			}
+		
+		}
+
+	return 0;
 }

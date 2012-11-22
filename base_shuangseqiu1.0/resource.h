@@ -104,6 +104,7 @@
 #define IDC_PREV_BTN                    1053
 #define IDC_BUTTON16                    1053
 #define IDC_NEXT_BTN                    1054
+#define IDC_BUTTON17                    1054
 #define IDC_RESULT                      1055
 #define IDC_RESULT2                     1056
 #define IDC_JINXUAN_BTN                 1056
