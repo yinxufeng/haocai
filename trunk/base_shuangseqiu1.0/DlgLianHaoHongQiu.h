@@ -29,12 +29,34 @@ protected:
 	//初始化列表头
 	void InitListHeader();
 
+	//三胆尾换算
 	int TransDataByInt(CString DataStr,int Data2 );
+
+	//双胆尾换算
+	int TransDataByInt(CString DataStr,int Data2 ,int Data3);
+
 	CString TransData(CString DataStr,float Data);
+
+	//填充颜色
+	void FillItemStyleColor(sItemStyle& Style,bool IsTrue1,bool IsTrue2);
+
 private:
-	CListCtrlEx m_ListCtrl;
-	CListCtrlEx m_ListCtrl2;
+
+	//填充双胆尾数据
+	void FillShuangDanList(int FillType);
+
+	//填充数据
+	void FillDataByType(int FillType,bool FillWay,int& List2Index);
+
+	//填充数据
+	void FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex);
+
+private:
+	CListCtrlEx m_ListCtrl;         //显示前三后三
+	CListCtrlEx m_ListCtrl2;        //显示尾三 合三 走势
+	CListCtrlEx m_ListCtrl3;        //显示双胆
 	BOOL      m_IsInitData;
+	int       m_CompareShuangDanType; //双胆比较方式
 public:
 	afx_msg void OnBnClickedSearchBtn();
 
@@ -46,4 +68,8 @@ public:
 
 
 	
+	afx_msg void OnBnClickedButton6();
+	afx_msg void OnBnClickedWeishuShuangdanBtn();
+	afx_msg void OnBnClickedHeshuShuangdanBtn();
+	afx_msg void OnBnClickedChashuShuangdanBtn();
 };

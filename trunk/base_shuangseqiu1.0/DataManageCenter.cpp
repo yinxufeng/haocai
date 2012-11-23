@@ -1932,6 +1932,34 @@ bool CDataManageCenter::IsHongQiuInHeData(sShuangSeQiu QiuData,int Data,bool IsV
 	return Ret;
 }
 
+//球是否在红球差中
+bool CDataManageCenter::IsHongQiuInChaData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if(abs(QiuData.m_HongQiu[Index]%10- QiuData.m_HongQiu[Index]/10)== abs(Data%10-Data/10))
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(abs(QiuData.m_HongQiu[Index]%10- QiuData.m_HongQiu[Index]/10)%10== abs(Data%10-Data/10)%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
 
 //球是否在位数中
 bool CDataManageCenter::IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV)

@@ -22,6 +22,7 @@
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
+#define IDC_LIST4                       1002
 #define IDC_RED_BALL_BTN                1003
 #define IDC_BLUE_BALL_BTN               1004
 #define IDC_BUTTON1                     1005
@@ -49,6 +50,7 @@
 #define IDC_STATIC4                     1011
 #define IDC_EDIT11                      1011
 #define IDC_EDIT26                      1011
+#define IDC_CHASHU_SHUANGDAN_BTN        1011
 #define IDC_EDIT2                       1012
 #define IDC_STATIC5                     1012
 #define IDC_EDIT24                      1012
@@ -115,6 +117,8 @@
 #define IDC_COMBO2                      1061
 #define IDC_WEI_FEN_BTN                 1062
 #define IDC_HE_FEN_BTN                  1063
+#define IDC_WEISHU_SHUANGDAN_BTN        1064
+#define IDC_HESHU_SHUANGDAN_BTN         1065
 
 // Next default values for new objects
 // 
@@ -122,7 +126,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1064
+#define _APS_NEXT_CONTROL_VALUE         1066
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
