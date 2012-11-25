@@ -24,6 +24,9 @@ protected:
 
 	//初始化列表头
 	void InitListHeader();
+	
+	//获取颜色值
+	COLORREF GetColor(int Data);
 
 	void OnClose();
 

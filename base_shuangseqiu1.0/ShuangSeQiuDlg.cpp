@@ -1601,7 +1601,7 @@ void CShuangSeQiuDlg::OnBnClickedButton15()
 
 void CShuangSeQiuDlg::OnBnClickedButton16()
 {
-	::CreateThread(NULL,0,CombineDataThread,this,0,0);
+	m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
 }
 
  DWORD CShuangSeQiuDlg::CombineDataThread(LPVOID lpVoid)

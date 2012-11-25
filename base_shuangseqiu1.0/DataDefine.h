@@ -51,6 +51,29 @@ struct sShuangSeQiu
 		memset(m_HongQiu,0,sizeof(DWORD)*QIU_XUN);
 		memset(m_QuJian,0,sizeof(DWORD)*3);
 	}
+
+public:
+
+	CString ToString()
+	{
+		int QiShu=atoi(m_QiShu.GetBuffer());
+		m_QiShu.ReleaseBuffer();
+		
+		CString RetStr;
+		RetStr.Format("%d",QiShu);
+		for(int i=0; i < QIU_XUN; i++)
+		{
+			CString Str;
+			Str.Format(" %02d",m_HongQiu[i]);
+			RetStr+=Str;
+		}
+
+		CString Lan;
+		Lan.Format("+%02d",m_LanQiu);
+		RetStr=RetStr+Lan;
+		return RetStr;
+		
+	}
 };
 
 struct sEqualShuangSeQiu          //相等红球数结构体定义

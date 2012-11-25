@@ -2146,6 +2146,52 @@ void CFormulaCenter::ExecShaLongTouFormula()
 		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
 		FormualIndex++;
 
+		FormulaData.m_Data   = "";
+		FormulaData.m_IsTrue = true;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+
+
+		//龙头胆组
+		int TempData1=(*ShunXuDataList)[Index-1].m_HongQiu[5];
+		while(true)
+		{
+			TempData1+=6;
+			if(TempData1 > QIU_COUNT)
+				break;
+		}
+		TempData=TempData1;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,0):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+
+		TempData = TempData1+1;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,0):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+
+		TempData = TempData1-1;
+		if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,0):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+
 		if(Index == 1)
 			RealCount+=FormualIndex;
 	}
