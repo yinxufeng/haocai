@@ -154,6 +154,9 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 		m_ListCtrl.InsertItem(2,"");
 		m_ListCtrl.InsertItem(3,"");
 
+		CString FilePath2 = GetAppCurrentPath3()+_T("\\wuqiyilou.txt");
+		HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+
 		vector<sShuangSeQiu>*DataList =CDataManageCenter::GetInstance()->GetDataList();
 		for(int Index =4; Index < DataList->size(); Index++)
 		{
@@ -222,19 +225,38 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 			if(Index == 134)
 				WuQiCount=0;
 
+
+			CString WriteTextStr="ÏÂÆÚ£º\r\n";
+			if(Index+1 < DataList->size())
+			{
+				WriteTextStr=(*DataList)[Index+1].m_QiShu;
+
+			}
+
 			for(int k=0; k <= 4 ; k++)
 			{
 				int TempCount=0;
 				int AllCount=0;
+				CString TempText;
+				TempText.Format("%02d²ã:   ",k);
+				CString OutText;
+
 				for(int j=0; j < QIU_COUNT; j++)
 				{
 					if(YiLouDataArray[k][j])
 					{
+						CString Temp;
+						Temp.Format("%02d ",j+1);
+						TempText+=Temp;
+
 						bool Want=Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],j+1);
 						if(Want)
 						{
 							TempCount++;
 							WuQiCount++;
+							OutText+=Temp;
+							
+							
 						}
 						AllCount++;
 						WuQiShuCount++;
@@ -248,8 +270,15 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 				Style.m_DrawData.m_TextData.m_BGColor=GetColor(TempCount);
 				m_ListCtrl.SetItemSpecialStyle(Index,ListIndex,Style);
 				ListIndex++;
+
+				for(int i=TempText.GetLength(); i < 50; i++)
+					TempText+=" ";
+				WriteTextStr+=TempText+"==¡·"+OutText+"\r\n";
 			}
 
+			WriteTextStr+="\r\n";
+			DWORD WriteBytes=0;
+			::WriteFile(FileHandle2,WriteTextStr.GetBuffer(),WriteTextStr.GetLength(),&WriteBytes,0);
 			ShowText.Empty();
 			ShowText.Format("%d:%d",QIU_COUNT-WuQiShuCount,6-WuQiCount);
 			m_ListCtrl.SetItemText(Index,ListIndex,ShowText);
@@ -278,9 +307,10 @@ void CDlgHengXiangChaZhi::OnShowWindow(BOOL bShow, UINT nStatus)
 			m_ListCtrl.SetItemSpecialStyle(Index,ListIndex,Style);
 
 			ListIndex++;
-
 		}
 		
+
+		CloseHandle(FileHandle2);
 	}
 
 
@@ -292,6 +322,7 @@ BOOL CDlgHengXiangChaZhi::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	InitListHeader();
+	this->CenterWindow();
 	return true;
 }
 
