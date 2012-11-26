@@ -116,7 +116,6 @@ void CDlgLianHaoLanQiu::InitListHeader()
 void CDlgLianHaoLanQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialog::OnShowWindow(bShow, nStatus);
-	CDialog::OnShowWindow(bShow, nStatus);
 	if(!m_IsInitData)
 	{
 		m_IsInitData = true;
@@ -224,6 +223,9 @@ void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
 	
 	for(int Index = 0; Index < EndIndex;Index++)
 	{
+		int TempArray[QIU_COUNT+1];
+		memset(TempArray,0,(QIU_COUNT+1)*sizeof(int));
+
 		for(int i = 0; i < FormulList[Index].m_DataList.size(); i++)
 		{
 			int TempIndex = Index;
@@ -238,6 +240,11 @@ void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
 				}
 				m_ListCtrl.SetItemText(i+1,0,QiShu);
 			}
+			int TempData=atoi(FormulList[Index].m_DataList[i].m_Data.GetBuffer());
+			FormulList[Index].m_DataList[i].m_Data.ReleaseBuffer();
+			if(TempData>=0 && TempData <= QIU_COUNT && FormulList[Index].m_DataList[i].m_IsTrue)
+				TempArray[TempData]++;
+
 			m_ListCtrl.SetItemText(i+1,TempIndex+1,FormulList[Index].m_DataList[i].m_Data);
 			if(FormulList[Index].m_DataList[i].m_IsTrue)
 			{
@@ -256,8 +263,23 @@ void CDlgLianHaoLanQiu::FillData(vector<sFormulaInfo>& FormulList)
 				Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
 				m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
 			}
-		
 		}
+
+	/*	if(m_FormulaType == FORMULA_DING_HONG_WEI)
+		{
+			for(int i = 0; i < FormulList[Index].m_DataList.size(); i++)
+			{
+				int TempIndex = Index;
+				if(FormulList[Index].m_DataList[i].m_IsTrue && !FormulList[Index].m_DataList[i].m_Data.IsEmpty())
+				{
+					int TempData=atoi(FormulList[Index].m_DataList[i].m_Data.GetBuffer());
+					FormulList[Index].m_DataList[i].m_Data.ReleaseBuffer();
+					Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+					Style.m_DrawData.m_TextData.m_BGColor =GetColor(TempArray[TempData]);
+					m_ListCtrl.SetItemSpecialStyle(i+1,TempIndex+1,Style);
+				}
+			}
+		}*/
 	}
 
 	int AllErrorCount=0;
@@ -657,5 +679,29 @@ void CDlgLianHaoLanQiu::SetWondowsTitle(CString Title,eFormulaType Type)
 		m_ListCtrl.DeleteAllItems();
 		OnBnClickedJingxuanBtn();
 
+	}
+}
+
+//获取颜色值
+COLORREF CDlgLianHaoLanQiu::GetColor(int Data)
+{
+	switch(Data)
+	{
+	case 0:
+		return RGB(112,48,160);
+	case 1:
+		return RGB(255,0,0);
+	case 2:
+		return RGB(198,198,200);
+	case 3:
+		return RGB(255,192,0);
+	/*case 4:
+		return RGB(128,128,128);*/
+
+	default:
+		return RGB(128,128,128);
+
+	/*default:
+		return RGB(248,183,173);*/
 	}
 }

@@ -19,6 +19,7 @@
 #define IDD_WEIHONG_DLG                 138
 #define IDD_SHUANGSEQIU_DIALOG8         139
 #define IDD_SHUANGSEQIU_DIALOG9         140
+#define IDD_SHUANGSEQIU_DIALOG10        141
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
@@ -119,6 +120,11 @@
 #define IDC_HE_FEN_BTN                  1063
 #define IDC_WEISHU_SHUANGDAN_BTN        1064
 #define IDC_HESHU_SHUANGDAN_BTN         1065
+#define IDC_QIAN_SAN_WEI_BTN            1066
+#define IDC_HOU_SAN_WEI_BTN             1067
+#define IDC_QIAN_SAN_HE_BTN             1068
+#define IDC_HOU_SAN_HE_BTN              1069
+#define IDC_HOU_SAN_HE_BTN2             1070
 
 // Next default values for new objects
 // 
@@ -126,7 +132,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1066
+#define _APS_NEXT_CONTROL_VALUE         1070
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

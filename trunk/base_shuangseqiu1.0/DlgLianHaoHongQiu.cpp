@@ -42,6 +42,11 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoHongQiu, CDialog)
 	ON_BN_CLICKED(IDC_WEISHU_SHUANGDAN_BTN, &CDlgLianHaoHongQiu::OnBnClickedWeishuShuangdanBtn)
 	ON_BN_CLICKED(IDC_HESHU_SHUANGDAN_BTN, &CDlgLianHaoHongQiu::OnBnClickedHeshuShuangdanBtn)
 	ON_BN_CLICKED(IDC_CHASHU_SHUANGDAN_BTN, &CDlgLianHaoHongQiu::OnBnClickedChashuShuangdanBtn)
+	ON_BN_CLICKED(IDC_QIAN_SAN_WEI_BTN, &CDlgLianHaoHongQiu::OnBnClickedQianSanWeiBtn)
+	ON_BN_CLICKED(IDC_HOU_SAN_WEI_BTN, &CDlgLianHaoHongQiu::OnBnClickedHouSanWeiBtn)
+	ON_BN_CLICKED(IDC_QIAN_SAN_HE_BTN, &CDlgLianHaoHongQiu::OnBnClickedQianSanHeBtn)
+	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn)
+	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN2, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn2)
 END_MESSAGE_MAP()
 
 
@@ -211,6 +216,15 @@ int CDlgLianHaoHongQiu::TransDataByInt(CString DataStr,int Data2 )
 	int TempData = atoi(DataStr.GetBuffer());
 	DataStr.ReleaseBuffer();
 	int Temp=TempData*Data2;
+	return Temp%1000;
+}
+
+//三胆尾换算
+int CDlgLianHaoHongQiu::TransDataByInt(CString DataStr)
+{
+    int TempData = atoi(DataStr.GetBuffer());
+	DataStr.ReleaseBuffer();
+	int Temp=TempData;
 	return Temp%1000;
 }
 
@@ -3181,30 +3195,126 @@ void CDlgLianHaoHongQiu::FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShu
 	}
 	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
 
-	/*if(!IsTrue2)
-	{
-		Style.m_DrawData.m_TextData.m_BGColor = Write;
-	}
-	else
-	{
-		FillItemStyleColor(Style,IsTrue1,IsTrue2);
-	}
-	ListCtrl.SetItemSpecialStyle(Index,CololIndex+1,Style);
-
-	Str.Empty();
-	CololIndex+=3;*/
 	CololIndex++;
 
 	return;
 }
 
+//填充数据
+void CDlgLianHaoHongQiu::FillSanDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex)
+{
+	
+
+	int TempData=Data;
+	int TempData1=TempData/100;
+	int TempData2=TempData/10%10;
+	int TempData3=TempData%10;
+	bool IsTrue1=false;
+	bool IsTrue2=false;
+	bool IsTrue3=false;
+
+	CString Str;
+	Str.Format("%d",TempData1);
+	ListCtrl.SetItemText(Index,CololIndex,Str);
+	sItemStyle Style=GetSanDanItemStyle(m_CompareSanDanType,DataList,Index,TempData1);
+	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+	Str.Empty();
+	CololIndex++;
+
+	Str.Format("%d",TempData2);
+	ListCtrl.SetItemText(Index,CololIndex,Str);
+	Style=GetSanDanItemStyle(m_CompareSanDanType,DataList,Index,TempData2);
+	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+	Str.Empty();
+	CololIndex++;
+
+	Str.Format("%d",TempData3);
+	ListCtrl.SetItemText(Index,CololIndex,Str);
+	Style=GetSanDanItemStyle(m_CompareSanDanType,DataList,Index,TempData3);
+	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+	Str.Empty();
+	CololIndex++;
+
+	int max=((TempData1+TempData2)+abs(TempData1-TempData2))/2;
+	if(max < TempData3)
+		max=TempData3;
+
+	int min=((TempData1+TempData2)-abs(TempData1-TempData2))/2;
+	if(min > TempData3)
+		min=TempData3;
+
+	Str.Format("%d",max-min);
+	ListCtrl.SetItemText(Index,CololIndex,Str);
+	Style=GetSanDanItemStyle(m_CompareSanDanType,DataList,Index,max-min);
+	Style.m_DrawData.m_TextData.m_IsFillBG=false;
+	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+	Str.Empty();
+	CololIndex++;
+
+	int He=TempData1+TempData2+TempData3;
+	Str.Format("%d",He);
+	ListCtrl.SetItemText(Index,CololIndex,Str);
+	Style=GetSanDanItemStyle(m_CompareSanDanType,DataList,Index,He);
+	Style.m_DrawData.m_TextData.m_IsFillBG=false;
+	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+	Str.Empty();
+	CololIndex++;
+
+
+
+	return;
+}
+
+//获取三胆填充风格
+sItemStyle CDlgLianHaoHongQiu::GetSanDanItemStyle(int FillType,vector<sShuangSeQiu>* DataList,int Index,int Data)
+{
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+
+	COLORREF Yelow=RGB(255,192,0);
+	COLORREF ZiSe=RGB(112,48,160);
+	COLORREF Write=RGB(255,255,255);
+	COLORREF Red=RGB(255,0,0);
+
+	bool IsTrue1=false;
+	bool IsTrue2=false;
+
+	if(FillType == 0)
+	{
+		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
+		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
+	}
+	else if(FillType == 1)
+	{
+		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
+		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
+	}
+	else
+	{
+		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
+		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
+	}
+
+	if(IsTrue1 && IsTrue2)
+		Style.m_DrawData.m_TextData.m_BGColor=Red;
+	else if(!IsTrue1&&!IsTrue2)
+		Style.m_DrawData.m_TextData.m_BGColor=Write;
+	else if(IsTrue1&&!IsTrue2)
+		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
+	else
+		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
+
+	return Style;
+}
+
 //填充双胆尾数据
 void CDlgLianHaoHongQiu::FillShuangDanList(int FillType)
 {
-	m_ListCtrl.ShowWindow(SW_HIDE);
-	m_ListCtrl2.ShowWindow(SW_HIDE);
-	m_ListCtrl3.ShowWindow(SW_SHOW);
-
+	
 	m_ListCtrl.ShowWindow(SW_HIDE);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
 	m_ListCtrl3.ShowWindow(SW_SHOW);
@@ -3228,6 +3338,29 @@ void CDlgLianHaoHongQiu::FillShuangDanList(int FillType)
 	FillDataByType(1,false,ListInsertPos);
 	FillDataByType(2,false,ListInsertPos);
 }
+
+//填充三胆尾数据
+void CDlgLianHaoHongQiu::FillSanDanList(int FillType)
+{
+	m_CompareSanDanType=FillType;
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_SHOW);
+	m_ListCtrl3.ShowWindow(SW_HIDE);
+
+	m_ListCtrl2.DeleteAllItems();
+	m_ListCtrl2.InsertItem(0,"");
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		m_ListCtrl2.InsertItem(Index,"");
+	}
+
+	int ListInsertPos=0;
+	FillSanDanDataByType(FillType,true,ListInsertPos);
+}
+
 
 //填充数据
 void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIndex)
@@ -3418,4 +3551,219 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 			if(Index == 0)
 				ColoumnIndex=List2Index;
 		}
+}
+
+//填充三胆尾数据
+void CDlgLianHaoHongQiu::FillSanDanDataByType(int FillType,bool FillWay,int& ColoumnIndex)
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	
+	int TempColoumnIndex=ColoumnIndex;
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+			CString ShunV;
+			CString HouV;
+			CString QiuV;
+			CString QiuHouV;
+			CString KuaDu;
+			CString HeV;
+
+			int VCount=0;
+
+			CString ShunVCSV;
+			CString HouVCSV;
+			CString QiuVCSV;
+			CString QiuHouVCSV;
+
+			vector<int> ShunVInt;
+			vector<int> HouVInt;
+			vector<int> QiuVInt;
+			vector<int> QiuHouVInt;
+			
+			int TempArray[10];
+			memset(TempArray,0,10*sizeof(int));
+
+			for(int i=0; i < 6; i++)
+			{
+				int V=0;
+				int V2=0;
+				
+				
+				if(FillType == 0)
+				{
+					V=(*DataList)[Index].m_HongQiu[i]%10;
+					V2=(*QiuShun)[Index].m_HongQiu[i]%10;
+					
+
+				}
+				else if(FillType == 1)
+				{
+					V=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
+					V2=(*QiuShun)[Index].m_HongQiu[i]%10+(*QiuShun)[Index].m_HongQiu[i]/10;
+				}
+				else
+				{
+					V=abs((*DataList)[Index].m_HongQiu[i]%10-(*DataList)[Index].m_HongQiu[i]/10);
+					V2=abs((*QiuShun)[Index].m_HongQiu[i]%10-(*QiuShun)[Index].m_HongQiu[i]/10);
+				}
+
+				V=V%10;
+				V2=V2%10;
+				TempArray[V]++;
+				CString StrV;
+				StrV.Format("%d",V);
+				CString StrV2;
+				StrV2.Format("%d",V2);
+			
+				if(i < 3)
+				{
+					QiuV+=StrV;
+					ShunV+=StrV2;
+
+					ShunVInt.push_back(V2);
+					QiuVInt.push_back(V);
+
+					if(QiuVCSV.IsEmpty())
+						QiuVCSV+=StrV;
+					else 
+						QiuVCSV+=","+StrV;
+					if(ShunVCSV.IsEmpty())
+						ShunVCSV+=StrV2;
+					else
+						ShunVCSV+=","+StrV2;
+				}
+				else
+				{
+					QiuHouV+=StrV;
+					HouV+=StrV2;
+
+					HouVInt.push_back(V2);
+					QiuHouVInt.push_back(V);
+
+					if(QiuHouVCSV.IsEmpty())
+						QiuHouVCSV+=StrV;
+					else 
+						QiuHouVCSV+=","+StrV;
+					if(HouVCSV.IsEmpty())
+						HouVCSV+=StrV2;
+					else
+						HouVCSV+=","+StrV2;
+
+				}
+			}
+
+
+			int InsertPos=Index;
+
+			int List2Index=TempColoumnIndex;
+			if(FillWay)
+			{
+				CString AllV;
+				int Min=10;
+				int Max=0;
+				for(int j=0; j < 10; j++)
+				{
+					if(TempArray[j])
+					{
+						CString Temp;
+						Temp.Format("%d",j);
+						AllV+=Temp;
+
+						if(Max < j)
+							Max=j;
+						
+						if(Min > j)
+							Min=j;
+					}
+				}
+
+				
+				CString Text;
+				Text=(*DataList)[Index].m_QiShu+" "+AllV;
+				m_ListCtrl2.SetItemText(InsertPos,List2Index,Text);
+				List2Index++;
+
+				Text.Empty();
+				Text.Format("%d",Max-Min);
+				m_ListCtrl2.SetItemText(InsertPos,List2Index,Text);
+
+				sItemStyle Style;
+				Style.m_ItemType = TEXT_TYPE;
+				Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+				Style.m_DrawData.m_TextData.m_TextFont = NULL;
+				Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+				Style.m_DrawData.m_TextData.m_IsFillBG=false;
+				m_ListCtrl2.SetItemSpecialStyle(InsertPos,List2Index,Style);
+				List2Index++;
+
+			}
+
+			
+
+			int TempData=TransDataByInt(ShunV);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(HouV);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(QiuV);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(QiuHouV);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+
+			TempData=TransDataByInt(ShunV,314);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(ShunV,618);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(HouV,314);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(HouV,618);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(QiuV,314);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(QiuV,618);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(QiuHouV,314);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			TempData=TransDataByInt(QiuHouV,618);
+			FillSanDanListData(m_ListCtrl2,DataList,TempData,InsertPos,List2Index);
+
+			if(Index == 0)
+				ColoumnIndex=List2Index;
+		}
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedQianSanWeiBtn()
+{
+	OnBnClickedButton1();
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedHouSanWeiBtn()
+{
+	OnBnClickedButton2();
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedQianSanHeBtn()
+{
+	FillSanDanList(0);
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn()
+{
+	FillSanDanList(1);
+}
+void CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn2()
+{
+	FillSanDanList(2);
+	
 }

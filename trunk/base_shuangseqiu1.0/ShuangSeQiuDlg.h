@@ -15,6 +15,7 @@
 #include "DlgShiFaDingHong.h"
 #include "DlgZiDongFenXi.h"
 #include "DlgTeZongHeFenXi.h"
+#include "DlgDingHongWei.h"
 #include "afxwin.h"
 
 
@@ -139,6 +140,7 @@ private:
 
 	CDlgLianHaoHongQiu   m_DlgLianHaoHongQiu;
 	CDlgLianHaoLanQiu    m_DlgLianHaoLanQiu;
+	CDlgDingHongWei      m_DlgDingHongWei;
 	
 	CDlgHengXiangChaZhi  m_DlgHengXiangChaZhi;
 	CDlgZongXiangChaZhi  m_DlgZongXiangChaZhi;

@@ -32,6 +32,9 @@ protected:
 	//三胆尾换算
 	int TransDataByInt(CString DataStr,int Data2 );
 
+	//三胆尾换算
+	int TransDataByInt(CString DataStr);
+
 	//双胆尾换算
 	int TransDataByInt(CString DataStr,int Data2 ,int Data3);
 
@@ -45,11 +48,23 @@ private:
 	//填充双胆尾数据
 	void FillShuangDanList(int FillType);
 
+	//填充三胆尾数据
+	void FillSanDanList(int FillType);
+
 	//填充数据
 	void FillDataByType(int FillType,bool FillWay,int& List2Index);
 
+	//填充三胆尾数据
+	void FillSanDanDataByType(int FillType,bool FillWay,int& List2Index);
+
 	//填充数据
 	void FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex);
+
+	//填充数据
+	void FillSanDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex);
+
+	//获取三胆填充风格
+	sItemStyle GetSanDanItemStyle(int FillType,vector<sShuangSeQiu>* DataList,int Index,int Data);
 
 private:
 	CListCtrlEx m_ListCtrl;         //显示前三后三
@@ -57,6 +72,7 @@ private:
 	CListCtrlEx m_ListCtrl3;        //显示双胆
 	BOOL      m_IsInitData;
 	int       m_CompareShuangDanType; //双胆比较方式
+	int       m_CompareSanDanType;    //三胆尾比较方式
 public:
 	afx_msg void OnBnClickedSearchBtn();
 
@@ -72,4 +88,9 @@ public:
 	afx_msg void OnBnClickedWeishuShuangdanBtn();
 	afx_msg void OnBnClickedHeshuShuangdanBtn();
 	afx_msg void OnBnClickedChashuShuangdanBtn();
+	afx_msg void OnBnClickedQianSanWeiBtn();
+	afx_msg void OnBnClickedHouSanWeiBtn();
+	afx_msg void OnBnClickedQianSanHeBtn();
+	afx_msg void OnBnClickedHouSanHeBtn();
+	afx_msg void OnBnClickedHouSanHeBtn2();
 };

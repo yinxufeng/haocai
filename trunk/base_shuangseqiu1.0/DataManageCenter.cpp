@@ -1903,6 +1903,62 @@ bool CDataManageCenter::IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 	return Ret;
 }
 
+//球是否在红球前三中
+bool CDataManageCenter::IsHongQiuInQianSanData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < 3; Index++)
+	{
+		if(!IsV)
+		{
+			if(QiuData.m_HongQiu[Index] == Data)
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(QiuData.m_HongQiu[Index]%10 == Data%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+//球是否在红球后三中
+bool CDataManageCenter::IsHongQiuInHouSanData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 3; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if(QiuData.m_HongQiu[Index] == Data)
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(QiuData.m_HongQiu[Index]%10 == Data%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
 
 //球是否在红球合中
 bool CDataManageCenter::IsHongQiuInHeData(sShuangSeQiu QiuData,int Data,bool IsV)
@@ -1932,6 +1988,63 @@ bool CDataManageCenter::IsHongQiuInHeData(sShuangSeQiu QiuData,int Data,bool IsV
 	return Ret;
 }
 
+//球是否在红球合前三中
+bool CDataManageCenter::IsHongQiuInHeQianSanData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < 3; Index++)
+	{
+		if(!IsV)
+		{
+			if((QiuData.m_HongQiu[Index]%10+ QiuData.m_HongQiu[Index]/10)== (Data%10+Data/10))
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if((QiuData.m_HongQiu[Index]%10+ QiuData.m_HongQiu[Index]/10)%10== (Data%10+Data/10)%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+//球是否在红球合后三中
+bool CDataManageCenter::IsHongQiuInHeHouSanData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 3; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if((QiuData.m_HongQiu[Index]%10+ QiuData.m_HongQiu[Index]/10)== (Data%10+Data/10))
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if((QiuData.m_HongQiu[Index]%10+ QiuData.m_HongQiu[Index]/10)%10== (Data%10+Data/10)%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+
 //球是否在红球差中
 bool CDataManageCenter::IsHongQiuInChaData(sShuangSeQiu QiuData,int Data,bool IsV)
 {
@@ -1960,6 +2073,61 @@ bool CDataManageCenter::IsHongQiuInChaData(sShuangSeQiu QiuData,int Data,bool Is
 	return Ret;
 }
 
+//球是否在红球差中
+bool CDataManageCenter::IsHongQiuInChaQianSanData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < 3; Index++)
+	{
+		if(!IsV)
+		{
+			if(abs(QiuData.m_HongQiu[Index]%10- QiuData.m_HongQiu[Index]/10)== abs(Data%10-Data/10))
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(abs(QiuData.m_HongQiu[Index]%10- QiuData.m_HongQiu[Index]/10)%10== abs(Data%10-Data/10)%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+//球是否在红球差中
+bool CDataManageCenter::IsHongQiuInChaHouSanData(sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 3; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if(abs(QiuData.m_HongQiu[Index]%10- QiuData.m_HongQiu[Index]/10)== abs(Data%10-Data/10))
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(abs(QiuData.m_HongQiu[Index]%10- QiuData.m_HongQiu[Index]/10)%10== abs(Data%10-Data/10)%10)
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
 
 //球是否在位数中
 bool CDataManageCenter::IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV)

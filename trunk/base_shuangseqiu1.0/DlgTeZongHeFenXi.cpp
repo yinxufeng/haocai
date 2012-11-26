@@ -147,6 +147,12 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 						OutCount=0;
 				}
 
+				if(Index == 137)
+				{
+					int a=0;
+					int b=a;
+
+				}
 				int DataCount=it->second.size();
 				if(Count >= 16)
 				{
@@ -154,6 +160,7 @@ void CDlgTeZongHeFenXi::OnShowWindow(BOOL bShow, UINT nStatus)
 					OutCount=LemitDataCount;
 					DataCount+=LemitCount;
 					LemitCount=DataCount;
+					Count=16;
 				}
 				CString Str;
 				Str.Format("%02d:%02d",DataCount,OutCount);
@@ -217,7 +224,7 @@ COLORREF CDlgTeZongHeFenXi::GetColor(int Data)
 	case 1:
 		return RGB(255,0,0);
 	case 2:
-		return RGB(255,255,255);
+		return RGB(198,198,200);
 		
 	case 3:
 		return RGB(255,192,0);
