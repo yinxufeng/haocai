@@ -29,11 +29,13 @@ protected:
 	//初始化列表头
 	void InitListHeader();
 
-	//获取路数
-	int GetLuShu(int Data);
 
 	//获取颜色值
 	COLORREF GetColor(int Data);
+
+	//获取路数
+	int GetLuShu(int Data);
+
 
 	CString GetDataStr(int LuShu);
 

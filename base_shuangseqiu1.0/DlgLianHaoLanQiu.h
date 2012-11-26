@@ -37,6 +37,8 @@ protected:
 
 	void FillData(vector<sFormulaInfo>& FormulList);
 
+	//获取颜色值
+	COLORREF GetColor(int Data);
 private:
 
 	CListCtrlEx m_ListCtrl;

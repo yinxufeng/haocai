@@ -116,11 +116,33 @@ public:
 	//球是否在红球中
 	static bool IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV=false);
 
+	//球是否在红球前三中
+	static bool IsHongQiuInQianSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+	//球是否在红球后三中
+	static bool IsHongQiuInHouSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+
 	//球是否在红球合中
 	static bool IsHongQiuInHeData(sShuangSeQiu QiuData,int Data,bool IsV=false);
 
+	//球是否在红球合前三中
+	static bool IsHongQiuInHeQianSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+	//球是否在红球合后三中
+	static bool IsHongQiuInHeHouSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+
 	//球是否在红球差中
 	static bool IsHongQiuInChaData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+	//球是否在红球差中
+	static bool IsHongQiuInChaQianSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+	//球是否在红球差中
+	static bool IsHongQiuInChaHouSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+
 
 	//球是否在位数中
 	static bool IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV=false);

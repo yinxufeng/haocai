@@ -183,6 +183,8 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgTeZongHeFenXi.Create(CDlgTeZongHeFenXi::IDD,this);
 	m_DlgTeZongHeFenXi.ShowWindow(SW_HIDE);
 
+	m_DlgDingHongWei.Create(CDlgDingHongWei::IDD,this);
+	m_DlgDingHongWei.ShowWindow(SW_HIDE);
 
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
@@ -317,6 +319,7 @@ void CShuangSeQiuDlg::InitShaMap()
 	m_MapList["øÒ…±¡˙Õ∑"]=FORMULA_SHA_LONG_TOU;
 	m_MapList["øÒ…±∑ÔŒ≤"]=FORMULA_SHA_FENG_WEI;
 	m_MapList["Œ≤≤ªÕ¨≥ˆ"]=FORMULA_WEI_BU_TONG_CHU;
+	m_MapList["∂®∫ÏV"]=FORMULA_DING_HONG_WEI;
 }
 
 //≥ı ºªØ¡–±ÌÕ∑
@@ -522,8 +525,9 @@ void CShuangSeQiuDlg::OnBnClickedSearchBtn2()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn2()
 {
-	m_DlgLianHaoLanQiu.SetWondowsTitle("øÒ…±¿∫«Ú",FORMULA_SHA_LAN);
-	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
+	/*m_DlgLianHaoLanQiu.SetWondowsTitle("øÒ…±¿∫«Ú",FORMULA_SHA_LAN);
+	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);*/
+	this->m_DlgDingHongWei.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn4()
@@ -982,7 +986,7 @@ void CShuangSeQiuDlg::InsertAndSetText3(int Row,sShuangSeQiu& ShuangSeQiu,int* p
 void CShuangSeQiuDlg::OnBnClickedButton11()
 {
 	CFormulaCenter::GetInstance();
-	m_DlgLianHaoLanQiu.SetWondowsTitle("∂®∫Ï∫Õ∫ÏV",FORMULA_DING_HONG_WEI);
+	m_DlgLianHaoLanQiu.SetWondowsTitle("∫Ï«Úµ„Œª",FORMULA_DING_HONG_DIAN );
 	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
 }
 //void CShuangSeQiuDlg::OnBnClickedButton11()

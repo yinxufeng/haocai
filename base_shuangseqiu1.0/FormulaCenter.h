@@ -145,8 +145,11 @@ private:
 	//运行杀红公式
 	void ExecShaHongFormula();
 
-	//运行定红V公式
+	//运行定红公式
 	void ExecDingHongFormula();
+
+	//运行定红V公式
+	void ExecDingHongVFormula();
 
 	//运行杀蓝公式
 	void ExecShaLanFormula();
@@ -154,8 +157,11 @@ private:
 	//运行杀蓝V公式
 	void ExecShaLanVFormula();
 
-	//运行杀龙凤尾公式
+	//运行杀龙头公式
 	void ExecShaLongTouFormula();
+
+	//运行杀凤尾公式
+	void ExecShaFengWeiFormula();
 
 	//运行尾不同出公式
 	void ExecWeiBuTongChuFormula();
@@ -173,6 +179,9 @@ private:
 
 	//统计公式信息
 	void ToJiFormulaInfo(sFormulaInfo& Formula);
+
+	//获取尾值和
+	int GetWeiZhiCount(int DataList[],int Count);
 
 
 	CFormulaCenter(void);

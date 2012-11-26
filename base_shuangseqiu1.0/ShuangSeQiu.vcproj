@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgDingHongWei.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgFourEqual.cpp"
 				>
 			</File>
@@ -297,6 +301,10 @@
 			</File>
 			<File
 				RelativePath=".\DataManageCenter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DlgDingHongWei.h"
 				>
 			</File>
 			<File

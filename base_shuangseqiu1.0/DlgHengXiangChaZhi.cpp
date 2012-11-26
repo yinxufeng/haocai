@@ -363,7 +363,7 @@ COLORREF CDlgHengXiangChaZhi::GetColor(int Data)
 	case 1:
 		return RGB(255,0,0);
 	case 2:
-		return RGB(255,255,255);
+		return RGB(198,198,200);
 	case 3:
 		return RGB(255,192,0);
 	case 4:
