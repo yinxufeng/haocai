@@ -1,4 +1,5 @@
 #pragma once
+#include "afxwin.h"
 
 
 // CDlgLianHaoHongQiu 对话框
@@ -28,6 +29,9 @@ protected:
 
 	//初始化列表头
 	void InitListHeader();
+
+	//初始化Combox
+	void InitCombox();
 
 	//三胆尾换算
 	int TransDataByInt(CString DataStr,int Data2 );
@@ -73,6 +77,8 @@ private:
 	BOOL      m_IsInitData;
 	int       m_CompareShuangDanType; //双胆比较方式
 	int       m_CompareSanDanType;    //三胆尾比较方式
+	CComboBox m_ComboBox;
+
 public:
 	afx_msg void OnBnClickedSearchBtn();
 
@@ -93,4 +99,5 @@ public:
 	afx_msg void OnBnClickedQianSanHeBtn();
 	afx_msg void OnBnClickedHouSanHeBtn();
 	afx_msg void OnBnClickedHouSanHeBtn2();
+	afx_msg void OnBnClickedExecBtn();
 };

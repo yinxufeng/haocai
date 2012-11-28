@@ -143,6 +143,13 @@ public:
 	 //爬取中彩擂台数据
 	static DWORD WINAPI RequestDataZhongCaiThread(LPVOID lpVoid);
 
+	//爬取澳客数据
+	static DWORD WINAPI RequestDataAoKeThread(LPVOID lpVoid);
+	
+	//爬取360数据
+	static DWORD WINAPI RequestData360Thread(LPVOID lpVoid);
+
+
 	//获取HTTP数据
 	static CString GetHttpData(CString Url);
 
