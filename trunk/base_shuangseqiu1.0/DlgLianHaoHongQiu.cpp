@@ -28,6 +28,7 @@ void CDlgLianHaoHongQiu::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST1, m_ListCtrl);
 	DDX_Control(pDX, IDC_LIST2, m_ListCtrl2);
 	DDX_Control(pDX, IDC_LIST4,m_ListCtrl3);
+	DDX_Control(pDX, IDC_COMBO1, m_ComboBox);
 }
 
 
@@ -47,6 +48,7 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoHongQiu, CDialog)
 	ON_BN_CLICKED(IDC_QIAN_SAN_HE_BTN, &CDlgLianHaoHongQiu::OnBnClickedQianSanHeBtn)
 	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn)
 	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN2, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn2)
+	ON_BN_CLICKED(IDC_EXEC_BTN, &CDlgLianHaoHongQiu::OnBnClickedExecBtn)
 END_MESSAGE_MAP()
 
 
@@ -139,6 +141,21 @@ void CDlgLianHaoHongQiu::InitListHeader()
 
 }
 
+
+//初始化Combox
+void CDlgLianHaoHongQiu::InitCombox()
+{
+	m_ComboBox.InsertString(0,"314尾前后三走势");
+	m_ComboBox.InsertString(1,"618尾前后三走势");
+	m_ComboBox.InsertString(2,"314合前后三走势");
+	m_ComboBox.InsertString(3,"618合前后三走势");
+	m_ComboBox.InsertString(4,"314差前后三走势");
+	m_ComboBox.InsertString(5,"双胆尾走势");
+	m_ComboBox.InsertString(6,"双胆合走势");
+	m_ComboBox.InsertString(7,"双胆差走势");
+	
+}
+
 void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialog::OnShowWindow(bShow, nStatus);
@@ -155,6 +172,8 @@ BOOL CDlgLianHaoHongQiu::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	InitListHeader();
+	InitCombox();
+	CenterWindow();
 	return true;
 }
 
@@ -3161,41 +3180,117 @@ void CDlgLianHaoHongQiu::FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShu
 	bool IsTrue1=false;
 	bool IsTrue2=false;
 
-	CString Str;
-	Str.Format("%d%d",TempData2,TempData3);
-	ListCtrl.SetItemText(Index,CololIndex,Str);
-	/*Str.Empty();
-	Str.Format("%d",TempData3);
-	ListCtrl.SetItemText(Index,CololIndex+1,Str);*/
+	if(m_CompareShuangDanType < 10)
+	{
+		CString Str;
+		Str.Format("%d%d",TempData2,TempData3);
+		ListCtrl.SetItemText(Index,CololIndex,Str);
+		/*Str.Empty();
+		Str.Format("%d",TempData3);
+		ListCtrl.SetItemText(Index,CololIndex+1,Str);*/
 
-	if(m_CompareShuangDanType == 0)
-	{
-		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
-		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData3,true);
-	}
-	else if(m_CompareShuangDanType  == 1)
-	{
-		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
-		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData3,true);
+		if(m_CompareShuangDanType == 0 || m_CompareShuangDanType== 5)
+		{
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData3,true);
+		}
+		else if(m_CompareShuangDanType  == 1|| m_CompareShuangDanType== 6)
+		{
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData3,true);
+		}
+		else if(m_CompareShuangDanType ==2 ||  m_CompareShuangDanType== 7 )
+		{
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData2,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData3,true);
+		}
+
+		if(!IsTrue1)
+		{
+			Style.m_DrawData.m_TextData.m_BGColor = Write;
+		}
+		else
+		{
+			FillItemStyleColor(Style,IsTrue1,IsTrue2);
+		}
+		ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+		CololIndex++;
 	}
 	else
 	{
-		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData2,true);
-		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData3,true);
-	}
-	
+		CString Str;
+		Str.Format("%d",TempData2);
+		ListCtrl.SetItemText(Index,CololIndex,Str);
+		int Data=TempData2;
+		if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11)
+		{
+			//前三后三胆V
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
+		}
+		else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13)
+		{
+			//前三后三胆合
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
 
-	if(!IsTrue1)
-	{
-		Style.m_DrawData.m_TextData.m_BGColor = Write;
-	}
-	else
-	{
-		FillItemStyleColor(Style,IsTrue1,IsTrue2);
-	}
-	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+		}
+		else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15)
+		{
+			//前三后三胆差
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
+		}
 
-	CololIndex++;
+		if(IsTrue1 && IsTrue2)
+			Style.m_DrawData.m_TextData.m_BGColor=Red;
+		else if(!IsTrue1&&!IsTrue2)
+			Style.m_DrawData.m_TextData.m_BGColor=Write;
+		else if(IsTrue1&&!IsTrue2)
+			Style.m_DrawData.m_TextData.m_BGColor=Yelow;
+		else
+			Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
+
+		
+		ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+		CololIndex++;
+
+		Str.Empty();
+		Str.Format("%d",TempData3);
+		ListCtrl.SetItemText(Index,CololIndex,Str);
+		Data=TempData3;
+		if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11)
+		{
+			//前三后三胆V
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
+		}
+		else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13)
+		{
+			//前三后三胆合
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
+
+		}
+		else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15)
+		{
+			//前三后三胆差
+			IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
+			IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
+		}
+
+		if(IsTrue1 && IsTrue2)
+			Style.m_DrawData.m_TextData.m_BGColor=Red;
+		else if(!IsTrue1&&!IsTrue2)
+			Style.m_DrawData.m_TextData.m_BGColor=Write;
+		else if(IsTrue1&&!IsTrue2)
+			Style.m_DrawData.m_TextData.m_BGColor=Yelow;
+		else
+			Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
+
+		ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+		CololIndex++;
+	}
 
 	return;
 }
@@ -3417,12 +3512,12 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 					V2=abs((*QiuShun)[Index].m_HongQiu[i]%10-(*QiuShun)[Index].m_HongQiu[i]/10);
 				}
 
-				if(m_CompareShuangDanType == 0)
+				if(m_CompareShuangDanType == 0 || m_CompareShuangDanType == 5|| m_CompareShuangDanType== 10 || m_CompareShuangDanType== 11)
 				{
 					int TempV=(*DataList)[Index].m_HongQiu[i]%10;
 					TempArray[TempV]++;
 				}
-				else if(m_CompareShuangDanType == 1)
+				else if(m_CompareShuangDanType == 1||m_CompareShuangDanType == 6|| m_CompareShuangDanType== 12 || m_CompareShuangDanType== 13)
 				{
 					int TempV=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
 					TempV=TempV%10;
@@ -3509,43 +3604,114 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 				List2Index++;
 			}
 
-			int TempData=TransDataByInt(ShunV,314,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+			if(m_CompareShuangDanType < 10)
+			{
+				if(m_CompareShuangDanType < 4)
+				{
+					int TempData=TransDataByInt(ShunV,314,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(ShunV,618,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(ShunV,618,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(HouV,314,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(HouV,314,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(HouV,618,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(HouV,618,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(QiuV,314,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(QiuV,314,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(QiuV,618,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(QiuV,618,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(QiuHouV,314,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(QiuHouV,314,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(QiuHouV,618,8);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(QiuHouV,618,8);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
 
-			//只乘0.8
-			TempData=TransDataByInt(ShunV,8,0);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					//只乘0.8
+					TempData=TransDataByInt(ShunV,8,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(HouV,8,0);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(HouV,8,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(QiuV,8,0);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(QiuV,8,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-			TempData=TransDataByInt(QiuHouV,8,0);
-			FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					TempData=TransDataByInt(QiuHouV,8,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+				}
+
+				if(m_CompareShuangDanType > 4)
+				{
+					int TempData=0;
+
+					//只乘314
+					TempData=TransDataByInt(ShunV,314,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(HouV,314,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuV,314,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuHouV,314,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					//只乘618
+					TempData=TransDataByInt(ShunV,618,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(HouV,618,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuV,618,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuHouV,618,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+				}
+			}
+			else
+			{
+				if(m_CompareShuangDanType %2 == 0 )
+				{
+					int TempData=TransDataByInt(ShunV,314,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(HouV,314,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuV,314,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuHouV,314,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+				}
+				else
+				{
+					
+					int TempData=TransDataByInt(ShunV,618,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(HouV,618,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuV,618,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+
+					TempData=TransDataByInt(QiuHouV,618,1);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					
+
+				}
+			}
 			
 
 			if(Index == 0)
@@ -3765,5 +3931,68 @@ void CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn()
 void CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn2()
 {
 	FillSanDanList(2);
+	
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
+{
+	/*m_ComboBox.InsertString(0,"314尾走势");
+	m_ComboBox.InsertString(1,"618尾走势");
+	m_ComboBox.InsertString(2,"314合走势");
+	m_ComboBox.InsertString(3,"618合走势");
+	m_ComboBox.InsertString(4,"314差走势");
+	m_ComboBox.InsertString(5,"618差走势");*/
+	//m_ComboBox.InsertString(0,"314尾前后三走势");
+	//m_ComboBox.InsertString(1,"618尾前后三走势");
+	//m_ComboBox.InsertString(2,"314合前后三走势");
+	//m_ComboBox.InsertString(3,"618合前后三走势");
+	//m_ComboBox.InsertString(4,"314差前后三走势");
+	//m_ComboBox.InsertString(5,"618差前后三走势");
+
+	CString Text;
+	GetDlgItem(IDC_COMBO1)->GetWindowText(Text);
+	if(Text == _T("314尾前后三走势"))
+	{
+		m_CompareShuangDanType = 10;
+	}
+	else if(Text==_T("618尾前后三走势"))
+	{
+		m_CompareShuangDanType = 11;
+	}
+	else if(Text == _T("314合前后三走势"))
+	{
+		m_CompareShuangDanType = 12;
+	}
+	else if(Text == _T("618合前后三走势"))
+	{
+		m_CompareShuangDanType = 13;
+	}
+	else if(Text == _T("314差前后三走势"))
+	{
+		m_CompareShuangDanType = 14;
+	}
+	else if(Text == _T("614差前后三走势"))
+	{
+		m_CompareShuangDanType = 15;
+
+	}
+	else if(Text == _T("双胆尾走势"))
+	{
+		m_CompareShuangDanType=5;
+	}
+	else if(Text == _T("双胆合走势"))
+	{
+		m_CompareShuangDanType=6;
+	}
+	else if(Text == _T("双胆差走势"))
+	{
+		m_CompareShuangDanType=7;
+	}
+	else
+	{
+		m_CompareShuangDanType =10;
+	}
+
+	FillShuangDanList(m_CompareShuangDanType);
 	
 }

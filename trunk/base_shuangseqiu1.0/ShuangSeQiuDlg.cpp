@@ -2487,6 +2487,32 @@ DWORD CShuangSeQiuDlg::RequestDataZhongCaiThread(LPVOID lpVoid)
 	return 0;
 }
 
+//爬取澳客数据
+DWORD CShuangSeQiuDlg::RequestDataAoKeThread(LPVOID lpVoid)
+{
+	CString Url;
+	Url=_T("http://www.okooo.com/shuangseqiu/ssqsh/en/100");
+	CString Txt=GetHttpData(Url);
+	//PaseZhongCaiInfo(Txt,InfoList,StartQiShu);
+	return 0;
+}
+
+//爬取360数据
+DWORD CShuangSeQiuDlg::RequestData360Thread(LPVOID lpVoid)
+{
+	CString Url;
+	Url=_T("http://cp.360.cn/shdd/sha/?ItemID=20344&TopCount=100");
+	CString Txt=GetHttpData(Url);
+	if(Txt.IsEmpty())
+	{
+
+	}
+
+	return 0;
+	//ErrorCount=0;
+	//PaseZhongCaiInfo(Txt,InfoList,StartQiShu);
+}
+
 //获取HTTP数据
 CString CShuangSeQiuDlg::GetHttpData(CString Url)
 {
@@ -2560,6 +2586,7 @@ void CShuangSeQiuDlg::OnBnClickedButton18()
 	//http://app.zhcw.com/wwwroot/zhcw/jsp/MediaArena2/leitai.jsp?issueId=290&utilType=1  //擂台网络数据
 
 	::CreateThread(NULL,0,RequestDataZhongCaiThread,this,0,0);
+	//::CreateThread(NULL,0,RequestDataAoKeThread,this,0,0);
 }
 
 //导入网络分析数据
