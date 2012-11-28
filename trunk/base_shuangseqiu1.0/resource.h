@@ -20,6 +20,7 @@
 #define IDD_SHUANGSEQIU_DIALOG8         139
 #define IDD_SHUANGSEQIU_DIALOG9         140
 #define IDD_SHUANGSEQIU_DIALOG10        141
+#define IDD_SHUANGSEQIU_NET_PARSE       142
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
@@ -109,6 +110,7 @@
 #define IDC_NEXT_BTN                    1054
 #define IDC_BUTTON17                    1054
 #define IDC_RESULT                      1055
+#define IDC_BUTTON18                    1055
 #define IDC_RESULT2                     1056
 #define IDC_JINXUAN_BTN                 1056
 #define IDC_JINGXUAN_BTN                1057
@@ -125,14 +127,19 @@
 #define IDC_QIAN_SAN_HE_BTN             1068
 #define IDC_HOU_SAN_HE_BTN              1069
 #define IDC_HOU_SAN_HE_BTN2             1070
+#define IDC_ZHONGCAI_HONG_BTN           1072
+#define IDC_ZHONGCAILAN_BTN             1073
+#define IDC_AOKE360_BTN                 1074
+#define IDC_WANGYI_BTN                  1075
+#define IDC_PARSE_RESULT_ST             1076
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        141
+#define _APS_NEXT_RESOURCE_VALUE        143
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1070
+#define _APS_NEXT_CONTROL_VALUE         1077
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

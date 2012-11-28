@@ -114,6 +114,7 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON16, &CShuangSeQiuDlg::OnBnClickedButton16)
 	ON_CBN_SELCHANGE(IDC_COMBO2, &CShuangSeQiuDlg::OnCbnSelchangeCombo2)
 	ON_BN_CLICKED(IDC_BUTTON17, &CShuangSeQiuDlg::OnBnClickedButton17)
+	ON_BN_CLICKED(IDC_BUTTON18, &CShuangSeQiuDlg::OnBnClickedButton18)
 END_MESSAGE_MAP()
 
 
@@ -185,6 +186,9 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 
 	m_DlgDingHongWei.Create(CDlgDingHongWei::IDD,this);
 	m_DlgDingHongWei.ShowWindow(SW_HIDE);
+
+	m_DlgNetDataParse.Create(CDlgNetDataParse::IDD,this);
+	m_DlgNetDataParse.ShowWindow(SW_HIDE);
 
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
@@ -1589,6 +1593,101 @@ bool CShuangSeQiuDlg::PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info)
 	return true;
 }
 
+//解析中彩擂台数据
+bool CShuangSeQiuDlg::PaseZhongCaiInfo(CString& Txt,vector<sZhongCaiDataInfo>& InfoList,int QiShuInt)
+{
+	
+	if(Txt.IsEmpty())
+		return false;
+
+	int StartPos=0;
+	int EndPos=0;
+	CString TempStr;
+
+	//获取期号
+	CString FindStr=_T("<h3 class=\"h3t\"><span>");
+	CString EndStr=_T("/span>");
+	StartPos=Txt.Find(FindStr,0);
+	EndPos = Txt.Find(EndStr,StartPos+FindStr.GetLength());
+	CString Value = Txt.Mid(StartPos+FindStr.GetLength()+16,EndPos-StartPos+FindStr.GetLength());
+	int QiShu=atoi(Value.GetBuffer());
+	Value.ReleaseBuffer();
+
+	__time32_t aa=time(NULL);
+	COleDateTime TempTime(aa);
+	CString QiShuStr;
+	QiShuStr.Format("%d%03d",TempTime.GetYear(),QiShu);
+
+
+	//获取红球统计数
+	sZhongCaiDataInfo Info1;
+	Info1.m_Type =TYPE_ZHONGCAI_HONG; 
+	Info1.m_QiShu=QiShuStr;
+	Info1.m_QiShuInt = QiShuInt;
+
+	FindStr=_T("<table class=\"qtab02\"  border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+	EndStr=_T("</table>");
+	StartPos=Txt.Find(FindStr,0);
+	EndPos = Txt.Find(EndStr,StartPos+FindStr.GetLength());
+	Value = Txt.Mid(StartPos+FindStr.GetLength(),EndPos-StartPos+FindStr.GetLength());
+	PaseZhongCaiInfo(Value,Info1,_T("<div class=\"hbg_red\" style"));
+	
+
+	//获取篮球统计数
+	sZhongCaiDataInfo Info2;
+	Info2.m_Type = TYPE_ZHONGCAI_LAN;
+	Info2.m_QiShu=QiShuStr;
+	Info2.m_QiShuInt = QiShuInt;
+	StartPos=Txt.Find(FindStr,EndPos+1);
+	EndPos = Txt.Find(EndStr,StartPos+FindStr.GetLength());
+	Value = Txt.Mid(StartPos+FindStr.GetLength(),EndPos-StartPos+FindStr.GetLength());
+	PaseZhongCaiInfo(Value,Info2,_T("<div class=\"hbg_blue\" style"));
+
+
+	InfoList.push_back(Info1);
+	InfoList.push_back(Info2);
+
+	
+	
+
+	return true;
+}
+
+bool CShuangSeQiuDlg::PaseZhongCaiInfo(CString& Txt,sZhongCaiDataInfo& Info,CString ParseFlag)
+{
+	int StartPos=0;
+	int EndPos=0;
+	CString TempStr;
+
+	CString FindStr=ParseFlag;
+	StartPos=Txt.Find(FindStr,0);
+	EndPos=Txt.Find(_T("</div>"),StartPos+1);
+	int Data=0;
+	while(StartPos != -1 && EndPos != -1)
+	{
+		CString Temp=Txt.Mid(StartPos+FindStr.GetLength(),EndPos-StartPos-FindStr.GetLength());
+		CString TempFindStr=_T("<span>");
+		int TempStartPos=Temp.Find(TempFindStr);
+		int TempEndPos=Temp.Find("</span>");
+		CString WantStr=Temp.Mid(TempStartPos+TempFindStr.GetLength(),TempEndPos-TempStartPos-TempFindStr.GetLength());
+		Data++;
+		int TempData = atoi(WantStr.GetBuffer());
+		WantStr.ReleaseBuffer();
+
+		sZhongCaiData ZhongCaiData;
+		ZhongCaiData.m_Data = Data;
+		ZhongCaiData.m_DataCount = TempData;
+		Info.m_DataList.push_back(ZhongCaiData);
+
+		StartPos=Txt.Find(FindStr,EndPos+1);
+		EndPos=Txt.Find(_T("</div>"),StartPos+1);
+		
+	}
+
+
+	return true;
+}
+
 void CShuangSeQiuDlg::OnBnClickedButton14()
 {
 	m_DlgZongXiangChaZhi.CenterWindow();
@@ -2240,7 +2339,9 @@ void CShuangSeQiuDlg::OnCbnSelchangeCombo2()
 
 void CShuangSeQiuDlg::OnBnClickedButton17()
 {
-	::CreateThread(NULL,0,RequestDataWangYiThread,this,0,0);
+	//::CreateThread(NULL,0,RequestDataWangYiThread,this,0,0);
+
+	m_DlgNetDataParse.ShowWindow(SW_SHOW);
 }
 
 
@@ -2308,4 +2409,161 @@ DWORD CShuangSeQiuDlg::RequestDataWangYiThread(LPVOID lpVoid)
 		}
 
 	return 0;
+}
+
+ //爬取中彩擂台数据
+DWORD CShuangSeQiuDlg::RequestDataZhongCaiThread(LPVOID lpVoid)
+{
+	
+	CShuangSeQiuDlg* Self=(CShuangSeQiuDlg*)lpVoid;
+	Self->GetDlgItem(IDC_BUTTON18)->EnableWindow(false);
+	Self->GetDlgItem(IDC_BUTTON17)->EnableWindow(false);
+
+	vector<sZhongCaiDataInfo>* DataList=CDataManageCenter::GetInstance()->GetZhongCaiDataInfo();
+	int StartQiShu=0;
+	if(DataList->empty())
+	{
+		//从2012年爬取开始
+		StartQiShu=150;
+	}
+	else
+	{
+		int TempIndex=DataList->size()-1;
+		StartQiShu=(*DataList)[TempIndex].m_QiShuInt;
+		StartQiShu++;
+	}
+
+	
+	int MaxErrorCount=2;
+	if(StartQiShu == 150)
+		MaxErrorCount=6;
+
+	vector<sZhongCaiDataInfo> InfoList;
+	int ErrorCount=0;
+	while(true)
+	{
+
+		CString Url;
+		Url.Format("http://app.zhcw.com/wwwroot/zhcw/jsp/MediaArena2/leitai.jsp?issueId=%d&utilType=1",StartQiShu);
+		CString Txt=GetHttpData(Url);
+		if(Txt.IsEmpty() || Txt.Find("<title>HTTP Status 500 - Error report</title>") != -1)
+		{
+			ErrorCount++;
+			StartQiShu++;
+			
+			if(ErrorCount >= MaxErrorCount)
+				break;
+
+			continue;
+		}
+
+		ErrorCount=0;
+		PaseZhongCaiInfo(Txt,InfoList,StartQiShu);
+		StartQiShu++;
+	}
+
+	
+
+	CString FilePath2 = GetAppCurrentPath()+ZHONG_CAI_FILE_NAME;
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,  OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+		FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,  	CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+
+	::SetFilePointer(FileHandle2,0,0,FILE_END);
+	CString WriteStr;
+	for(int i=0; i < InfoList.size(); i++)
+		WriteStr+=InfoList[i].ToString()+_T("\r\n");
+
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
+	CloseHandle(FileHandle2);
+
+	if(!InfoList.empty())
+		Self->LoadNetData();
+
+	Self->GetDlgItem(IDC_BUTTON17)->EnableWindow(true);
+	Self->GetDlgItem(IDC_BUTTON18)->EnableWindow(true);
+
+	return 0;
+}
+
+//获取HTTP数据
+CString CShuangSeQiuDlg::GetHttpData(CString Url)
+{
+	CString RetStr;
+
+	CHttpFile* File= NULL;
+	try
+	{
+		//获取服务器列表文件
+		CInternetSession Session;
+		File=(CHttpFile*)Session.OpenURL(Url);
+		if(NULL == File) 
+			return RetStr;
+
+		DWORD Len=0;
+		DWORD   Status; 
+		DWORD   StatusSize   =   sizeof(Status); 
+		DWORD   ContentLen=0,   ContentLenSize   =   sizeof(ContentLenSize); 
+		if(File->QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_STATUS_CODE,  &Status,   &StatusSize,   NULL) &&   Status   ==   HTTP_STATUS_OK) 
+			File-> QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_CONTENT_LENGTH,   &Len,   &ContentLenSize);	
+
+		char Buffer[10*1024+1];
+		memset(Buffer,0,10*1024+1);
+		DWORD AllLen = 0;
+		CString Txt;
+		while(true)
+		{
+			char Buffer[1024*10+1]={0};
+			memset(Buffer,0,1024*10+1);
+			//DWORD ReadLen= Len - AllLen > 10*1024 ? 10*1024 : Len - AllLen;
+			DWORD ReadLen=10*1024;
+			DWORD ReadBytes=File->Read(Buffer,ReadLen);
+			if(ReadBytes == -1)
+				break;
+			AllLen += ReadBytes;
+			CString TempTxt=CString(Buffer);
+			Txt+=TempTxt;
+
+			if(TempTxt.Find("</body>") != -1 || TempTxt.Find("</BODY>") != -1)
+				break;
+		}
+
+		if(Txt.IsEmpty())
+		{
+			File->Close();
+			delete File; File = NULL;
+		}
+
+		RetStr=Txt;
+		
+		File->Close();
+		delete File; File = NULL;
+	}catch(...)
+	{
+		if(File)
+		{
+			File->Close();
+			delete File; File = NULL;
+		}
+	
+	}
+
+	return RetStr;
+
+}
+
+void CShuangSeQiuDlg::OnBnClickedButton18()
+{
+	//http://www.okooo.com/shuangseqiu/ssqsh/en/100/                                      //澳客杀蓝数据
+	//http://cp.360.cn/shdd/sha/?ItemID=20344&TopCount=100                                //360杀蓝数据
+	//http://app.zhcw.com/wwwroot/zhcw/jsp/MediaArena2/leitai.jsp?issueId=290&utilType=1  //擂台网络数据
+
+	::CreateThread(NULL,0,RequestDataZhongCaiThread,this,0,0);
+}
+
+//导入网络分析数据
+void CShuangSeQiuDlg::LoadNetData()
+{
+	CDataManageCenter::GetInstance()->LoadNetData();
 }

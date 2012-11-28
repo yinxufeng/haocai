@@ -113,9 +113,12 @@ public:
 
 public:
 	
+	//通过期数获取双色球数据
+	bool GetShuangSeQiuData(CString QiShu,sShuangSeQiu& Data);
+
 	//球是否在红球中
 	static bool IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV=false);
-
+	
 	//球是否在红球前三中
 	static bool IsHongQiuInQianSanData(sShuangSeQiu QiuData,int Data,bool IsV=false);
 
@@ -167,6 +170,19 @@ public:
 	////获取点位字符串
 	//static CString GetDianDataStr(int Data,bool IsTrue=true,int Offset=1);
 
+
+//网络数据
+public:
+
+	//获取网易数据信息
+	vector<sWangYiDataInfo>* GetWangYiDataInfo();
+
+	//获取中彩数据信息
+	vector<sZhongCaiDataInfo>* GetZhongCaiDataInfo();
+
+	//导入网络分析数据
+	void LoadNetData(eLoadDataType Type=LOAD_ALL_DATA);
+
 private:
 
 	//解析数据
@@ -204,11 +220,30 @@ private:
 	//初始一组数据
 	void InitOneData(sData29 &Data);
 
-
 	CDataManageCenter(void);
 
 	~CDataManageCenter(void);
 
+private:
+
+	//导入中彩数据
+	void LoadZhongCaiData();
+
+	//导入网易数据
+	void LoadWangYiData();
+
+	//导入360数据
+	void Load360Data();
+
+	//导入澳客数据
+	void LoadAoKeData();
+
+	//获取文件字符串
+	CString GetFileStr(CString FilePath);
+
+	//解析文件字符串
+	void PaseFileStr(CString Str,vector<CString>& DataList);
+	
 private:
 	vector<sShuangSeQiu>        m_ShuangSeQiuList;        //双色球值列表
 	vector<sShuangSeQiu>        m_ShuangSeQiuChuHaoList;  //双色球球出号顺序列表
@@ -219,4 +254,9 @@ private:
 	vector<sData29>             m_Data29;                 //29组数据
 	BOOL                        m_SearchFlag;             //搜索标志
 	vector<map<int,CString>>    m_DanZu;                  //胆组数据
+
+
+	//网络数据
+	vector<sWangYiDataInfo>     m_WangYiDataInfo;         //网易数据
+	vector<sZhongCaiDataInfo>   m_ZhongCaiDataInfo;       //中彩数据描述
 };

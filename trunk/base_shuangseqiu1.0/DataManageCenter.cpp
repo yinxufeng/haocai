@@ -23,6 +23,8 @@ CString GetAppCurrentPath2()
 CDataManageCenter::CDataManageCenter(void)
 {
 	m_SearchFlag = false;
+
+	LoadNetData();
 }
 
 CDataManageCenter::~CDataManageCenter(void)
@@ -1903,6 +1905,8 @@ bool CDataManageCenter::IsHongQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)
 	return Ret;
 }
 
+
+
 //球是否在红球前三中
 bool CDataManageCenter::IsHongQiuInQianSanData(sShuangSeQiu QiuData,int Data,bool IsV)
 {
@@ -2725,4 +2729,205 @@ bool CDataManageCenter::IsHongQiuTongChu(sShuangSeQiu QiuData,vector<int> Data,b
 {
 	//for(int i=0; i < QIU_XUN;
 	return true;
+}
+
+//获取网易数据信息
+vector<sWangYiDataInfo>* CDataManageCenter::GetWangYiDataInfo()
+{
+	return &m_WangYiDataInfo;
+}
+
+//获取中彩数据信息
+vector<sZhongCaiDataInfo>* CDataManageCenter::GetZhongCaiDataInfo()
+{
+	return &m_ZhongCaiDataInfo;
+}
+
+//导入网络分析数据
+void CDataManageCenter::LoadNetData(eLoadDataType Type)
+{
+	switch(Type)
+	{
+	
+	case LOAD_WANGYI_DATA:     //导入网易数据
+		//导入网易数据
+		LoadWangYiData();
+		break;
+
+	case LOAD_ZHONGCAI_DATA:   //导入中彩数据
+		//导入中彩数据
+		LoadZhongCaiData();
+		break;
+
+	case LOAD_AOKE_DATA:       //导入澳客数据
+		//导入澳客数据
+		LoadAoKeData();
+		break;
+
+	case LOAD_360_DATA:        //导入360数据
+		//导入360数据
+		Load360Data();
+		break;
+
+	default:
+		//导入中彩数据
+		LoadZhongCaiData();
+
+		//导入网易数据
+		LoadWangYiData();
+
+		//导入360数据
+		Load360Data();
+
+		//导入澳客数据
+		LoadAoKeData();
+		break;
+	}
+	
+}
+
+
+//导入中彩数据
+void CDataManageCenter::LoadZhongCaiData()
+{
+	CString FilePath=GetAppCurrentPath2()+ZHONG_CAI_FILE_NAME;
+	CString StrData=GetFileStr(FilePath);
+
+	int StartPos=0;
+	int EndPos=0;
+	while(EndPos != -1)
+	{
+		EndPos=StrData.Find("\r\n",StartPos);
+		if(EndPos == -1)
+			break;
+
+		CString Temp=StrData.Mid(StartPos,EndPos-StartPos);
+		
+		vector<CString> DataList;
+		PaseFileStr(Temp,DataList);
+
+		sZhongCaiDataInfo Info;
+		Info.m_QiShu = DataList[0];
+		Info.m_QiShuInt=atoi(DataList[1].GetBuffer());
+		DataList[1].ReleaseBuffer();
+
+		Info.m_Type  = (eZhongCaiType)atoi(DataList[2].GetBuffer());
+		DataList[2].ReleaseBuffer();
+
+		for(int i=3; i < DataList.size();i++)
+		{
+			sZhongCaiData Data;
+			Data.m_Data=i-2;
+			Data.m_DataCount=atoi(DataList[i].GetBuffer());
+			DataList[i].ReleaseBuffer();
+
+			Info.m_DataList.push_back(Data);
+		}
+
+		m_ZhongCaiDataInfo.push_back(Info);
+		StartPos = EndPos+1;
+	}
+
+}
+
+//导入网易数据
+void CDataManageCenter::LoadWangYiData()
+{
+	CString FilePath=GetAppCurrentPath2()+WANG_YI_FILE_NAME;
+	CString StrData=GetFileStr(FilePath);
+
+	int StartPos=0;
+	int EndPos=0;
+	while(EndPos != -1)
+	{
+		EndPos=StrData.Find("\r\n",StartPos);
+		if(EndPos == -1)
+			break;
+
+		CString Temp=StrData.Mid(StartPos,EndPos-StartPos);
+		
+		vector<CString> DataList;
+		PaseFileStr(Temp,DataList);
+
+
+	/*	sWangYiDataInfo Info;
+		Info.m_QiShu = DataList[0];
+		Info.m_QiShuInt=DataList[1];
+		Info.m_Type  = DataList[2];
+
+		for(int i=3; i < DataList.size();i++)
+		{
+			sZhongCaiData Data;
+			Data.m_Data=i-2;
+			Data.m_DataCount=DataList[i];
+			Info.m_DataList.push_back(Data);
+		}*/
+
+		StartPos = EndPos+1;
+	}
+
+
+}
+
+//导入360数据
+void CDataManageCenter::Load360Data()
+{
+
+}
+
+//导入澳客数据
+void CDataManageCenter::LoadAoKeData()
+{
+
+}
+
+//获取文件字符串
+CString CDataManageCenter::GetFileStr(CString FilePath)
+{
+	DWORD Flag = OPEN_EXISTING;
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+		return "";
+	DWORD Size = ::GetFileSize(FileHandle,NULL);
+	char* Buffer = new char[Size+1];
+	memset(Buffer,'\0',Size+1);
+	DWORD ReadBytes=0;
+	::ReadFile(FileHandle,Buffer,Size,&ReadBytes,NULL);
+	CString StrData=CString(Buffer);
+	delete []Buffer;
+	CloseHandle(FileHandle);
+
+	return StrData;
+}
+
+//解析文件字符串
+void CDataManageCenter::PaseFileStr(CString StrData,vector<CString>& DataList)
+{
+	int StartPos=StrData.Find("#",0);
+	int EndPos=StrData.Find("#",StartPos+1);
+	while(EndPos != -1)
+	{
+		CString Temp=StrData.Mid(StartPos+1,EndPos-StartPos-1);
+		if(!Temp.IsEmpty())
+			DataList.push_back(Temp);
+		StartPos = EndPos;
+		EndPos=StrData.Find("#",StartPos+1);
+	}
+
+}
+
+//通过期数获取双色球数据
+bool  CDataManageCenter::GetShuangSeQiuData(CString QiShu,sShuangSeQiu& Data)
+{
+	for(int i=0; i < m_ShuangSeQiuList.size(); i++)
+	{
+		if(m_ShuangSeQiuList[i].m_QiShu.Find(QiShu) != -1)
+		{
+			Data=m_ShuangSeQiuList[i];
+			return true;
+		}
+	}
+
+
+	return false;
 }
