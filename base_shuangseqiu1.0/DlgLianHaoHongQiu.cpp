@@ -150,9 +150,10 @@ void CDlgLianHaoHongQiu::InitCombox()
 	m_ComboBox.InsertString(2,"314合前后三走势");
 	m_ComboBox.InsertString(3,"618合前后三走势");
 	m_ComboBox.InsertString(4,"314差前后三走势");
-	m_ComboBox.InsertString(5,"双胆尾走势");
-	m_ComboBox.InsertString(6,"双胆合走势");
-	m_ComboBox.InsertString(7,"双胆差走势");
+	m_ComboBox.InsertString(5,"618差前后三走势");
+	m_ComboBox.InsertString(6,"双胆尾走势");
+	m_ComboBox.InsertString(7,"双胆合走势");
+	m_ComboBox.InsertString(8,"双胆差走势");
 	
 }
 
@@ -3971,7 +3972,7 @@ void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
 	{
 		m_CompareShuangDanType = 14;
 	}
-	else if(Text == _T("614差前后三走势"))
+	else if(Text == _T("618差前后三走势"))
 	{
 		m_CompareShuangDanType = 15;
 
