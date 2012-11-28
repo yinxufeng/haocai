@@ -103,3 +103,99 @@ struct sHengXiangChaZhi          //横向差值
 	DWORD m_LanQiuChaZhi;        //篮球差值
 };
 
+
+//网易数据描述
+struct sWangYiData
+{
+	int  m_Data;          //数据
+	long m_Count;         //出球次数
+};
+
+/*********************网络数据描述************************/
+enum eLoadDataType
+{
+	LOAD_ALL_DATA,        //导入所有数据
+	LOAD_WANGYI_DATA,     //导入网易数据
+	LOAD_ZHONGCAI_DATA,   //导入中彩数据
+	LOAD_AOKE_DATA,       //导入澳客数据
+	LOAD_360_DATA,        //导入360数据
+};
+
+/*********************网易数据描述************************/
+#define WANG_YI_FILE_NAME  "net_wangyi.txt"
+
+enum eWangYiType
+{
+	TYPE_GAO_REN_QI,      //高人气号
+	TYPE_DI_REN_QI,       //低人气号
+	TYPE_RE_HAO,          //热号
+	TYPE_LENG_HAO,        //冷号
+};
+
+//网易数据描述
+struct sWangYiDataInfo
+{
+	__time32_t           m_GetTime;       //获取时间
+	CString              m_QiShu;         //期数
+	eWangYiType          m_Type;          //类型
+	vector<sWangYiData>  m_WangYiData;    //网易数据
+
+	//转化成字符串
+public:
+	CString ToString()
+	{
+		CString Temp;
+		Temp.Format("#%d#%s#%d#",m_GetTime,m_QiShu,m_Type);
+		for(int i=0; i < m_WangYiData.size(); i++)
+		{
+			CString Temp2;
+			Temp2.Format("%02d#",m_WangYiData[i]);
+			Temp+=Temp2;
+		}
+		return Temp;
+	}
+};
+
+
+/*********************中彩数据描述************************/
+#define ZHONG_CAI_FILE_NAME  "net_zhongcai.txt"
+//中彩数据类型
+enum eZhongCaiType
+{
+	TYPE_ZHONGCAI_HONG,
+	TYPE_ZHONGCAI_LAN,
+};
+
+//中彩擂台数据描述
+struct sZhongCaiData
+{
+	int m_Data;            //球数据
+	int m_DataCount;       //球数据计数
+};
+
+struct sZhongCaiDataInfo
+{
+	CString               m_QiShu;        //期数
+	int                   m_QiShuInt;     //期数整形描述
+	eZhongCaiType         m_Type;         //数据类型
+	vector<sZhongCaiData> m_DataList;     //中彩数据列表
+	
+	//转化成字符串
+public:
+	CString ToString()
+	{
+		CString Temp;
+		Temp.Format("#%s#%d#%d#",m_QiShu,m_QiShuInt,m_Type);
+		for(int i=0; i < m_DataList.size(); i++)
+		{
+			CString Temp2;
+			Temp2.Format("%02d#",m_DataList[i].m_DataCount);
+			Temp+=Temp2;
+		}
+		return Temp;
+	}
+
+};
+
+
+/*********************网络数据描述************************/

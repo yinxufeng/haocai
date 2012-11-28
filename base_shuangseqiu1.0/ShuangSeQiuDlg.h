@@ -16,6 +16,7 @@
 #include "DlgZiDongFenXi.h"
 #include "DlgTeZongHeFenXi.h"
 #include "DlgDingHongWei.h"
+#include "DlgNetDataParse.h"
 #include "afxwin.h"
 
 
@@ -29,44 +30,7 @@ struct sShuangSeQiuInfo
 	CString m_OtherInfo;
 };
 
-//网易数据描述
-struct sWangYiData
-{
-	int  m_Data;          //数据
-	long m_Count;         //出球次数
-};
 
-enum eWangYiType
-{
-	TYPE_GAO_REN_QI,      //高人气号
-	TYPE_DI_REN_QI,       //低人气号
-	TYPE_RE_HAO,          //热号
-	TYPE_LENG_HAO,        //冷号
-};
-
-//网易数据描述
-struct sWangYiDataInfo
-{
-	__time32_t           m_GetTime;       //获取时间
-	CString              m_QiShu;         //期数
-	eWangYiType          m_Type;          //类型
-	vector<sWangYiData>  m_WangYiData;    //网易数据
-
-	//转化成字符串
-public:
-	CString ToString()
-	{
-		CString Temp;
-		Temp.Format("#%d#%s#%d#",m_GetTime,m_QiShu,m_Type);
-		for(int i=0; i < m_WangYiData.size(); i++)
-		{
-			CString Temp2;
-			Temp2.Format("%02d#",m_WangYiData[i]);
-			Temp+=Temp2;
-		}
-		return Temp;
-	}
-};
 
 class CShuangSeQiuDlg : public CDialog
 {
@@ -129,6 +93,8 @@ private:
 	//初始化杀类型
 	void InitShaMap();
 
+	//导入网络分析数据
+	void LoadNetData();
 
 
 private:
@@ -152,6 +118,7 @@ private:
 	CDlgShiFaDingHong    m_DlgShiFaDingHong;
 	CDlgZiDongFenXi      m_DlgZiDongFenXi;
 	CDlgTeZongHeFenXi    m_DlgTeZongHeFenXi;
+	CDlgNetDataParse     m_DlgNetDataParse;
 
 	vector<sShuangSeQiu> m_ResultDataList;
 
@@ -173,13 +140,26 @@ public:
     //爬取网易数据
 	static DWORD WINAPI RequestDataWangYiThread(LPVOID lpVoid);
 
+	 //爬取中彩擂台数据
+	static DWORD WINAPI RequestDataZhongCaiThread(LPVOID lpVoid);
+
+	//获取HTTP数据
+	static CString GetHttpData(CString Url);
+
 	static DWORD WINAPI CombineDataThread(LPVOID lpVoid);
 
 
 	//解析数据
 	static bool PaseInfo(CString& Txt,sShuangSeQiuInfo& Info);
+
+	//解析网页数据
 	static bool PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info);
 	static bool PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info,CString ParseFlag);
+
+	//解析中彩擂台数据
+	static bool PaseZhongCaiInfo(CString& Txt,vector<sZhongCaiDataInfo>& Info,int QiShuInt);
+	static bool PaseZhongCaiInfo(CString& Txt,sZhongCaiDataInfo& Info,CString ParseFlag);
+
 	afx_msg void OnBnClickedButton14();
 	afx_msg void OnBnClickedButton15();
 	afx_msg void OnBnClickedButton16();
@@ -196,4 +176,5 @@ public:
 	
 	afx_msg void OnCbnSelchangeCombo2();
 	afx_msg void OnBnClickedButton17();
+	afx_msg void OnBnClickedButton18();
 };

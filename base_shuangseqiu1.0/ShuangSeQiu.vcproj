@@ -210,6 +210,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgNetDataParse.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgShiFaDingHong.cpp"
 				>
 			</File>
@@ -321,6 +325,10 @@
 			</File>
 			<File
 				RelativePath=".\DlgLianHaoLanQiu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DlgNetDataParse.h"
 				>
 			</File>
 			<File
