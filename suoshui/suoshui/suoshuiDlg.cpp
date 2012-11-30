@@ -78,6 +78,7 @@ BEGIN_MESSAGE_MAP(CsuoshuiDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDOK, &CsuoshuiDlg::OnBnClickedOk)
+	//ON_BN_CLICKED(IDOK2, &CsuoshuiDlg::OnBnClickedOk2)
 END_MESSAGE_MAP()
 
 
@@ -807,3 +808,23 @@ vector<int> CsuoshuiDlg::GetDataList(CString& StrData)
 	return DataList;
 }
 
+
+void CsuoshuiDlg::OnBnClickedOk2()
+{
+	/*CString FilePath=GetAppCurrentPath()+"zuxuan_tiaojian.txt";
+	DWORD Flag = OPEN_EXISTING;
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+		return ;
+	DWORD Size = ::GetFileSize(FileHandle,NULL);
+	char* Buffer = new char[Size+1];
+	memset(Buffer,'\0',Size+1);
+	DWORD ReadBytes=0;
+	::ReadFile(FileHandle,Buffer,Size,&ReadBytes,NULL);
+	CString StrData=CString(Buffer);
+	map<CString,vector<int>> MapData;
+	ParseData(StrData,MapData);
+	Combine(MapData);
+	delete []Buffer;
+	CloseHandle(FileHandle);*/
+}
