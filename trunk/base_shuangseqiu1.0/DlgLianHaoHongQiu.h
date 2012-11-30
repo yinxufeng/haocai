@@ -77,6 +77,7 @@ private:
 	BOOL      m_IsInitData;
 	int       m_CompareShuangDanType; //双胆比较方式
 	int       m_CompareSanDanType;    //三胆尾比较方式
+	int       m_ParamData;            //参数
 	CComboBox m_ComboBox;
 
 public:
