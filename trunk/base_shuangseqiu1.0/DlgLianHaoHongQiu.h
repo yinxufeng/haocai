@@ -101,4 +101,16 @@ public:
 	afx_msg void OnBnClickedHouSanHeBtn();
 	afx_msg void OnBnClickedHouSanHeBtn2();
 	afx_msg void OnBnClickedExecBtn();
+	afx_msg void OnBnClickedJixianBtn();
+
+public:
+	
+	//寻找极限基数线程
+	static DWORD LookJiXianThread(LPVOID lpVoid);
+
+	//计算数据
+	static void FillMapData(map<int,vector<int>>& MapData,int StartPos,int OffsetPos,int FillType,int Param);
+
+	//是否是需要的数据类型
+	static bool IsWantData(vector<int>& VecData,int CompareType);
 };

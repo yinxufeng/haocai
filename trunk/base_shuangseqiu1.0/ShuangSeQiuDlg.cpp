@@ -1608,6 +1608,7 @@ bool CShuangSeQiuDlg::PaseZhongCaiInfo(CString& Txt,vector<sZhongCaiDataInfo>& I
 	CString FindStr=_T("<h3 class=\"h3t\"><span>");
 	CString EndStr=_T("/span>");
 	StartPos=Txt.Find(FindStr,0);
+	StartPos=Txt.Find(FindStr,StartPos+1);
 	EndPos = Txt.Find(EndStr,StartPos+FindStr.GetLength());
 	CString Value = Txt.Mid(StartPos+FindStr.GetLength()+16,EndPos-StartPos+FindStr.GetLength());
 	int QiShu=atoi(Value.GetBuffer());
