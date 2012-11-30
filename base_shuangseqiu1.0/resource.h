@@ -133,6 +133,7 @@
 #define IDC_WANGYI_BTN                  1075
 #define IDC_PARSE_RESULT_ST             1076
 #define IDC_EXEC_BTN                    1077
+#define IDC_JIXIAN_BTN                  1078
 
 // Next default values for new objects
 // 
@@ -140,7 +141,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        143
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1079
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

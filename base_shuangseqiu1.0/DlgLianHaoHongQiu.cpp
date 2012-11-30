@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoHongQiu, CDialog)
 	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn)
 	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN2, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn2)
 	ON_BN_CLICKED(IDC_EXEC_BTN, &CDlgLianHaoHongQiu::OnBnClickedExecBtn)
+	ON_BN_CLICKED(IDC_JIXIAN_BTN, &CDlgLianHaoHongQiu::OnBnClickedJixianBtn)
 END_MESSAGE_MAP()
 
 
@@ -3192,7 +3193,7 @@ void CDlgLianHaoHongQiu::FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShu
 	bool IsTrue1=false;
 	bool IsTrue2=false;
 
-	if(m_CompareShuangDanType < 10)
+	if(m_CompareShuangDanType < 10 || m_CompareShuangDanType>= 30)
 	{
 		CString Str;
 		Str.Format("%d%d",TempData2,TempData3);
@@ -3707,7 +3708,7 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 		
 		            FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);*/
 
-					int Param=496;
+					int Param=314;
 
 					int TempData=TransDataByInt(ShunV,Param,1);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
@@ -4078,3 +4079,292 @@ void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
 	FillShuangDanList(m_CompareShuangDanType);
 	
 }
+
+void CDlgLianHaoHongQiu::OnBnClickedJixianBtn()
+{
+
+}
+
+////计算数据
+//void CDlgLianHaoHongQiu::FillMapData(map<int,vector<int>>& MapData,int StartPos,int OffsetPos,int FillType,int Param)
+//{
+//	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+//	vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+//
+//	if(DataList->size() < 5)
+//		return ;
+//
+//	for(int Index = DataList->size()-1; Index >=DataList->size()-5; Index--)
+//	{
+//			CString ShunV;
+//			CString HouV;
+//			CString QiuV;
+//			CString QiuHouV;
+//			CString KuaDu;
+//			CString HeV;
+//
+//			int VCount=0;
+//
+//			CString ShunVCSV;
+//			CString HouVCSV;
+//			CString QiuVCSV;
+//			CString QiuHouVCSV;
+//
+//			vector<int> ShunVInt;
+//			vector<int> HouVInt;
+//			vector<int> QiuVInt;
+//			vector<int> QiuHouVInt;
+//			
+//			int TempArray[10];
+//			memset(TempArray,0,10*sizeof(int));
+//
+//			for(int i=0; i < 6; i++)
+//			{
+//				int V=0;
+//				int V2=0;
+//				
+//				
+//				if(FillType == 0)
+//				{
+//					V=(*DataList)[Index].m_HongQiu[i]%10;
+//					V2=(*QiuShun)[Index].m_HongQiu[i]%10;
+//
+//				}
+//				else if(FillType == 1)
+//				{
+//					V=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
+//					V2=(*QiuShun)[Index].m_HongQiu[i]%10+(*QiuShun)[Index].m_HongQiu[i]/10;
+//				}
+//				else
+//				{
+//					V=abs((*DataList)[Index].m_HongQiu[i]%10-(*DataList)[Index].m_HongQiu[i]/10);
+//					V2=abs((*QiuShun)[Index].m_HongQiu[i]%10-(*QiuShun)[Index].m_HongQiu[i]/10);
+//				}
+//
+//				
+//				V=V%10; 
+//				V2=V2%10;
+//				VCount+=V;
+//			}
+//
+//			int TempData=TransDataByInt(ShunV,Param,1);
+//			int TempOffsetPos=Pos+OffsetPos+1;
+//			MapData[TempOffsetPos].push_back(TempData/10);
+//			TempOffsetPos++;
+//
+//			MapData[TempOffsetPos].push_back(TempData%10);
+//			TempOffsetPos++;
+//
+//			TempData=TransDataByInt(ShunV,Param,1);
+//			MapData[TempOffsetPos].push_back(TempData/10);
+//			TempOffsetPos++;
+//			MapData[TempOffsetPos].push_back(TempData%10);
+//			TempOffsetPos++;
+//
+//			TempData=TransDataByInt(QiuV,Param,1);
+//			MapData[TempOffsetPos].push_back(TempData/10);
+//			TempOffsetPos++;
+//			MapData[TempOffsetPos].push_back(TempData%10);
+//			TempOffsetPos++;
+//
+//			TempData=TransDataByInt(QiuHouV,Param,1);
+//			MapData[TempOffsetPos].push_back(TempData/10);
+//			TempOffsetPos++;
+//			MapData[TempOffsetPos].push_back(TempData%10);
+//			TempOffsetPos++;
+//	}
+//}
+//
+////是否是需要的数据类型
+//bool CDlgLianHaoHongQiu::IsWantData(vector<int>& VecData,int CompareType)
+//{
+//	for(int i=0; i < VecData.size(); i++)
+//	{
+//		switch(CompareType)
+//		{
+//			
+//	//	if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11|| m_CompareShuangDanType== 20)
+//	//	{
+//	//		//前三后三胆V
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
+//	//	}
+//	//	else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13|| m_CompareShuangDanType== 21)
+//	//	{
+//	//		//前三后三胆合
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
+//
+//	//	}
+//	//	else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15|| m_CompareShuangDanType== 22)
+//	//	{
+//	//		//前三后三胆差
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
+//	//	}
+//
+//	//	if(IsTrue1 && IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Red;
+//	//	else if(!IsTrue1&&!IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Write;
+//	//	else if(IsTrue1&&!IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
+//	//	else
+//	//		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
+//		}
+//	}
+//
+//	return true;
+//}
+//
+////寻找极限基数线程
+//DWORD CDlgLianHaoHongQiu::LookJiXianThread(LPVOID lpVoid)
+//{
+//	
+//	map<int,vector<int>>& MapData;
+//
+//	int StartPos =0;
+//	int OffsetPos=0;
+//	int FillType =0;
+//	int Param = 1;
+//
+//	FillMapData(MapData,StartPos,OffsetPos,FillType,Param);
+//
+//	OffsetPos+=20;
+//	FillType=1;
+//	FillMapData(MapData,StartPos,OffsetPos,FillType,Param);
+//
+//	OffsetPos+=20;
+//	FillType=2;
+//	FillMapData(MapData,StartPos,OffsetPos,FillType,Param);
+//
+//	
+//	map<int,vector<int>>::iterator it=MapData.begin();
+//	for(; it != MapData.end(); it++)
+//	{
+//		bool IsWant=IsWantData(it->second,0);
+//	}
+//
+//
+//	//FillMapData(map<int,vector<int>>& MapData,int StartPos,int OffsetPos,int FillType,int Param)
+//
+//	//int TempData=Data;
+//	//int TempData2=TempData/10;
+//	//int TempData3=TempData%10;
+//	//bool IsTrue1=false;
+//	//bool IsTrue2=false;
+//
+//	//if(m_CompareShuangDanType < 10 || m_CompareShuangDanType>= 30)
+//	//{
+//	//	CString Str;
+//	//	Str.Format("%d%d",TempData2,TempData3);
+//	//	ListCtrl.SetItemText(Index,CololIndex,Str);
+//	//	/*Str.Empty();
+//	//	Str.Format("%d",TempData3);
+//	//	ListCtrl.SetItemText(Index,CololIndex+1,Str);*/
+//
+//	//	if(m_CompareShuangDanType == 0 || m_CompareShuangDanType== 5 || m_CompareShuangDanType== 30)
+//	//	{
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData3,true);
+//	//	}
+//	//	else if(m_CompareShuangDanType  == 1|| m_CompareShuangDanType== 6|| m_CompareShuangDanType== 31)
+//	//	{
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData3,true);
+//	//	}
+//	//	else if(m_CompareShuangDanType ==2 ||  m_CompareShuangDanType== 7 || m_CompareShuangDanType== 32)
+//	//	{
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData2,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData3,true);
+//	//	}
+//
+//	//	if(!IsTrue1)
+//	//	{
+//	//		Style.m_DrawData.m_TextData.m_BGColor = Write;
+//	//	}
+//	//	else
+//	//	{
+//	//		FillItemStyleColor(Style,IsTrue1,IsTrue2);
+//	//	}
+//	//	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+//	//	CololIndex++;
+//	//}
+//	//else
+//	//{
+//	//	CString Str;
+//	//	Str.Format("%d",TempData2);
+//	//	ListCtrl.SetItemText(Index,CololIndex,Str);
+//	//	int Data=TempData2;
+//	//	if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11|| m_CompareShuangDanType== 20)
+//	//	{
+//	//		//前三后三胆V
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
+//	//	}
+//	//	else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13|| m_CompareShuangDanType== 21)
+//	//	{
+//	//		//前三后三胆合
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
+//
+//	//	}
+//	//	else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15|| m_CompareShuangDanType== 22)
+//	//	{
+//	//		//前三后三胆差
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
+//	//	}
+//
+//	//	if(IsTrue1 && IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Red;
+//	//	else if(!IsTrue1&&!IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Write;
+//	//	else if(IsTrue1&&!IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
+//	//	else
+//	//		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
+//
+//	//	
+//	//	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+//	//	CololIndex++;
+//
+//	//	Str.Empty();
+//	//	Str.Format("%d",TempData3);
+//	//	ListCtrl.SetItemText(Index,CololIndex,Str);
+//	//	Data=TempData3;
+//	//	if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11)
+//	//	{
+//	//		//前三后三胆V
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
+//	//	}
+//	//	else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13)
+//	//	{
+//	//		//前三后三胆合
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
+//
+//	//	}
+//	//	else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15)
+//	//	{
+//	//		//前三后三胆差
+//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
+//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
+//	//	}
+//
+//	//	if(IsTrue1 && IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Red;
+//	//	else if(!IsTrue1&&!IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Write;
+//	//	else if(IsTrue1&&!IsTrue2)
+//	//		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
+//	//	else
+//	//		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
+//
+//	//	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+//	//	CololIndex++;
+//	//	}
+//
+//	return 0;
+//}
