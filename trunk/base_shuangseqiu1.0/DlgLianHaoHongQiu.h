@@ -2,6 +2,33 @@
 #include "afxwin.h"
 
 
+//极限数据描述
+struct sDataInfo
+{
+	int          m_Data;      //数据
+	CString      m_QiShu;     //期数
+	COLORREF     m_Color;     //颜色值
+};
+
+//定义数据类型
+enum eYanDataType
+{
+	TYPE_WEI_QIANSAN_HOUSAN,          //前三后三尾
+	TYPE_HE_QIANSAN_HOUSAN,            //前三后三合 
+	TYPE_CHA_QIANSAN_HOUSAN,          //前三后三差
+	TYPE_WEI_SHUANG_DAN,              //双胆尾
+	TYPE_HE_SHUANG_DAN,               //双胆合
+	TYPE_CHA_SHUANG_DAN,              //双胆差
+};
+
+//定义数据总类型
+enum eYanType
+{
+	TYPE_WEI,         //尾
+	TYPE_HE,          //合
+	TYPE_CHA,         //差
+};
+
 // CDlgLianHaoHongQiu 对话框
 
 class CDlgLianHaoHongQiu : public CDialog
@@ -106,11 +133,29 @@ public:
 public:
 	
 	//寻找极限基数线程
-	static DWORD LookJiXianThread(LPVOID lpVoid);
+	static DWORD WINAPI LookJiXianThread(LPVOID lpVoid);
 
 	//计算数据
-	static void FillMapData(map<int,vector<int>>& MapData,int StartPos,int OffsetPos,int FillType,int Param);
+	void FillMapData(map<int,vector<sDataInfo>>& MapData,int StartPos,int OffsetPos,eYanType YanType,eYanDataType DataType,int Param);
 
 	//是否是需要的数据类型
-	static bool IsWantData(vector<int>& VecData,int CompareType);
+	bool IsWantData(vector<sDataInfo>& VecData,eYanDataType DataType);
+
+	//填充极限数据
+	void FillJiXianDataList(eYanDataType DataType);
+
+	//获取数据颜色值
+	COLORREF GetDataColor(eYanDataType Type,sShuangSeQiu QiuData,int Data,bool IsV=false);
+
+	//过滤重复数据
+	void FilterMapData(map<int,map<int,vector<sDataInfo>>>& MapData);
+
+	//判断两个vector数据相等
+	bool IsEqualVector(vector<sDataInfo>& Vec1,vector<sDataInfo>& Vec2);
+
+
+
+private:
+	map<int,map<int,vector<sDataInfo>>>  m_AllData;       //自动搜索极限数据
+	int                                  m_Flag;            
 };

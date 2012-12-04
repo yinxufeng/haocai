@@ -17,6 +17,7 @@ CDlgLianHaoHongQiu::CDlgLianHaoHongQiu(CWnd* pParent /*=NULL*/)
 	m_IsInitData = false;
 	m_CompareShuangDanType=0;
 	 m_ParamData=314;
+	 m_Flag=false;
 }
 
 CDlgLianHaoHongQiu::~CDlgLianHaoHongQiu()
@@ -165,8 +166,16 @@ void CDlgLianHaoHongQiu::InitCombox()
 	m_ComboBox.InsertString(14,"可变双胆差走势");
 
 
+	m_ComboBox.InsertString(15,"自动尾前后三极限");
+	m_ComboBox.InsertString(16,"自动合前后三极限");
+	m_ComboBox.InsertString(17,"自动差前后三极限");
+	m_ComboBox.InsertString(18,"自动双胆尾极限");
+	m_ComboBox.InsertString(19,"自动双胆合极限");
+	m_ComboBox.InsertString(20,"自动双胆差极限");
 
 	
+
+
 }
 
 void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
@@ -4002,6 +4011,14 @@ void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
 	//m_ComboBox.InsertString(13,"可变双胆合走势");
 	//m_ComboBox.InsertString(14,"可变双胆差走势");
 
+	/*m_ComboBox.InsertString(15,"自动尾前后三极限");
+	m_ComboBox.InsertString(16,"自动合前后三极限");
+	m_ComboBox.InsertString(17,"自动差前后三极限");
+	m_ComboBox.InsertString(18,"自动双胆尾极限");
+	m_ComboBox.InsertString(19,"自动双胆合极限");
+	m_ComboBox.InsertString(20,"自动双胆差极限");*/
+
+
 	CString Text;
 	GetDlgItem(IDC_COMBO1)->GetWindowText(Text);
 	if(Text == _T("314尾前后三走势"))
@@ -4045,11 +4062,11 @@ void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
 	{
 		m_CompareShuangDanType=20;
 	}
-	else if(Text == _T("可变尾合后三走势"))
+	else if(Text == _T("可变合前后三走势"))
 	{
 		m_CompareShuangDanType=21;
 	}
-	else if(Text == _T("可变尾差后三走势"))
+	else if(Text == _T("可变差前后三走势"))
 	{
 		m_CompareShuangDanType=22;
 	}
@@ -4068,8 +4085,54 @@ void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
 	}
 	else
 	{
-		m_CompareShuangDanType =10;
+		if(m_Flag)
+		{
+			AfxMessageBox("正在计算极限");
+			return;
+		}
+		
+		eYanDataType DataType=TYPE_WEI_QIANSAN_HOUSAN;		
+		if(Text==_T("自动尾前后三极限"))
+		{
+			DataType=TYPE_WEI_QIANSAN_HOUSAN;          //前三后三尾
+		}
+		else if(Text==_T("自动合前后三极限"))
+		{
+			DataType=TYPE_HE_QIANSAN_HOUSAN;          //前三后三合
+		}
+		else if(Text==_T("自动差前后三极限"))
+		{
+			DataType=TYPE_CHA_QIANSAN_HOUSAN;          //前三后三差
+		}
+		else if(Text==_T("自动双胆尾极限"))
+		{
+			DataType =TYPE_WEI_SHUANG_DAN;
+		}
+		else if(Text==_T("自动双胆合极限"))
+		{
+			DataType =TYPE_HE_SHUANG_DAN;
+		}
+		else if(Text==_T("自动双胆差极限"))
+		{
+			DataType =TYPE_CHA_SHUANG_DAN;
+		}
+		else
+		{
+			m_CompareShuangDanType =10;
+		}
+
+		FillJiXianDataList(DataType);
+		return;
 	}
+
+
+
+	/*m_ComboBox.InsertString(15,"自动尾前后三极限");
+	m_ComboBox.InsertString(16,"自动合前后三极限");
+	m_ComboBox.InsertString(17,"自动差前后三极限");
+	m_ComboBox.InsertString(18,"自动双胆尾极限");
+	m_ComboBox.InsertString(19,"自动双胆合极限");
+	m_ComboBox.InsertString(20,"自动双胆差极限");*/
 
 	CString EditText;
 	GetDlgItem(IDC_EDIT1)->GetWindowText(EditText);
@@ -4082,289 +4145,541 @@ void CDlgLianHaoHongQiu::OnBnClickedExecBtn()
 
 void CDlgLianHaoHongQiu::OnBnClickedJixianBtn()
 {
+	CString EditText;
+	GetDlgItem(IDC_EDIT1)->GetWindowText(EditText);
+	m_ParamData=atoi(EditText.GetBuffer());
+	EditText.ReleaseBuffer();
 
+	::CreateThread(NULL,0,LookJiXianThread,this,0,NULL);
 }
 
-////计算数据
-//void CDlgLianHaoHongQiu::FillMapData(map<int,vector<int>>& MapData,int StartPos,int OffsetPos,int FillType,int Param)
-//{
-//	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
-//	vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
-//
-//	if(DataList->size() < 5)
-//		return ;
-//
-//	for(int Index = DataList->size()-1; Index >=DataList->size()-5; Index--)
-//	{
-//			CString ShunV;
-//			CString HouV;
-//			CString QiuV;
-//			CString QiuHouV;
-//			CString KuaDu;
-//			CString HeV;
-//
-//			int VCount=0;
-//
-//			CString ShunVCSV;
-//			CString HouVCSV;
-//			CString QiuVCSV;
-//			CString QiuHouVCSV;
-//
-//			vector<int> ShunVInt;
-//			vector<int> HouVInt;
-//			vector<int> QiuVInt;
-//			vector<int> QiuHouVInt;
-//			
-//			int TempArray[10];
-//			memset(TempArray,0,10*sizeof(int));
-//
-//			for(int i=0; i < 6; i++)
-//			{
-//				int V=0;
-//				int V2=0;
-//				
-//				
-//				if(FillType == 0)
-//				{
-//					V=(*DataList)[Index].m_HongQiu[i]%10;
-//					V2=(*QiuShun)[Index].m_HongQiu[i]%10;
-//
-//				}
-//				else if(FillType == 1)
-//				{
-//					V=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
-//					V2=(*QiuShun)[Index].m_HongQiu[i]%10+(*QiuShun)[Index].m_HongQiu[i]/10;
-//				}
-//				else
-//				{
-//					V=abs((*DataList)[Index].m_HongQiu[i]%10-(*DataList)[Index].m_HongQiu[i]/10);
-//					V2=abs((*QiuShun)[Index].m_HongQiu[i]%10-(*QiuShun)[Index].m_HongQiu[i]/10);
-//				}
-//
-//				
-//				V=V%10; 
-//				V2=V2%10;
-//				VCount+=V;
-//			}
-//
-//			int TempData=TransDataByInt(ShunV,Param,1);
-//			int TempOffsetPos=Pos+OffsetPos+1;
-//			MapData[TempOffsetPos].push_back(TempData/10);
-//			TempOffsetPos++;
-//
-//			MapData[TempOffsetPos].push_back(TempData%10);
-//			TempOffsetPos++;
-//
-//			TempData=TransDataByInt(ShunV,Param,1);
-//			MapData[TempOffsetPos].push_back(TempData/10);
-//			TempOffsetPos++;
-//			MapData[TempOffsetPos].push_back(TempData%10);
-//			TempOffsetPos++;
-//
-//			TempData=TransDataByInt(QiuV,Param,1);
-//			MapData[TempOffsetPos].push_back(TempData/10);
-//			TempOffsetPos++;
-//			MapData[TempOffsetPos].push_back(TempData%10);
-//			TempOffsetPos++;
-//
-//			TempData=TransDataByInt(QiuHouV,Param,1);
-//			MapData[TempOffsetPos].push_back(TempData/10);
-//			TempOffsetPos++;
-//			MapData[TempOffsetPos].push_back(TempData%10);
-//			TempOffsetPos++;
-//	}
-//}
-//
-////是否是需要的数据类型
-//bool CDlgLianHaoHongQiu::IsWantData(vector<int>& VecData,int CompareType)
-//{
-//	for(int i=0; i < VecData.size(); i++)
-//	{
-//		switch(CompareType)
-//		{
-//			
-//	//	if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11|| m_CompareShuangDanType== 20)
-//	//	{
-//	//		//前三后三胆V
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
-//	//	}
-//	//	else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13|| m_CompareShuangDanType== 21)
-//	//	{
-//	//		//前三后三胆合
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
-//
-//	//	}
-//	//	else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15|| m_CompareShuangDanType== 22)
-//	//	{
-//	//		//前三后三胆差
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
-//	//	}
-//
-//	//	if(IsTrue1 && IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Red;
-//	//	else if(!IsTrue1&&!IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Write;
-//	//	else if(IsTrue1&&!IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
-//	//	else
-//	//		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
-//		}
-//	}
-//
-//	return true;
-//}
-//
-////寻找极限基数线程
-//DWORD CDlgLianHaoHongQiu::LookJiXianThread(LPVOID lpVoid)
-//{
-//	
-//	map<int,vector<int>>& MapData;
-//
-//	int StartPos =0;
-//	int OffsetPos=0;
-//	int FillType =0;
-//	int Param = 1;
-//
-//	FillMapData(MapData,StartPos,OffsetPos,FillType,Param);
-//
-//	OffsetPos+=20;
-//	FillType=1;
-//	FillMapData(MapData,StartPos,OffsetPos,FillType,Param);
-//
-//	OffsetPos+=20;
-//	FillType=2;
-//	FillMapData(MapData,StartPos,OffsetPos,FillType,Param);
-//
-//	
-//	map<int,vector<int>>::iterator it=MapData.begin();
-//	for(; it != MapData.end(); it++)
-//	{
-//		bool IsWant=IsWantData(it->second,0);
-//	}
-//
-//
-//	//FillMapData(map<int,vector<int>>& MapData,int StartPos,int OffsetPos,int FillType,int Param)
-//
-//	//int TempData=Data;
-//	//int TempData2=TempData/10;
-//	//int TempData3=TempData%10;
-//	//bool IsTrue1=false;
-//	//bool IsTrue2=false;
-//
-//	//if(m_CompareShuangDanType < 10 || m_CompareShuangDanType>= 30)
-//	//{
-//	//	CString Str;
-//	//	Str.Format("%d%d",TempData2,TempData3);
-//	//	ListCtrl.SetItemText(Index,CololIndex,Str);
-//	//	/*Str.Empty();
-//	//	Str.Format("%d",TempData3);
-//	//	ListCtrl.SetItemText(Index,CololIndex+1,Str);*/
-//
-//	//	if(m_CompareShuangDanType == 0 || m_CompareShuangDanType== 5 || m_CompareShuangDanType== 30)
-//	//	{
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData2,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],TempData3,true);
-//	//	}
-//	//	else if(m_CompareShuangDanType  == 1|| m_CompareShuangDanType== 6|| m_CompareShuangDanType== 31)
-//	//	{
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData2,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],TempData3,true);
-//	//	}
-//	//	else if(m_CompareShuangDanType ==2 ||  m_CompareShuangDanType== 7 || m_CompareShuangDanType== 32)
-//	//	{
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData2,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],TempData3,true);
-//	//	}
-//
-//	//	if(!IsTrue1)
-//	//	{
-//	//		Style.m_DrawData.m_TextData.m_BGColor = Write;
-//	//	}
-//	//	else
-//	//	{
-//	//		FillItemStyleColor(Style,IsTrue1,IsTrue2);
-//	//	}
-//	//	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
-//	//	CololIndex++;
-//	//}
-//	//else
-//	//{
-//	//	CString Str;
-//	//	Str.Format("%d",TempData2);
-//	//	ListCtrl.SetItemText(Index,CololIndex,Str);
-//	//	int Data=TempData2;
-//	//	if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11|| m_CompareShuangDanType== 20)
-//	//	{
-//	//		//前三后三胆V
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
-//	//	}
-//	//	else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13|| m_CompareShuangDanType== 21)
-//	//	{
-//	//		//前三后三胆合
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
-//
-//	//	}
-//	//	else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15|| m_CompareShuangDanType== 22)
-//	//	{
-//	//		//前三后三胆差
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
-//	//	}
-//
-//	//	if(IsTrue1 && IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Red;
-//	//	else if(!IsTrue1&&!IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Write;
-//	//	else if(IsTrue1&&!IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
-//	//	else
-//	//		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
-//
-//	//	
-//	//	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
-//	//	CololIndex++;
-//
-//	//	Str.Empty();
-//	//	Str.Format("%d",TempData3);
-//	//	ListCtrl.SetItemText(Index,CololIndex,Str);
-//	//	Data=TempData3;
-//	//	if(m_CompareShuangDanType == 10 || m_CompareShuangDanType== 11)
-//	//	{
-//	//		//前三后三胆V
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHouSanData((*DataList)[Index+1],Data,true);
-//	//	}
-//	//	else if(m_CompareShuangDanType == 12 || m_CompareShuangDanType== 13)
-//	//	{
-//	//		//前三后三胆合
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeHouSanData((*DataList)[Index+1],Data,true);
-//
-//	//	}
-//	//	else if(m_CompareShuangDanType == 14 || m_CompareShuangDanType== 15)
-//	//	{
-//	//		//前三后三胆差
-//	//		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaQianSanData((*DataList)[Index+1],Data,true);
-//	//		IsTrue2 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaHouSanData((*DataList)[Index+1],Data,true);
-//	//	}
-//
-//	//	if(IsTrue1 && IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Red;
-//	//	else if(!IsTrue1&&!IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Write;
-//	//	else if(IsTrue1&&!IsTrue2)
-//	//		Style.m_DrawData.m_TextData.m_BGColor=Yelow;
-//	//	else
-//	//		Style.m_DrawData.m_TextData.m_BGColor=ZiSe;
-//
-//	//	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
-//	//	CololIndex++;
-//	//	}
-//
-//	return 0;
-//}
+//计算数据
+void CDlgLianHaoHongQiu::FillMapData(map<int,vector<sDataInfo>>& MapData,int StartPos,int OffsetPos,eYanType YanType,eYanDataType DataType,int Param)
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	for(int Index =0; Index < DataList->size(); Index++)
+	{
+			CString ShunV;
+			CString HouV;
+			CString QiuV;
+			CString QiuHouV;
+			CString KuaDu;
+			CString HeV;
+
+			int VCount=0;
+
+			CString ShunVCSV;
+			CString HouVCSV;
+			CString QiuVCSV;
+			CString QiuHouVCSV;
+
+			vector<int> ShunVInt;
+			vector<int> HouVInt;
+			vector<int> QiuVInt;
+			vector<int> QiuHouVInt;
+			
+			int TempArray[10];
+			memset(TempArray,0,10*sizeof(int));
+
+			for(int i=0; i < 6; i++)
+			{
+				int V=0;
+				int V2=0;
+				
+				
+				if(YanType == TYPE_WEI)
+				{
+					V=(*DataList)[Index].m_HongQiu[i]%10;
+					V2=(*QiuShun)[Index].m_HongQiu[i]%10;
+
+				}
+				else if(YanType == TYPE_HE)
+				{
+					V=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
+					V2=(*QiuShun)[Index].m_HongQiu[i]%10+(*QiuShun)[Index].m_HongQiu[i]/10;
+				}
+				else
+				{
+					V=abs((*DataList)[Index].m_HongQiu[i]%10-(*DataList)[Index].m_HongQiu[i]/10);
+					V2=abs((*QiuShun)[Index].m_HongQiu[i]%10-(*QiuShun)[Index].m_HongQiu[i]/10);
+				}
+
+				
+				V=V%10; 
+				V2=V2%10;
+				VCount+=V;
+
+				CString StrV;
+				StrV.Format("%d",V);
+				CString StrV2;
+				StrV2.Format("%d",V2);
+
+				if(i < 3)
+				{
+					QiuV+=StrV;
+					ShunV+=StrV2;
+
+					ShunVInt.push_back(V2);
+					QiuVInt.push_back(V);
+
+					if(QiuVCSV.IsEmpty())
+						QiuVCSV+=StrV;
+					else 
+						QiuVCSV+=","+StrV;
+					if(ShunVCSV.IsEmpty())
+						ShunVCSV+=StrV2;
+					else
+						ShunVCSV+=","+StrV2;
+				}
+				else
+				{
+					QiuHouV+=StrV;
+					HouV+=StrV2;
+
+					HouVInt.push_back(V2);
+					QiuHouVInt.push_back(V);
+
+					if(QiuHouVCSV.IsEmpty())
+						QiuHouVCSV+=StrV;
+					else 
+						QiuHouVCSV+=","+StrV;
+					if(HouVCSV.IsEmpty())
+						HouVCSV+=StrV2;
+					else
+						HouVCSV+=","+StrV2;
+
+				}
+			}
+
+			sDataInfo Info;
+			Info.m_QiShu = (*DataList)[Index].m_QiShu;
+			if(DataType <= TYPE_CHA_QIANSAN_HOUSAN)
+			{
+				int TempData=TransDataByInt(ShunV,Param,1);
+				int TempOffsetPos=StartPos+OffsetPos+1;
+				Info.m_Data = TempData/10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				Info.m_Data = TempData%10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				TempData=TransDataByInt(ShunV,Param,1);
+				Info.m_Data = TempData/10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				Info.m_Data = TempData%10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				TempData=TransDataByInt(QiuV,Param,1);
+				Info.m_Data = TempData/10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				Info.m_Data = TempData%10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				TempData=TransDataByInt(QiuHouV,Param,1);
+				Info.m_Data = TempData/10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				Info.m_Data = TempData%10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+			}
+			else
+			{
+				int TempData=TransDataByInt(ShunV,Param,1);
+				int TempOffsetPos=StartPos+OffsetPos+1;
+				Info.m_Data = TempData;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				TempData=TransDataByInt(ShunV,Param,1);
+				Info.m_Data = TempData/10;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				TempData=TransDataByInt(QiuV,Param,1);
+				Info.m_Data = TempData;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+				TempData=TransDataByInt(QiuHouV,Param,1);
+				Info.m_Data = TempData;
+				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
+				MapData[TempOffsetPos].push_back(Info);
+				TempOffsetPos++;
+
+			}
+	}
+}
+
+//是否是需要的数据类型
+bool CDlgLianHaoHongQiu::IsWantData(vector<sDataInfo>& VecData,eYanDataType DataType)
+{
+	if(VecData.size() < 6)
+		return false;
+
+	int JiXianCount= m_ParamData-1 >= 0 ? m_ParamData-1:3;
+	int Start = VecData.size()-2;
+	COLORREF Color=VecData[Start].m_Color;
+	for(int i=Start; i >=Start-JiXianCount; i--)
+	{
+
+		switch(DataType)
+		{
+			case TYPE_WEI_QIANSAN_HOUSAN:          //前三后三尾
+			case TYPE_HE_QIANSAN_HOUSAN:            //前三后三合 
+			case TYPE_CHA_QIANSAN_HOUSAN:          //前三后三差	
+				{
+					if(Color == RED)
+					{
+						Color = VecData[i].m_Color;
+					}
+					else if(Color != WRITE)
+					{
+						if(Color != VecData[i].m_Color)
+							return false;
+					}
+					else
+						return false;
+				}
+				break;
+			case TYPE_WEI_SHUANG_DAN:              //双胆尾
+			case TYPE_HE_SHUANG_DAN:               //双胆合
+			case TYPE_CHA_SHUANG_DAN:              //双胆差
+				{
+					if(Color == ZISE)
+					{
+						Color = VecData[i].m_Color;
+					}
+				/*	else if(Color != WRITE)
+					{
+						if(Color != VecData[i].m_Color)
+							return false;
+					}*/
+					else
+						return false;
+
+					
+				}
+				break;
+
+			default:
+				return false;
+				break;
+		}
+	}
+
+	return true;
+}
+	
+//获取数据颜色值
+COLORREF CDlgLianHaoHongQiu::GetDataColor(eYanDataType Type,sShuangSeQiu QiuData,int Data,bool IsV)
+{
+	bool IsTrue1=false;
+	bool IsTrue2=false;
+	int TempData2=Data/10;
+	int TempData3=Data%10;
+
+	switch(Type)
+	{
+		case TYPE_WEI_QIANSAN_HOUSAN:          //前三后三尾
+			//前三后三胆V
+			IsTrue1 =CDataManageCenter::IsHongQiuInQianSanData(QiuData,Data,IsV);
+			IsTrue2 =CDataManageCenter::IsHongQiuInHouSanData(QiuData,Data,IsV);
+			break;
+		case TYPE_HE_QIANSAN_HOUSAN:           //前三后三合 
+			//前三后三胆合
+			IsTrue1 = CDataManageCenter::IsHongQiuInHeQianSanData(QiuData,Data,IsV);
+			IsTrue2 = CDataManageCenter::IsHongQiuInHeHouSanData(QiuData,Data,IsV);
+			break;
+		case TYPE_CHA_QIANSAN_HOUSAN:         //前三后三差
+			IsTrue1 = CDataManageCenter::IsHongQiuInChaQianSanData(QiuData,Data,IsV);
+			IsTrue2 = CDataManageCenter::IsHongQiuInChaHouSanData(QiuData,Data,IsV);
+			break;
+
+		case TYPE_WEI_SHUANG_DAN:              //双胆尾
+			IsTrue1 = CDataManageCenter::IsHongQiuInData(QiuData,TempData2,IsV);
+			IsTrue2 = CDataManageCenter::IsHongQiuInData(QiuData,TempData3,IsV);
+			break;
+		case TYPE_HE_SHUANG_DAN:               //双胆合
+			IsTrue1 = CDataManageCenter::IsHongQiuInHeData(QiuData,TempData2,IsV);
+			IsTrue2 = CDataManageCenter::IsHongQiuInHeData(QiuData,TempData3,IsV);
+			break;
+		case TYPE_CHA_SHUANG_DAN:           //双胆差
+			IsTrue1 = CDataManageCenter::IsHongQiuInChaData(QiuData,TempData2,IsV);
+			IsTrue2 = CDataManageCenter::IsHongQiuInChaData(QiuData,TempData3,IsV);
+			break;
+		default:
+			break;
+	}
+
+	 
+
+
+	COLORREF Color=WRITE;
+	//颜色比较方式
+	switch(Type)
+	{
+		case TYPE_WEI_QIANSAN_HOUSAN:          //前三后三尾
+		case TYPE_HE_QIANSAN_HOUSAN:           //前三后三合 
+		case TYPE_CHA_QIANSAN_HOUSAN:         //前三后三差	
+			{
+				if(IsTrue1 && IsTrue2)
+					Color=RED;
+				else if(!IsTrue1&&!IsTrue2)
+					Color=WRITE;
+				else if(IsTrue1&&!IsTrue2)
+					Color=YELOW;
+				else
+					Color=ZISE;
+			}
+			break;
+		case TYPE_WEI_SHUANG_DAN:              //双胆尾
+		case TYPE_HE_SHUANG_DAN:               //双胆合
+		case TYPE_CHA_SHUANG_DAN:           //双胆差
+			{
+				if(IsTrue1 && IsTrue2)
+					Color=ZISE;
+				else if((!IsTrue1 && IsTrue2) || (IsTrue1 && !IsTrue2))
+					Color=YELOW;
+				else
+					Color=WRITE;
+			}
+			break;
+		default:
+			break;
+	}
+
+	return Color;
+}
+
+//寻找极限基数线程
+DWORD CDlgLianHaoHongQiu::LookJiXianThread(LPVOID lpVoid)
+{
+	CDlgLianHaoHongQiu* Self=(CDlgLianHaoHongQiu*)lpVoid;
+	Self->m_Flag=true;
+	Self->m_AllData.clear();
+
+	Self->GetDlgItem(IDC_JIXIAN_BTN)->EnableWindow(false);
+
+	map<int,map<int,vector<sDataInfo>>> AllData;
+
+	for(int DataType=TYPE_WEI_QIANSAN_HOUSAN; DataType <=TYPE_CHA_SHUANG_DAN; DataType++)
+	{
+		
+		map<int,vector<sDataInfo>> WantMapData;
+		int WantPos=0;
+		for(int Param=1; Param < 100; Param++)
+		{
+			map<int,vector<sDataInfo>> MapData;
+			int StartPos =0;
+			int OffsetPos=0;
+			int FillType =0;
+			eYanType     YanType  = TYPE_WEI;
+			Self->FillMapData(MapData,StartPos,OffsetPos,YanType,(eYanDataType)DataType,Param);
+
+			OffsetPos+=20;
+			YanType=TYPE_HE;
+			Self->FillMapData(MapData,StartPos,OffsetPos,YanType,(eYanDataType)DataType,Param);
+
+			OffsetPos+=20;
+			YanType=TYPE_CHA;
+			Self->FillMapData(MapData,StartPos,OffsetPos,YanType,(eYanDataType)DataType,Param);
+
+			
+			map<int,vector<sDataInfo>>::iterator it=MapData.begin();
+			for(; it != MapData.end(); it++)
+			{
+				bool IsWant=Self->IsWantData(it->second,(eYanDataType)DataType);
+				if(IsWant)
+				{
+					
+					WantMapData[WantPos].insert(WantMapData[WantPos].begin(),it->second.begin(),it->second.end());
+					WantPos++;
+				}
+			}
+
+		}
+
+		AllData[DataType]=WantMapData;
+		
+	}
+
+
+	Self->FilterMapData(AllData);
+	Self->m_AllData=AllData;
+	
+	Self->m_Flag=false;
+	Self->GetDlgItem(IDC_JIXIAN_BTN)->EnableWindow(true);
+
+	return 0;
+}
+
+//过滤重复数据
+void CDlgLianHaoHongQiu::FilterMapData(map<int,map<int,vector<sDataInfo>>>& MapData)
+{
+	map<int,map<int,vector<sDataInfo>>> AllData;
+	map<int,map<int,vector<sDataInfo>>>::iterator itAll = MapData.begin();
+	for(; itAll != MapData.end(); itAll++)
+	{
+
+		map<int,vector<sDataInfo>>::iterator it=itAll->second.begin();
+		map<int,vector<sDataInfo>> TempData;
+
+		for(;it != itAll->second.end(); it++)
+		{
+			map<int,vector<sDataInfo>>::iterator it2=TempData.begin();
+			if(it2 == TempData.end())
+			{
+				TempData[it->first]=it->second;
+				continue;
+			}
+
+			bool IsWant=true;
+			for(;it2 != TempData.end(); it2++)
+			{
+				if(IsEqualVector(it2->second,it->second))
+				{
+					IsWant=false;
+					break;
+				}
+			}
+
+			if(IsWant)
+				TempData[it->first]=it->second;
+		}
+
+		AllData[itAll->first]=TempData;
+	}
+
+	MapData.clear();
+	MapData=AllData;
+
+	
+	
+}
+
+//判断两个vector数据相等
+bool CDlgLianHaoHongQiu::IsEqualVector(vector<sDataInfo>& Vec1,vector<sDataInfo>& Vec2)
+{
+	if(Vec1.size() != Vec2.size())
+		return false;
+
+	int CompareCount=Vec1.size() > 10 ? 10:Vec1.size();
+	int EqualCount=0;
+	for(int Index=0; Index < CompareCount; Index++)
+	{
+		if(Vec1[Index].m_Data == Vec2[Index].m_Data)
+			EqualCount++;
+	}
+
+	if(CompareCount == EqualCount)
+		return true;
+
+	return false;
+}
+
+
+//填充极限数据
+void CDlgLianHaoHongQiu::FillJiXianDataList(eYanDataType DataType)
+{
+	m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_SHOW);
+	m_ListCtrl3.DeleteAllItems();
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		m_ListCtrl3.InsertItem(Index,"");
+		int TempArray[10];
+		memset(TempArray,0,10*sizeof(int));
+		for(int i=0; i < 6; i++)
+		{
+			int V=0;
+			if(DataType == TYPE_WEI_QIANSAN_HOUSAN || DataType == TYPE_WEI_SHUANG_DAN)
+			{
+				V=(*DataList)[Index].m_HongQiu[i]%10;
+			
+			}
+			else if(DataType == TYPE_HE_QIANSAN_HOUSAN || DataType == TYPE_HE_SHUANG_DAN)
+			{
+				V=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
+			}
+			else 
+			{
+				V=abs((*DataList)[Index].m_HongQiu[i]%10-(*DataList)[Index].m_HongQiu[i]/10);
+			}
+			
+			V=V%10;
+			TempArray[V]++;
+		}
+
+		CString Text=" ";
+		for(int i=0; i < 10; i++)
+		{
+			if(TempArray[i])
+			{
+				CString Temp;
+				Temp.Format("%d",i);
+				Text+=Temp;
+			}
+		}
+
+		Text=(*DataList)[Index].m_QiShu+Text;
+		m_ListCtrl3.SetItemText(Index,0,Text);
+	}
+
+
+	int ListInsertPos=0;
+	map<int,map<int,vector<sDataInfo>>>::iterator it=m_AllData.find(DataType);
+	if(it != m_AllData.end())
+	{
+		map<int,vector<sDataInfo>>::iterator it2=it->second.begin();
+		
+		int ListIndex=1;
+		while(it2 != it->second.end())
+		{
+			int InsertPos=0;
+			for(int Index = 0; Index < it2->second.size(); Index++)
+			{
+				CString Text;
+				Text.Format("%d",it2->second[Index].m_Data);
+				Style.m_DrawData.m_TextData.m_BGColor = it2->second[Index].m_Color;
+				m_ListCtrl3.SetItemText(InsertPos,ListIndex,Text);
+				m_ListCtrl3.SetItemSpecialStyle(InsertPos,ListIndex,Style);
+				InsertPos++;
+				
+			}
+
+			ListIndex++;
+			it2++;
+		}
+	}
+}
