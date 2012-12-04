@@ -190,9 +190,14 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgNetDataParse.Create(CDlgNetDataParse::IDD,this);
 	m_DlgNetDataParse.ShowWindow(SW_HIDE);
 
+	m_DlgJiXianWeiLan.Create(CDlgJiXianWeiLan::IDD,this);
+	m_DlgJiXianWeiLan.ShowWindow(SW_HIDE);
+
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
 	m_ListCtrl3.ShowWindow(SW_HIDE);
+
+
 
 	m_ComboBox.InsertString(0,_T("ËÑË÷ºìÇò"));
 	m_ComboBox.InsertString(1,_T("ËÑË÷ÀºÇò"));
@@ -208,7 +213,10 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 		Count++;
 		it++;
 	}
+
+	m_ShaComboBox.InsertString(Count,"¼«ÏÞÉ±À¶");
 	m_ShaComboBox.SetCurSel(0);
+
 	CenterWindow();
 
 	OnBnClickedLoadDataBtn();
@@ -1145,6 +1153,11 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 		}
 	}
 
+	if(Text == _T("¼«ÏÞÉ±À¶"))
+	{
+		m_DlgJiXianWeiLan.ShowWindow(SW_SHOW);
+
+	}
 	
 	//this->m_DlgShiFaDingHong.ShowWindow(SW_SHOW);
 }
