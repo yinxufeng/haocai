@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgJiXianWeiLan.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgLianHaoHongQiu.cpp"
 				>
 			</File>
@@ -317,6 +321,10 @@
 			</File>
 			<File
 				RelativePath=".\DlgHengXiangChaZhi.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DlgJiXianWeiLan.h"
 				>
 			</File>
 			<File

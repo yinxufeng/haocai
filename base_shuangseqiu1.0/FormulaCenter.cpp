@@ -1109,6 +1109,65 @@ void CFormulaCenter::ExecShaLanFormula()
 		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
 		FormualIndex++;
 
+
+		TempData =(*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[2];
+		TempData=abs(TempData%10+TempData/10);
+		TempData=TempData%10;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+		FormulaData.m_Data   = DataToStr(TempData)+"V";
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+		TempData =(*DataList)[Index-1].m_LanQiu+(*DataList)[Index-1].m_HongQiu[2];
+		TempData=abs(TempData%10-TempData/10);
+		TempData=TempData%10;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+		FormulaData.m_Data   = DataToStr(TempData)+"V";
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;
+
+		if(Index > 1)
+		{
+			TempData =(*DataList)[Index-1].m_LanQiu+(*DataList)[Index-2].m_LanQiu;
+			TempData=abs(TempData%10+TempData/10);
+			TempData=TempData%10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData)+"V";
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+
+			TempData =(*DataList)[Index-1].m_LanQiu+(*DataList)[Index-2].m_LanQiu;
+			TempData=abs(TempData%10-TempData/10);
+			TempData=TempData%10;
+			IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+			FormulaData.m_Data   = DataToStr(TempData)+"V";
+			FormulaData.m_IsTrue = !IsTrue;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+		}
+		else
+		{
+			FormulaData.m_Data   = "";
+			FormulaData.m_IsTrue = false;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+
+			FormulaData.m_Data   = "";
+			FormulaData.m_IsTrue = false;
+			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+			FormualIndex++;
+
+		}
+
 		if(Index == 1)
 			RealCount=FormualIndex;
 	}
@@ -1123,7 +1182,8 @@ void CFormulaCenter::ExecShaLanFormula()
 		m_MapFormulaInfo[FORMULA_SHA_LAN ].push_back(FormualList[i]);
 	}
 
-	sort(m_MapFormulaInfo[FORMULA_SHA_LAN ].begin(),m_MapFormulaInfo[FORMULA_SHA_LAN ].end(), SortByErrorCount);
+
+	//sort(m_MapFormulaInfo[FORMULA_SHA_LAN ].begin(),m_MapFormulaInfo[FORMULA_SHA_LAN ].end(), SortByErrorCount);
 }
 
 //运行杀蓝V公式

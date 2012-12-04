@@ -21,6 +21,8 @@
 #define IDD_SHUANGSEQIU_DIALOG9         140
 #define IDD_SHUANGSEQIU_DIALOG10        141
 #define IDD_SHUANGSEQIU_NET_PARSE       142
+#define IDD_SHUANGSEQIU_DIALOG11        143
+#define IDD_DLG_WEI_LAN                 143
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
