@@ -74,6 +74,38 @@ public:
 		return RetStr;
 		
 	}
+
+	CString ToLanString()
+	{
+	
+		int QiShu=atoi(m_QiShu.GetBuffer());
+		m_QiShu.ReleaseBuffer();
+		
+		CString RetStr;
+		RetStr.Format("%d",QiShu);
+		CString Lan;
+		Lan.Format(" %02d",m_LanQiu);
+		RetStr=RetStr+Lan;
+		return RetStr;
+	}
+
+	CString ToHongString()
+	{
+
+		int QiShu=atoi(m_QiShu.GetBuffer());
+		m_QiShu.ReleaseBuffer();
+		
+		CString RetStr;
+		RetStr.Format("%d",QiShu);
+		for(int i=0; i < QIU_XUN; i++)
+		{
+			CString Str;
+			Str.Format(" %02d",m_HongQiu[i]);
+			RetStr+=Str;
+		}
+
+		return RetStr;
+	}
 };
 
 struct sEqualShuangSeQiu          //相等红球数结构体定义
