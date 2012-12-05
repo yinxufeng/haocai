@@ -3534,12 +3534,12 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 					V2=abs((*QiuShun)[Index].m_HongQiu[i]%10-(*QiuShun)[Index].m_HongQiu[i]/10);
 				}
 
-				if(m_CompareShuangDanType == 0 || m_CompareShuangDanType == 5|| m_CompareShuangDanType== 10 || m_CompareShuangDanType== 11 || m_CompareShuangDanType== 21 || m_CompareShuangDanType== 31)
+				if(m_CompareShuangDanType == 0 || m_CompareShuangDanType == 5|| m_CompareShuangDanType== 10 || m_CompareShuangDanType== 11 || m_CompareShuangDanType== 20 || m_CompareShuangDanType== 30)
 				{
 					int TempV=(*DataList)[Index].m_HongQiu[i]%10;
 					TempArray[TempV]++;
 				}
-				else if(m_CompareShuangDanType == 1||m_CompareShuangDanType == 6|| m_CompareShuangDanType== 12 || m_CompareShuangDanType== 13 ||m_CompareShuangDanType== 22 || m_CompareShuangDanType== 32 )
+				else if(m_CompareShuangDanType == 1||m_CompareShuangDanType == 6|| m_CompareShuangDanType== 12 || m_CompareShuangDanType== 13 ||m_CompareShuangDanType== 21 || m_CompareShuangDanType== 31 )
 				{
 					int TempV=(*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i]/10;
 					TempV=TempV%10;
@@ -4335,59 +4335,106 @@ void CDlgLianHaoHongQiu::FillMapData(map<int,vector<sDataInfo>>& MapData,int Sta
 //是否是需要的数据类型
 bool CDlgLianHaoHongQiu::IsWantData(vector<sDataInfo>& VecData,eYanDataType DataType)
 {
-	if(VecData.size() < 6)
+	if(VecData.size() < 10)
 		return false;
 
 	int JiXianCount= m_ParamData-1 >= 0 ? m_ParamData-1:3;
 	int Start = VecData.size()-2;
 	COLORREF Color=VecData[Start].m_Color;
-	for(int i=Start; i >=Start-JiXianCount; i--)
+	if(Color != WRITE)
 	{
-
-		switch(DataType)
-		{
-			case TYPE_WEI_QIANSAN_HOUSAN:          //前三后三尾
-			case TYPE_HE_QIANSAN_HOUSAN:            //前三后三合 
-			case TYPE_CHA_QIANSAN_HOUSAN:          //前三后三差	
-				{
-					if(Color == RED)
+			switch(DataType)
+			{
+				case TYPE_WEI_QIANSAN_HOUSAN:          //前三后三尾
+				case TYPE_HE_QIANSAN_HOUSAN:            //前三后三合 
+				case TYPE_CHA_QIANSAN_HOUSAN:          //前三后三差	
 					{
-						Color = VecData[i].m_Color;
+						for(int i=Start; i >=Start-JiXianCount; i--)
+						{
+							if(Color == RED)
+							{
+								Color = VecData[i].m_Color;
+							}
+							else if(Color != WRITE)
+							{
+								if(Color != VecData[i].m_Color)
+									return false;
+							}
+							else
+								return false;
+						}
 					}
-					else if(Color != WRITE)
+					break;
+				case TYPE_WEI_SHUANG_DAN:              //双胆尾
+				case TYPE_HE_SHUANG_DAN:               //双胆合
+				case TYPE_CHA_SHUANG_DAN:              //双胆差
 					{
-						if(Color != VecData[i].m_Color)
-							return false;
-					}
-					else
-						return false;
-				}
-				break;
-			case TYPE_WEI_SHUANG_DAN:              //双胆尾
-			case TYPE_HE_SHUANG_DAN:               //双胆合
-			case TYPE_CHA_SHUANG_DAN:              //双胆差
-				{
-					if(Color == ZISE)
-					{
-						Color = VecData[i].m_Color;
-					}
-				/*	else if(Color != WRITE)
-					{
-						if(Color != VecData[i].m_Color)
-							return false;
-					}*/
-					else
-						return false;
+						JiXianCount= m_ParamData-1 >= 0 ? m_ParamData-1:4;
+						for(int i=Start; i >=Start-JiXianCount; i--)
+						{
+							if(Color == ZISE)
+							{
+								Color = VecData[i].m_Color;
+							}
+							else
+								return false;
+						}
 
-					
-				}
-				break;
+						
+					}
+					break;
 
-			default:
-				return false;
-				break;
-		}
+				default:
+					return false;
+					break;
+			}
 	}
+	else
+	{
+		    JiXianCount= m_ParamData-1 >= 0 ? m_ParamData-1+6:10;
+			switch(DataType)
+			{
+				case TYPE_WEI_QIANSAN_HOUSAN:          //前三后三尾
+				case TYPE_HE_QIANSAN_HOUSAN:            //前三后三合 
+				case TYPE_CHA_QIANSAN_HOUSAN:          //前三后三差	
+					{
+						for(int i=Start; i >=Start-JiXianCount; i--)
+						{
+							if(Color == WRITE)
+							{
+								Color = VecData[i].m_Color;
+							}
+							else
+								return false;
+						}
+					}
+					break;
+				case TYPE_WEI_SHUANG_DAN:              //双胆尾
+				case TYPE_HE_SHUANG_DAN:               //双胆合
+				case TYPE_CHA_SHUANG_DAN:              //双胆差
+					{
+						 JiXianCount= m_ParamData-1 >= 0 ? m_ParamData-1+4:5;
+						for(int i=Start; i >=Start-JiXianCount; i--)
+						{
+							if(Color == WRITE)
+							{
+								Color = VecData[i].m_Color;
+							}
+			
+							else
+								return false;
+						}
+
+						
+					}
+					break;
+
+				default:
+					return false;
+					break;
+			}
+	}
+
 
 	return true;
 }
