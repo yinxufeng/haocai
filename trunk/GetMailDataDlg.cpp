@@ -44,6 +44,22 @@ wchar_t* ConvertToUnicodeFromUtf8(char *utf8)
 	return unicode;
 }
 
+
+void ConvertUtf8ToGBK(CStringA  strUtf8,CString& DestStr)    
+{   
+	int len=MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)strUtf8, -1, NULL,0);   
+	unsigned short * wszGBK = new unsigned short[len+1];   
+	memset(wszGBK, 0, len * 2 + 2);   
+	MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)strUtf8, -1, (LPWSTR)wszGBK, len);   
+	len = WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)wszGBK, -1, NULL, 0, NULL, NULL);   
+	char *szGBK=new char[len + 1];   
+	memset(szGBK, 0, len + 1);   
+	WideCharToMultiByte (CP_ACP, 0, (LPCWSTR)wszGBK, -1, szGBK, len, NULL,NULL);   
+	DestStr = szGBK;   
+	delete[] szGBK;   
+	delete[] wszGBK;   
+} 
+
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialog
@@ -148,8 +164,10 @@ BOOL CGetMailDataDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 
+//	CString Url=_T("http://www.baidu.com");
+	CString Url=_T("http://www.shanxigov.cn");
 	//创建新HTML控件
-	CreateNewHtmlCtrl(_T("http://www.baidu.com"),_T(""));
+	CreateNewHtmlCtrl(Url,_T(""));
 	GetDlgItem(IDC_TEST_STATIC)->SetWindowText(_T("准备"));
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -272,16 +290,27 @@ void CGetMailDataDlg::CreateNewHtmlCtrl(CString URL,CString PostData)
 //解析数据
 void CGetMailDataDlg::PaseText(CString Text,vector<CString>& List)
 {
+	ParseHref(Text,List,false);
+	ParseHref(Text,List,true);
+}
+
+//解析A
+void CGetMailDataDlg::ParseHref(CString Text,vector<CString>& List,bool IsA)
+{
+	int StartPos=0;
+	int EndPos=0;
+
 	CString FindStartStr=_T("<a");
 	CString FindEndStr=_T("/a");
-
-	int StartPos= Text.Find(FindStartStr);
-	int EndPos =Text.Find(FindEndStr,StartPos+1);
-
-	if(StartPos == -1 )
+	if(IsA)
 	{
 		FindStartStr=_T("<A");
 		FindEndStr=_T("/A");
+		StartPos= Text.Find(FindStartStr);
+		EndPos =Text.Find(FindEndStr,StartPos+1);
+	}
+	else
+	{
 		StartPos= Text.Find(FindStartStr);
 		EndPos =Text.Find(FindEndStr,StartPos+1);
 	}
@@ -312,10 +341,12 @@ void CGetMailDataDlg::PaseText(CString Text,vector<CString>& List)
 	}
 }
 
+
 //解析email 
 void CGetMailDataDlg::PaseEmail(CString Text,map<CString,int>& EmailMap)
 {
 	 CString strRegex=L"({[a-zA-Z0-9_]+@[a-zA-Z0-9]+[.][a-zA-Z0-9]+[.]?[a-zA-Z0-9]+})";
+//	CString strRegex=L";
      CAtlRegExp<CAtlRECharTraitsW> reRule;
      wchar_t *wt = (wchar_t *)(LPCTSTR)strRegex;
      REParseError status = reRule.Parse((const ATL::CAtlRegExp<CAtlRECharTraitsW>::RECHAR *)wt);
@@ -390,7 +421,7 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 
 	    CString Url = Param->m_RequestUrl[Index];
 		CHttpFile* File= NULL;
-		CString Txt;
+		CStringA Txt;
 		try
 		{
 			//获取服务器列表文件
@@ -431,29 +462,42 @@ DWORD CGetMailDataDlg::RequestDataInfoThread(LPVOID lpVoid)
 				AllLen += ReadBytes;
 
 			///	wchar_t* Temp=ConvertToUnicodeFromUtf8(Buffer);
-				CString TempTxt=CString(Buffer);
+				CStringA TempTxt=CStringA(Buffer);
 				//delete [] Temp;
 				Txt+=TempTxt;
 
 				if(AllLen == Len && IsCompare)
 					break;
 				
-				if(!IsCompare && ReadLen < 10*1024)
+				if(Txt.Find("</body>") != -1 || Txt.Find("</BODY>") != -1)
 					break;
+			/*	if(!IsCompare && ReadLen < 10*1024)
+					break;*/
 
 			}
 
-
-			if(Param->m_ParseType == 0)
-			{
-				
-				PaseText(Txt,List);
-			}
 
 			if(Param->m_ParseType == 1)
 			{
+				CString TempTxt;
+				if(Txt.Find("charset=utf-8") != -1)
+				{
+				/*	wchar_t* TempWChar=ConvertToUnicodeFromUtf8(Txt.GetBuffer());
+					Txt.ReleaseBuffer();
+					TempTxt=CString(TempWChar);
+					delete [] TempWChar;*/
+					ConvertUtf8ToGBK(Txt,TempTxt);
+
+				}
+				else
+				{
+					TempTxt=CString(Txt.GetBuffer());
+					Txt.ReleaseBuffer();
+				}
+
+
 				map<CString,int> EmailMap;
-				PaseEmail(Txt,EmailMap);
+				PaseEmail(TempTxt,EmailMap);
 				if(!EmailMap.empty())
 				{
 				    CString FilePath = GetAppCurrentPath()+_T("\\email.tmp");
@@ -563,8 +607,8 @@ LRESULT CGetMailDataDlg::OnStartParseMsg(WPARAM wParam,LPARAM lParam)
 	vector<CString> List;
 	map<CString,int> EmailMap;
 	PaseText(Text,List);
-	PaseEmail(Text,EmailMap);
-	if(!EmailMap.empty())
+	//PaseEmail(Text,EmailMap);
+	/*if(!EmailMap.empty())
 	{
 	    CString FilePath = GetAppCurrentPath()+_T("\\email.tmp");
 		SaveEmailToFile(FilePath,EmailMap);
@@ -574,7 +618,7 @@ LRESULT CGetMailDataDlg::OnStartParseMsg(WPARAM wParam,LPARAM lParam)
 	{
 		GetDlgItem(IDC_TEST_STATIC)->SetWindowText(_T("完毕"));
 		return 0;
-	}
+	}*/
 		
 
 	CString Text2;
