@@ -43,6 +43,9 @@ protected:
 	//解析数据
 	static void PaseText(CString Text, vector<CString>& List);
 
+	//解析A
+	static void ParseHref(CString Text,vector<CString>& List,bool IsA=false);
+
 	//解析email 
 	static void PaseEmail(CString Text,map<CString,int>& EmailMap);
 
