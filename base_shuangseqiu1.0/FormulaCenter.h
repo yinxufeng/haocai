@@ -45,6 +45,12 @@ enum eFormulaType
 	FORMULA_DING_HONG_WEI       ,    //定红球V
 
 	FORMULA_WEI_BU_TONG_CHU     ,    //尾不同出
+
+	FORMUAL_SHA_JI_JU,               //杀极距
+	FORMUAL_SHA_DI_ER_HONG,          //杀第二位红
+	FORMUAL_SHA_DI_SAN_HONG,         //杀第三位红
+	FORMUAL_SHA_DI_SI_HONG,          //杀第四位红
+	FORMUAL_SHA_DI_WU_WHONG,         //杀第五位红
 };
 
 //公式描述数据
