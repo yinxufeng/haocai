@@ -211,7 +211,7 @@ void CsuoshuiDlg::ParseData(CString& StrData,map<CString,vector<int>>& MapData)
 			Name=Name.Mid(Name.Find("\r\n")+2);
 		Name=Name.Trim();
 		Temp=Temp.Mid(Pos+1);
-		if(!Temp.IsEmpty())
+		if(!Temp.IsEmpty() && Temp.Find("#") == -1)
 		{
 			vector<int> Data=this->GetDataList(Temp);
 			MapData[Name]=Data;
@@ -894,11 +894,15 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   else
 						  EqualCount=6;
 
-					   bool IsXiaoYu=false;
-					   if(it->first.Find("-") != -1)
+					   int IsXiaoYu=1;
+					   if(it->first.Find("-0") != -1)
 					   {
-						   IsXiaoYu=true;
+						   IsXiaoYu=2;
 					   }
+					   else if(it->first.Find("-") != -1)
+						   IsXiaoYu=1;
+					   else
+						   IsXiaoYu=0;
 
 					  WantCount++;
 					  int QieCount=0;
@@ -917,8 +921,16 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 					  if(IsXiaoYu)
 					  {
-						  if(QieCount <= EqualCount && QieCount > 0)
-								RealWantCount++;
+						  if(IsXiaoYu == 1)
+						  {
+							  if(QieCount <= EqualCount && QieCount > 0)
+									RealWantCount++;
+						  }
+						  else
+						  {
+							   if(QieCount <= EqualCount)
+									RealWantCount++;
+						  }
 					  }else
 					  {
 						   if(QieCount == EqualCount )
@@ -929,6 +941,393 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					  continue;
 				  }
 
+
+
+				  if(it->first.Find("前三尾杀") != -1)
+				  {
+					  
+					  WantCount++;
+					  bool IsWant=true;
+					  int QieCount=0;
+					  for(int i=1; i<=3; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=false;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("前三尾") != -1)
+				  {
+					   WantCount++;
+					  bool IsWant=false;
+					  int QieCount=0;
+					  for(int i=1; i<=3; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+
+				  if(it->first.Find("前三合杀") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=true;
+					  for(int i=1; i<=3; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10+MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=false;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("前三合") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=false;
+					  for(int i=1; i<=3; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10+MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("前三差杀") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=true;
+					  for(int i=1; i<=3; i++)      
+					  {
+						  int TempData=abs(MapData["球数"][order[i]]%10-MapData["球数"][order[i]]/10);
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=false;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("前三差") != -1)
+				  {
+				
+					    WantCount++;
+					  bool IsWant=false;
+					  for(int i=1; i<=3; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10-MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+
+				   if(it->first.Find("后三尾杀") != -1)
+				  {
+					  
+					    WantCount++;
+					  bool IsWant=true;
+					  int QieCount=0;
+					  for(int i=4; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=false;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("后三尾") != -1)
+				  {
+				
+					    WantCount++;
+					  bool IsWant=false;
+					  int QieCount=0;
+					  for(int i=4; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+
+				  if(it->first.Find("后三合杀") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=true;
+					  for(int i=4; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10+MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=false;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("后三合") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=false;
+					  for(int i=4; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10+MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("后三差杀") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=true;
+					  for(int i=4; i<=m; i++)      
+					  {
+						  int TempData=abs(MapData["球数"][order[i]]%10-MapData["球数"][order[i]]/10);
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=false;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("后三差") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=false;
+					  for(int i=4; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10-MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					   if(IsWant)
+						   RealWantCount++;
+
+					   continue;
+				  }
+
+
+				  if(it->first.Find("尾不同出") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=false;
+					  int TempArray[10];
+					  memset(TempArray,0,10*sizeof(int));
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 TempArray[TempData]++;
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					  int QieCount=0;
+					  for(int i=0; i < 10; i++)
+					  {
+						  if(TempArray[i])
+							  QieCount++;
+					  }
+
+					 if(it->second.size() != QieCount || QieCount == 0)
+						   RealWantCount++;
+					   continue;
+				  }
+
+
+				  if(it->first.Find("合不同出") != -1)
+				  {
+					    WantCount++;
+					  bool IsWant=false;
+					  int TempArray[10];
+					  memset(TempArray,0,10*sizeof(int));
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]]%10+MapData["球数"][order[i]]/10;
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 TempArray[TempData]++;
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					  int QieCount=0;
+					  for(int i=0; i < 10; i++)
+					  {
+						  if(TempArray[i])
+							  QieCount++;
+					  }
+
+					 if(it->second.size() != QieCount || QieCount == 0)
+						   RealWantCount++;
+					   continue;
+				  }
+
+				   if(it->first.Find("差不同出") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempArray[10];
+					  memset(TempArray,0,10*sizeof(int));
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=abs(MapData["球数"][order[i]]%10-MapData["球数"][order[i]]/10);
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 TempArray[TempData]++;
+								 IsWant=true;
+								 break;
+							  }
+						  }
+					  }
+
+					  int QieCount=0;
+					  for(int i=0; i < 10; i++)
+					  {
+						  if(TempArray[i])
+							  QieCount++;
+					  }
+
+					  if(it->second.size() != QieCount || QieCount == 0)
+						   RealWantCount++;
+
+					   continue;
+				  }
 
 
 
