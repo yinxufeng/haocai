@@ -172,6 +172,27 @@ private:
 	//运行尾不同出公式
 	void ExecWeiBuTongChuFormula();
 
+ //   FORMUAL_SHA_JI_JU,               //杀极距
+	//FORMUAL_SHA_DI_ER_HONG,          //杀第二位红
+	//FORMUAL_SHA_DI_SAN_HONG,         //杀第三位红
+	//FORMUAL_SHA_DI_SI_HONG,          //杀第四位红
+	//FORMUAL_SHA_DI_WU_WHONG,         //杀第五位红
+
+	//杀极距
+	void ExecShaJiJu();
+
+	//杀第二位
+	void ExecShaDiErWei();
+
+	//杀第三位
+	void ExecShaDiSanWei();
+
+	//杀第四位
+	void ExecShaDiSiWei();
+
+	//杀第五位
+	void ExecShaDiWuWei();
+
 private:
 
 	//整形转化到字符串
