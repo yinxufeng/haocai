@@ -307,7 +307,7 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					  continue;
 				  }
 
-				  if(it->first == "胆V或")
+				  if(it->first.Find("胆V或") != -1)
 				  {
 					  WantCount++;
 					  bool IsWant=false;
@@ -383,6 +383,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						RealWantCount++;
 					  continue;
 				  }
+
+				  if(it->first.Find("定胆或") != -1)
+				  {
+					  WantCount++;
+					  int QieCount=0;
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]];
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 QieCount++;
+								 break;
+							  }
+						  }
+					  }
+
+					  if(QieCount > 0 )
+						RealWantCount++;
+					  continue;
+				  }
 				 
 				  if(it->first.Find("杀胆V") != -1)
 				  {
@@ -428,6 +450,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					  continue;
 				  }
 
+
+				  if(it->first.Find("红一杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[1]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
 
 				  if(it->first.Find("红一大于") != -1)
 				  {
@@ -495,6 +539,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   continue;
 				  }
 
+				  if(it->first.Find("红二杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[2]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
 				  if(it->first.Find("红二小于") != -1)
 				  {
 					  WantCount++;
@@ -519,7 +585,7 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 
 
-				    if(it->first.Find("红三大于") != -1)
+				   if(it->first.Find("红三大于") != -1)
 				  {
 					  WantCount++;
 					  bool IsWant=false;
@@ -530,6 +596,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						  if(TempData > it->second[j])
 						  {
 							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红三杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[3]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
 							  break;
 						  }
 
@@ -565,7 +653,7 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 
 
-				    if(it->first.Find("红四大于") != -1)
+				  if(it->first.Find("红四大于") != -1)
 				  {
 					  WantCount++;
 					  bool IsWant=false;
@@ -576,6 +664,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						  if(TempData > it->second[j])
 						  {
 							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红四杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[4]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
 							  break;
 						  }
 
@@ -633,6 +743,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   continue;
 				  }
 
+				  if(it->first.Find("红五杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[5]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
 				  if(it->first.Find("红五小于") != -1)
 				  {
 					  WantCount++;
@@ -657,7 +789,7 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 
 
-				    if(it->first.Find("红六大于") != -1)
+				   if(it->first.Find("红六大于") != -1)
 				  {
 					  WantCount++;
 					  bool IsWant=false;
@@ -701,6 +833,103 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   continue;
 				  }
 
+				  if(it->first.Find("红六杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[6]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("极距杀") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=true;
+					  int TempData=MapData["球数"][order[6]]-MapData["球数"][order[1]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				
+				  if(it->first.Find("胆组") != -1)
+				  {
+					  int EqualCount=0;
+					  if(it->first.Find("胆组1") != -1)
+						  EqualCount=1;
+					  else if(it->first.Find("胆组2") != -1)
+						  EqualCount=2;
+					  else if(it->first.Find("胆组3") != -1)
+						  EqualCount=3;
+					   else if(it->first.Find("胆组4") != -1)
+						  EqualCount=4;
+					   else if(it->first.Find("胆组5") != -1)
+						  EqualCount=5;
+					   else
+						  EqualCount=6;
+
+					   bool IsXiaoYu=false;
+					   if(it->first.Find("-") != -1)
+					   {
+						   IsXiaoYu=true;
+					   }
+
+					  WantCount++;
+					  int QieCount=0;
+					  for(int i=1; i<=m; i++)      
+					  {
+						  int TempData=MapData["球数"][order[i]];
+						  for(int j=0; j < it->second.size();j++)
+						  {
+							  if(TempData == it->second[j])
+							  {
+								 QieCount++;
+								 break;
+							  }
+						  }
+					  }
+
+					  if(IsXiaoYu)
+					  {
+						  if(QieCount <= EqualCount && QieCount > 0)
+								RealWantCount++;
+					  }else
+					  {
+						   if(QieCount == EqualCount )
+								RealWantCount++;
+					  }
+
+					
+					  continue;
+				  }
+
+
 
 
 
@@ -719,7 +948,7 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					}
 
 				   CString LanQiu;
-				   LanQiu.Format("%02d",MapData["蓝球"][0]);
+				   LanQiu.Format("%02d",MapData["篮球"][0]);
 				   OutStr+=LanQiu;
 				   OutStr+="\r\n";
 				   WriteStr+=OutStr;
