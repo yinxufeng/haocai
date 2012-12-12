@@ -2161,6 +2161,43 @@ bool CDataManageCenter::IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiSh
 	return Ret;
 }
 
+//球是否在红球区间中
+bool CDataManageCenter::IsHongQiuQuJianInData(sShuangSeQiu QiuData,int BeginData,int EndData,int WeiShu,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if( Index == WeiShu && QiuData.m_HongQiu[Index] >=BeginData &&QiuData.m_HongQiu[Index] <= EndData)
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(Index ==WeiShu && QiuData.m_HongQiu[Index]%10 >= BeginData%10 && QiuData.m_HongQiu[Index]%10 <= EndData%10 )
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+//球是否等于极距中
+bool CDataManageCenter::IsHongJiJuInData(sShuangSeQiu QiuData,int Data)
+{
+	int TempData = abs(QiuData.m_HongQiu[5] - QiuData.m_HongQiu[0]) ;
+	if(Data == TempData)
+		return true;
+
+	return false;
+}
 
 //球是否在篮球中
 bool CDataManageCenter::IsLanQiuInData(sShuangSeQiu QiuData,int Data,bool IsV)

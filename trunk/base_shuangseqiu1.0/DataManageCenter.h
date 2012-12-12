@@ -150,6 +150,12 @@ public:
 	//球是否在位数中
 	static bool IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV=false);
 
+	//球是否在红球区间中
+	static bool IsHongQiuQuJianInData(sShuangSeQiu QiuData,int BeginData,int EndData,int WeiShu,bool IsV=false);
+
+	//球是否等于极距中
+	static bool IsHongJiJuInData(sShuangSeQiu QiuData,int Data);
+
 	//红球同出
 	static bool IsHongQiuTongChu(sShuangSeQiu QiuData,vector<int> Data,bool IsV=false);
 
