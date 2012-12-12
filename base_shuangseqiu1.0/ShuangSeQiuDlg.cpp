@@ -332,6 +332,14 @@ void CShuangSeQiuDlg::InitShaMap()
 	m_MapList["狂杀凤尾"]=FORMULA_SHA_FENG_WEI;
 	m_MapList["尾不同出"]=FORMULA_WEI_BU_TONG_CHU;
 	m_MapList["定红V"]=FORMULA_DING_HONG_WEI;
+	m_MapList["杀极距"]=FORMUAL_SHA_JI_JU;
+	m_MapList["杀第一位"]=FORMUAL_SHA_DI_YI_HONG;
+	m_MapList["杀第二位"]=FORMUAL_SHA_DI_ER_HONG;
+	m_MapList["杀第三位"]=FORMUAL_SHA_DI_SAN_HONG;
+	m_MapList["杀第四位"]=FORMUAL_SHA_DI_SI_HONG;
+	m_MapList["杀第五位"]=FORMUAL_SHA_DI_WU_HONG;
+	m_MapList["杀第六位"]=FORMUAL_SHA_DI_LIU_HONG;
+	//m_MapList["第一位区间"]=FORMUAL_DI_YI_HONG_QU_JIAN;
 }
 
 //初始化列表头

@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoLanQiu, CDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CDlgLianHaoLanQiu::OnCbnSelchangeCombo1)
 	ON_BN_CLICKED(IDC_JINGXUAN_BTN, &CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn)
 	ON_BN_CLICKED(IDC_ZIDONG_BTN, &CDlgLianHaoLanQiu::OnBnClickedZidongBtn)
+	ON_BN_CLICKED(IDC_TONGJI_BTN, &CDlgLianHaoLanQiu::OnBnClickedTongjiBtn)
 END_MESSAGE_MAP()
 
 
@@ -434,6 +435,7 @@ void CDlgLianHaoLanQiu::OnBnClickedNextBtn()
 void CDlgLianHaoLanQiu::OnBnClickedButton5()
 {
 	m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(m_FormulaType);
+	
 	m_CurrentIndex=0;
 	FillData(m_FormulaInfoList);
 	UpdateBtnStatus();
@@ -499,174 +501,10 @@ void CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn()
 void CDlgLianHaoLanQiu::OnBnClickedZidongBtn()
 {
 	
-		//CString FilePath2 = GetAppCurrentPath()+_T("\\zidongfenxi.txt");
-
-		//HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
-		//if(FileHandle2 == INVALID_HANDLE_VALUE)
-		//{
-		//	AfxMessageBox(_T("打开文件失败！"));
-		//	return;
-		//}
-		//	
-		//vector<sFormulaInfo> InfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMULA_SHA_LAN);
-		//vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
-		//int DataSize = DataList->size();
-		//int Offset=18;
-
-		//CString StrArray[9]={"球在        一页里：",
-		//	"球在        二页里：",
-		//	"球在        三页里：",
-		//	"球在     一 二页里：",
-		//	"球在     一 三页里：",
-		//	"球在     二 三页里：",
-		//	"球在  一 二 三页里：",
-		//	"球不在一 二 三页里：",
-		//	"综合"};
-		//for(int Index = 0; Index < DataSize; Index++)
-		//{
-		//	int TeArray1[50];
-		//	int TeArray2[50];
-		//	int TeArray3[50];
-		//	int TeArray4[50];
-		//	memset(TeArray1,0,sizeof(int)*50);
-		//	memset(TeArray2,0,sizeof(int)*50);
-		//	memset(TeArray3,0,sizeof(int)*50);
-		//	memset(TeArray4,0,sizeof(int)*50);
-
-		//	for(int i = 0 ; i <InfoList.size(); i++)
-		//	{
-		//		if(InfoList[i].m_DataList.empty())
-		//			continue;
-
-		//		int TempData=atoi(InfoList[i].m_DataList[Index].m_Data.GetBuffer());
-		//		TeArray4[TempData]++;
-
-		//		if(i < Offset)
-		//		{
-		//			TeArray1[TempData]++;
-		//		}
-		//		else if( i >= Offset && i < 2*Offset)
-		//		{
-		//			TeArray2[TempData]++;
-
-		//		}
-		//		else
-		//			TeArray3[TempData]++;
-		//	}
-
-
-		//	int TempArray[8][50];
-		//	memset(TempArray,0,8*50*sizeof(int));
-
-		//	for(int j=0; j < 50; j++)
-		//	{
-		//		//特在一组里
-		//		if(TeArray1[j] && !TeArray2[j] && !TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[0][TempData]++;
-		//		}
-
-		//		//特在二组里
-		//		if(TeArray2[j] && !TeArray1[j] && !TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[1][TempData]++;
-		//		}
-
-		//		//特在三 组里
-		//		if(TeArray2[j] && TeArray1[j] && TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[2][TempData]++;
-		//		}
-
-
-		//		//特在一 二组里
-		//		if(TeArray1[j] && TeArray2[j] && !TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[3][TempData]++;
-		//		}
-
-		//		//特在一 三组里
-		//		if(TeArray1[j] && !TeArray2[j] && TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[4][TempData]++;
-		//		}
-
-		//		//特在二 三 组里
-		//		if(TeArray2[j] && !TeArray1[j] && TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[5][TempData]++;
-		//		}
-
-		//		//特在一 二 三 组里
-		//		if(TeArray1[j] && TeArray2[j] && TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[6][TempData]++;
-		//		}
-
-		//		//特不再在一 二 三 组里
-		//		if(!TeArray1[j] && !TeArray2[j] && !TeArray3[j])
-		//		{
-		//			int TempData = j;
-		//			TempArray[7][TempData]++;
-		//		}
-
-		//	}
-
-
-		//	CString TongJi;
-		//	int TempTest[50];
-		//	memset(TempTest,0,sizeof(int)*50);
-		//	CString WriteStr;
-		//	if(Index == DataSize-1)
-		//	{
-		//		WriteStr="下期预测：\r\n";
-		//	}
-		//	else
-		//	{
-		//		CString TeStr;
-		//		TeStr.Format(" 篮球 %02d",(*DataList)[Index+1].m_LanQiu);
-		//		WriteStr=(*DataList)[Index+1].m_QiShu+"期"+TeStr+"：\r\n";
-		//	}
-
-		//	for(int i=0; i < 8; i++)
-		//	{
-		//		int Count=0;
-		//		CString Str;
-		//		for(int j=0; j < 50; j++)
-		//		{
-		//			CString Temp;
-		//			if(TempArray[i][j])
-		//			{
-		//				Temp.Format("%02d ",j);
-		//				Str+=Temp;
-		//				TempTest[j]++;
-		//				Count++;
-
-		//			}
-		//		}
-
-		//		CString CountStr;
-		//		CountStr.Format("个数 %02d：",Count);
-
-		//		CString TempStr=StrArray[i]+CountStr+Str+"\r\n";
-		//		WriteStr+=TempStr;
-		//	}
-
-		//	WriteStr+="\r\n\r\n";
-		//	DWORD WriteBytes=0;
-		//	::WriteFile(FileHandle2,WriteStr.GetBuffer(),WriteStr.GetLength(),&WriteBytes,NULL);
-
-		//}	
-		//
-		//CloseHandle(FileHandle2);
-		//ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
+	m_CurrentIndex=0;
+	m_FormulaInfoList=AutoFindJiXian(m_FormulaInfoList);
+	FillData(m_FormulaInfoList);
+	UpdateBtnStatus();
 }
 
 //设置窗口标题
@@ -678,6 +516,13 @@ void CDlgLianHaoLanQiu::SetWondowsTitle(CString Title,eFormulaType Type)
 		SetWindowText(Title);
 		m_ListCtrl.DeleteAllItems();
 		OnBnClickedJingxuanBtn();
+
+		if(m_FormulaType >= FORMUAL_SHA_JI_JU && m_FormulaType <=FORMUAL_SHA_DI_LIU_HONG)
+		{
+			GetDlgItem(IDC_TONGJI_BTN)->EnableWindow(true);
+		}
+		else
+			GetDlgItem(IDC_TONGJI_BTN)->EnableWindow(false);
 
 	}
 }
@@ -704,4 +549,249 @@ COLORREF CDlgLianHaoLanQiu::GetColor(int Data)
 	/*default:
 		return RGB(248,183,173);*/
 	}
+}
+
+//自动寻找极限
+vector<sFormulaInfo> CDlgLianHaoLanQiu::AutoFindJiXian(vector<sFormulaInfo>& FormulList)
+{
+	vector<sFormulaInfo> WantList;
+	for(int Index = 0; Index < FormulList.size(); Index++)
+	{
+
+		bool IsWant=false;
+		int Count=FormulList[Index].m_ErrorCount+FormulList[Index].m_TrueCount;
+		if(Count > 0 && (FormulList[Index].m_TrueCount*100)/Count > 98 )
+		{
+			WantList.push_back(FormulList[Index]);
+			continue;
+		}
+
+
+		int TrueCount = 0;
+		int ErrorCount=0;
+
+
+
+		sFormulaInfo Formula = FormulList[Index];
+		for(int i = Formula.m_DataList.size()-2; i >= 0; i--)
+		{
+			if(i <  0 )
+				break;
+
+			
+			bool IsTrue=Formula.m_DataList[ Formula.m_DataList.size()-2].m_IsTrue;
+			if(!IsTrue)
+			{
+				if(!Formula.m_DataList[i].m_IsTrue)
+				{
+					ErrorCount++;
+					continue;
+				}
+			}
+			else
+			{
+				if(Formula.m_DataList[i].m_IsTrue)
+				{
+					TrueCount++;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+		/*if(TrueCount)
+		{
+			if(TrueCount > ( Formula.m_MinLianDuiCount+2) && TrueCount < ( Formula.m_MaxLianDuiCount-3))
+			{
+				WantList.push_back(Formula);
+		    	continue;
+			}
+		}*/
+
+		if(ErrorCount)
+		{
+			if(ErrorCount >= Formula.m_MaxLianCuoCount)
+			{
+				WantList.push_back(Formula);
+		    	continue;
+			}
+
+		}
+	}
+
+	return WantList;
+
+}
+
+//统计错误信息
+void CDlgLianHaoLanQiu::TongJiErrorInfo()
+{
+
+	CString FilePath=GetAppCurrentPath()+_T("error_tongji.txt");
+	
+	DWORD Flag = CREATE_ALWAYS;
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+		return;
+
+	CString FilePath2=GetAppCurrentPath()+_T("true_tongji.txt");
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+		return;
+
+	
+
+	CString Title;
+	GetWindowText(Title);
+	Title+=_T("\r\n");
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle,Title.GetBuffer(),Title.GetLength(),&WriteBytes,NULL);
+	Title.ReleaseBuffer();
+	::WriteFile(FileHandle2,Title.GetBuffer(),Title.GetLength(),&WriteBytes,NULL);
+	Title.ReleaseBuffer();
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+
+	int DataSize = DataList->size();
+	for(int Index = 1; Index < DataSize+1; Index++)
+	{
+		CString WriteLine= Index + 1 > DataSize ? "下期               ":(*DataList)[Index].ToString()+_T("             ");
+		CString WriteLine2=Index + 1 > DataSize ? "下期                             ":(*DataList)[Index].ToString()+_T("     ");
+
+		map<CString,vector<CString>> MapData;
+
+		int ErrorCount=0;
+		int ErrorSize=0;
+		CString ErrorDataStr;
+
+		for(int i=0; i < m_FormulaInfoList.size(); i++)
+		{
+			if(!m_FormulaInfoList[i].m_DataList[Index-1].m_IsTrue && Index != DataSize)
+			{
+				CString Str;
+				Str.Format("%s ",m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi);
+
+				for(int j=Str.GetLength(); j < 10; j++)
+					Str+=_T(" ");
+
+				int Data=atoi(m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi.GetBuffer());
+				m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi.ReleaseBuffer();
+				ErrorCount+=Data;
+				ErrorSize++;
+				ErrorDataStr=m_FormulaInfoList[i].m_DataList[Index-1].m_Data;
+				WriteLine+=Str;
+
+			}
+			else
+				MapData[m_FormulaInfoList[i].m_DataList[Index-1].m_Data].push_back(m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi);
+
+		}
+
+		map<CString,vector<CString>>::iterator it = MapData.begin(); 
+		for(it ; it != MapData.end(); it++)
+		{
+			int AllData=0;
+			for(int k=0; k < it->second.size(); k++)
+			{
+				int Data=atoi(it->second[k].GetBuffer());
+				it->second[k].ReleaseBuffer();
+				AllData+=Data;
+			}
+
+			int ArgvData=AllData/it->second.size();
+
+			
+
+			CString TempStr;
+			TempStr.Format("%02d",ArgvData);
+			for(int i=TempStr.GetLength(); i < 4; i++)
+					TempStr+=_T(" ");
+
+			WriteLine2+=TempStr;
+
+		}
+
+		CString ErrorStr;
+		if(ErrorSize > 0)
+			ErrorStr.Format("    %s ：%02d",ErrorDataStr,ErrorCount/ErrorSize);
+		else
+			ErrorStr.Format("   %s",ErrorDataStr);
+
+
+		WriteLine2+=ErrorStr+_T("\r\n");
+		WriteLine+=ErrorStr+_T("\r\n");
+
+	    WriteBytes=0;
+		::WriteFile(FileHandle,WriteLine.GetBuffer(),WriteLine.GetLength(),&WriteBytes,NULL);
+		WriteLine.ReleaseBuffer();
+		::WriteFile(FileHandle2,WriteLine2.GetBuffer(),WriteLine2.GetLength(),&WriteBytes,NULL);
+		WriteLine2.ReleaseBuffer();
+	}
+
+
+	CloseHandle(FileHandle);
+	CloseHandle(FileHandle2);
+	ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
+}
+
+////统计公式信息
+//void CFormulaCenter::ToJiFormulaInfo(sFormulaInfo& Formula)
+//{
+//	int                    MaxLianCuoCount=0;    
+//	int                    MaxLianDuiCount=0;      
+//	int                    MinLianCuoCount=0;      
+//	int                    MinLianDuiCount=0;    
+//	int                    ErrorCount=0;      
+//	int                    TrueCount = 0;
+//	bool                   LastStatus=false;  
+//
+//
+//	int                    TempLianCuoCount=0;    
+//	int                    TempLianDuiCount=0; 
+//
+//
+//
+//	for(int Index = 0; Index < Formula.m_DataList.size(); Index++)
+//	{
+//		if(Formula.m_DataList[Index].m_IsTrue)
+//		{
+//			TrueCount++;
+//			if(MaxLianCuoCount < TempLianCuoCount)
+//				MaxLianCuoCount = TempLianCuoCount;
+//			else if(MinLianCuoCount > TempLianCuoCount)
+//				MinLianCuoCount = TempLianCuoCount;
+//			TempLianCuoCount=0;
+//			TempLianDuiCount++;
+//		}
+//		else
+//		{
+//			ErrorCount++;
+//			if(MaxLianDuiCount < TempLianDuiCount)
+//				MaxLianDuiCount = TempLianDuiCount;
+//			else if(MinLianDuiCount > TempLianDuiCount)
+//				MinLianDuiCount = TempLianDuiCount;
+//			TempLianDuiCount=0;
+//
+//			TempLianDuiCount  = 0;
+//			TempLianCuoCount++;
+//		}
+//
+//		if(Index == Formula.m_DataList.size()-2)
+//			LastStatus = Formula.m_DataList[Index].m_IsTrue;
+//	}
+//
+//	Formula.m_ErrorCount      = ErrorCount;
+//	Formula.m_TrueCount       = TrueCount;
+//	Formula.m_MaxLianCuoCount = MaxLianCuoCount;
+//	Formula.m_MinLianCuoCount = MinLianCuoCount;
+//	Formula.m_MaxLianDuiCount = MaxLianDuiCount;
+//	Formula.m_MaxLianCuoCount = MaxLianCuoCount;
+//	Formula.m_LastStatus      = LastStatus;
+//
+//}
+void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
+{
+	TongJiErrorInfo();
 }

@@ -47,10 +47,21 @@ enum eFormulaType
 	FORMULA_WEI_BU_TONG_CHU     ,    //尾不同出
 
 	FORMUAL_SHA_JI_JU,               //杀极距
+	FORMUAL_SHA_DI_YI_HONG,          //杀第一位红
 	FORMUAL_SHA_DI_ER_HONG,          //杀第二位红
 	FORMUAL_SHA_DI_SAN_HONG,         //杀第三位红
 	FORMUAL_SHA_DI_SI_HONG,          //杀第四位红
-	FORMUAL_SHA_DI_WU_WHONG,         //杀第五位红
+	FORMUAL_SHA_DI_WU_HONG,          //杀第五位红
+	FORMUAL_SHA_DI_LIU_HONG,         //杀第六位红
+
+	
+	FORMUAL_DI_YI_HONG_QU_JIAN,         //第一红波动区间
+	FORMUAL_DI_ER_HONG_QU_JIAN,         //第二红波动区间
+	FORMUAL_DI_SAN_HONG_QU_JIAN,        //第三红波动区间
+	FORMUAL_DI_SI_HONG_QU_JIAN,         //第四红波动区间
+	FORMUAL_DI_WU_HONG_QU_JIAN,         //第五红波动区间
+	FORMUAL_DI_LIU_HONG_QU_JIAN,        //第六红波动区间
+
 };
 
 //公式描述数据
@@ -59,6 +70,7 @@ struct sFormulaData
 	CString m_Data;            //描述数据
 	bool    m_IsTrue;          //是否正确
 	CString m_QiShu;           //期数
+	CString m_TrueBaiFenBi;    //正确百分比
 
 	sFormulaData()
 	{
@@ -181,6 +193,9 @@ private:
 	//杀极距
 	void ExecShaJiJu();
 
+	//杀第一位
+	void ExecShaDiYiWei();
+
 	//杀第二位
 	void ExecShaDiErWei();
 
@@ -192,6 +207,30 @@ private:
 
 	//杀第五位
 	void ExecShaDiWuWei();
+
+	//杀第六位
+	void ExecShaDiLiuWei();
+
+
+	//第一位波动区间
+	void ExecDiYiBoDongQuJian();
+
+	//第二位波动区间
+	void ExecDiErBoDongQuJian();
+
+	//第三位波动区间
+	void ExecDiSanBoDongQuJian();
+
+	//第四位波动区间
+	void ExecDiSiBoDongQuJian();
+
+	//第五位波动区间
+	void ExecDiWuBoDongQuJian();
+
+	//第六位波动区间
+	void ExecDiLiuBoDongQuJian();
+
+
 
 private:
 
@@ -210,6 +249,9 @@ private:
 	//获取尾值和
 	int GetWeiZhiCount(int DataList[],int Count);
 
+	//运行区间公式
+	void RunQuJianFormula(eFormulaType FormulaType);
+
 
 	CFormulaCenter(void);
 
@@ -217,7 +259,6 @@ private:
 
 	//公式运算
 	void RunFormula();
-
 
 private:
 

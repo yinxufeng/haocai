@@ -37,6 +37,13 @@ protected:
 
 	void FillData(vector<sFormulaInfo>& FormulList);
 
+    //自动寻找极限
+	vector<sFormulaInfo> AutoFindJiXian(vector<sFormulaInfo>& FormulList);
+
+	//统计错误信息
+	void TongJiErrorInfo();
+
+
 	//获取颜色值
 	COLORREF GetColor(int Data);
 private:
@@ -62,4 +69,5 @@ public:
 
 	afx_msg void OnBnClickedJingxuanBtn();
 	afx_msg void OnBnClickedZidongBtn();
+	afx_msg void OnBnClickedTongjiBtn();
 };

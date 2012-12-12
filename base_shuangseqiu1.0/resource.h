@@ -23,6 +23,7 @@
 #define IDD_SHUANGSEQIU_NET_PARSE       142
 #define IDD_SHUANGSEQIU_DIALOG11        143
 #define IDD_DLG_WEI_LAN                 143
+#define IDD_DRAW_TIAO_XING_DLG          144
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
@@ -136,14 +137,15 @@
 #define IDC_PARSE_RESULT_ST             1076
 #define IDC_EXEC_BTN                    1077
 #define IDC_JIXIAN_BTN                  1078
+#define IDC_TONGJI_BTN                  1079
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1079
+#define _APS_NEXT_CONTROL_VALUE         1080
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

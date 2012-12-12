@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgDrawTiaoXing.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgFourEqual.cpp"
 				>
 			</File>
@@ -313,6 +317,10 @@
 			</File>
 			<File
 				RelativePath=".\DlgDingHongWei.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DlgDrawTiaoXing.h"
 				>
 			</File>
 			<File
