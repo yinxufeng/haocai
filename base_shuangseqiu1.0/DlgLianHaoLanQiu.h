@@ -1,5 +1,6 @@
 #pragma once
 #include "FormulaCenter.h"
+#include "DlgDrawTiaoXing.h"
 #include "afxwin.h"
 
 // CDlgLianHaoLanQiu 对话框
@@ -41,7 +42,7 @@ protected:
 	vector<sFormulaInfo> AutoFindJiXian(vector<sFormulaInfo>& FormulList);
 
 	//统计错误信息
-	void TongJiErrorInfo();
+	void TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo);
 
 
 	//获取颜色值
@@ -51,6 +52,7 @@ private:
 	CListCtrlEx m_ListCtrl;
 	BOOL      m_IsInitData;
 	CComboBox m_ComboBox;
+	CDlgDrawTiaoXing m_DlgDrawTiaoXing;
 	int       m_CurrentIndex;
 	vector<sFormulaInfo> m_FormulaInfoList;
 	eFormulaType         m_FormulaType;

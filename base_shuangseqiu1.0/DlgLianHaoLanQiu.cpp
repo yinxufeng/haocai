@@ -30,6 +30,7 @@ CString GetAppCurrentPath3()
 extern CString GetAppCurrentPath();
 
 
+
 IMPLEMENT_DYNAMIC(CDlgLianHaoLanQiu, CDialog)
 
 CDlgLianHaoLanQiu::CDlgLianHaoLanQiu(CWnd* pParent /*=NULL*/)
@@ -156,6 +157,9 @@ BOOL CDlgLianHaoLanQiu::OnInitDialog()
 	m_ComboBox.InsertString(12,"球区间");
 
 	m_ComboBox.SetCurSel(0);
+
+	m_DlgDrawTiaoXing.Create(CDlgDrawTiaoXing::IDD,this);
+	m_DlgDrawTiaoXing.ShowWindow(SW_HIDE);
 	CenterWindow();
 	return true;
 }
@@ -626,7 +630,7 @@ vector<sFormulaInfo> CDlgLianHaoLanQiu::AutoFindJiXian(vector<sFormulaInfo>& For
 }
 
 //统计错误信息
-void CDlgLianHaoLanQiu::TongJiErrorInfo()
+void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 {
 
 	CString FilePath=GetAppCurrentPath()+_T("error_tongji.txt");
@@ -654,7 +658,12 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo()
 
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 
+
+
 	int DataSize = DataList->size();
+
+	
+
 	for(int Index = 1; Index < DataSize+1; Index++)
 	{
 		CString WriteLine= Index + 1 > DataSize ? "下期               ":(*DataList)[Index].ToString()+_T("             ");
@@ -666,8 +675,11 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo()
 		int ErrorSize=0;
 		CString ErrorDataStr;
 
+
 		for(int i=0; i < m_FormulaInfoList.size(); i++)
 		{
+
+
 			if(!m_FormulaInfoList[i].m_DataList[Index-1].m_IsTrue && Index != DataSize)
 			{
 				CString Str;
@@ -684,34 +696,54 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo()
 				WriteLine+=Str;
 
 			}
-			else
-				MapData[m_FormulaInfoList[i].m_DataList[Index-1].m_Data].push_back(m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi);
+			
+			
+			MapData[m_FormulaInfoList[i].m_DataList[Index-1].m_Data].push_back(m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi);
 
 		}
 
+
+		sDrawInfoList DrawInfoList;
+		DrawInfoList.m_QiShu = Index + 1 > DataSize ? "下期 ":(*DataList)[Index].m_QiShu;
+		
 		map<CString,vector<CString>>::iterator it = MapData.begin(); 
 		for(it ; it != MapData.end(); it++)
 		{
+			sDrawDataInfo DrawData;
+
 			int AllData=0;
 			for(int k=0; k < it->second.size(); k++)
 			{
 				int Data=atoi(it->second[k].GetBuffer());
+				DrawData.m_InfoList.push_back(it->second[k]);
 				it->second[k].ReleaseBuffer();
 				AllData+=Data;
 			}
 
 			int ArgvData=AllData/it->second.size();
+			
 
 			
 
 			CString TempStr;
 			TempStr.Format("%02d",ArgvData);
+			DrawData.m_DrawText = TempStr;
+
+			if(it->first ==ErrorDataStr)
+				DrawData.m_IsTrue = false;
+			else
+				DrawData.m_IsTrue = true;
+
 			for(int i=TempStr.GetLength(); i < 4; i++)
 					TempStr+=_T(" ");
+
+			DrawInfoList.m_DrawDataList.push_back(DrawData);
 
 			WriteLine2+=TempStr;
 
 		}
+
+		DrawAllInfo.push_back(DrawInfoList);
 
 		CString ErrorStr;
 		if(ErrorSize > 0)
@@ -733,7 +765,9 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo()
 
 	CloseHandle(FileHandle);
 	CloseHandle(FileHandle2);
-	ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
+
+	return ;
+	//ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }
 
 ////统计公式信息
@@ -793,5 +827,17 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo()
 //}
 void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 {
-	TongJiErrorInfo();
+	static eFormulaType  FormualType=(eFormulaType)-1;
+	CString Title;
+	GetWindowText(Title);
+
+	if(FormualType != m_FormulaType)
+	{
+		vector<sDrawInfoList> DrawAllInfo;
+		TongJiErrorInfo(DrawAllInfo);
+		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title);
+		FormualType=m_FormulaType;
+	}
+
+	m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
 }
