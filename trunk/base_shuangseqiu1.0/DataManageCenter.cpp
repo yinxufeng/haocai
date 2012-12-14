@@ -1277,7 +1277,13 @@ sShuangSeQiu CDataManageCenter::GetShuangSeQiuByStr(CString& StrData)
 
 		if(Index == 0)
 		{
-			ShuangSeQiu.m_QiShu = StrData.Mid(StartPos,EndPos-StartPos);
+			CString QiShuStr=StrData.Mid(StartPos,EndPos-StartPos);
+			int QiShu=atoi(QiShuStr.GetBuffer());
+			QiShuStr.ReleaseBuffer();
+			QiShuStr.Empty();
+			
+			QiShuStr.Format("%d",QiShu);
+			ShuangSeQiu.m_QiShu = QiShuStr;
 		}
 		else if(Index == 7)
 		{

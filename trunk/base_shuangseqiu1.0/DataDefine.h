@@ -239,3 +239,27 @@ public:
 #define ZISE    RGB(112,48,160)                //紫色
 #define WRITE   RGB(255,255,255)               //白色
 #define RED     RGB(255,0,0)                   //红色
+
+
+
+/*********************条形数据描述************************/
+
+//绘制数据
+struct sDrawDataInfo
+{
+	bool            m_IsTrue;         //是否正确
+	CString         m_DrawText;       //绘制文本
+	CString         m_Data;           //数据
+	vector<CString> m_InfoList;       //绘制详情
+};
+
+
+//绘制数据列表
+struct sDrawInfoList
+{
+	CString m_QiShu;                              //期数
+	vector<sDrawDataInfo>      m_DrawDataList;    //数据列表
+};
+
+
+/*********************条形数据描述************************/
