@@ -473,6 +473,29 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   continue;
 				  }
 
+				   if(it->first.Find("红一") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[1]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+
 				  if(it->first.Find("红一大于") != -1)
 				  {
 					  WantCount++;
@@ -561,6 +584,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   continue;
 				  }
 
+				   if(it->first.Find("红二") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[2]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
 				  if(it->first.Find("红二小于") != -1)
 				  {
 					  WantCount++;
@@ -618,6 +663,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						  if(TempData == it->second[j])
 						  {
 							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				   if(it->first.Find("红三") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[3]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
 							  break;
 						  }
 
@@ -697,6 +764,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					   continue;
 				  }
 
+				  if(it->first.Find("红四") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[4]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
 				  if(it->first.Find("红四小于") != -1)
 				  {
 					  WantCount++;
@@ -764,6 +853,30 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 					   continue;
 				  }
+
+				  
+				  if(it->first.Find("红五") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[5]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
 
 				  if(it->first.Find("红五小于") != -1)
 				  {
@@ -844,6 +957,28 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 						  if(TempData == it->second[j])
 						  {
 							  IsWant=false;
+							  break;
+						  }
+
+					  }
+
+					  if(IsWant)
+						RealWantCount++;
+
+					   continue;
+				  }
+
+				  if(it->first.Find("红六") != -1)
+				  {
+					  WantCount++;
+					  bool IsWant=false;
+					  int TempData=MapData["球数"][order[6]];
+				
+					  for(int j=0; j < it->second.size();j++)
+					  {
+						  if(TempData == it->second[j])
+						  {
+							  IsWant=true;
 							  break;
 						  }
 
@@ -1266,7 +1401,7 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 
 				  if(it->first.Find("合不同出") != -1)
 				  {
-					    WantCount++;
+					   WantCount++;
 					  bool IsWant=false;
 					  int TempArray[10];
 					  memset(TempArray,0,10*sizeof(int));
@@ -1342,12 +1477,16 @@ void CsuoshuiDlg::Combine(map<CString,vector<int>> MapData)
 					{
 						int TempData=MapData["球数"][order[i]];	
 						CString Temp;
-						Temp.Format("%02d ",TempData);
+						if(i == 1)
+							Temp.Format("%02d",TempData);
+						else
+							Temp.Format(" %02d",TempData);
 						OutStr+=Temp;
 					}
 
+				 
 				   CString LanQiu;
-				   LanQiu.Format("%02d",MapData["篮球"][0]);
+				   LanQiu.Format(":%02d",MapData["篮球"][0]);
 				   OutStr+=LanQiu;
 				   OutStr+="\r\n";
 				   WriteStr+=OutStr;
