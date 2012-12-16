@@ -521,7 +521,7 @@ void CDlgLianHaoLanQiu::SetWondowsTitle(CString Title,eFormulaType Type)
 		m_ListCtrl.DeleteAllItems();
 		OnBnClickedJingxuanBtn();
 
-		if(m_FormulaType >= FORMUAL_SHA_JI_JU && m_FormulaType <=FORMUAL_SHA_DI_LIU_HONG)
+		if(m_FormulaType >= FORMUAL_SHA_JI_JU && m_FormulaType <=FORMUAL_SHA_NEW_JIXIAN_LAN)
 		{
 			GetDlgItem(IDC_TONGJI_BTN)->EnableWindow(true);
 		}
@@ -835,7 +835,11 @@ void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 	{
 		vector<sDrawInfoList> DrawAllInfo;
 		TongJiErrorInfo(DrawAllInfo);
-		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title);
+		int TiaoXingCount=33;
+		if(m_FormulaType == FORMUAL_SHA_NEW_JIXIAN_LAN)
+			TiaoXingCount=16;
+
+		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount);
 		FormualType=m_FormulaType;
 	}
 

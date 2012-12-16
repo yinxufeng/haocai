@@ -147,6 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\嫣然一笑专用版.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"

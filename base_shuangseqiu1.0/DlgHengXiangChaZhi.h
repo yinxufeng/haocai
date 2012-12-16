@@ -44,4 +44,5 @@ private:
 	BOOL        m_IsInitData;
 public:
 	afx_msg void OnBnClickedSearchBtn();
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 };

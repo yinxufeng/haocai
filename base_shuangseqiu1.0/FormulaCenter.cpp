@@ -317,6 +317,8 @@ void CFormulaCenter::RunFormula()
 	ExecShaDiLiuWei();
 
 
+	//新极限杀蓝
+	ExecNewShaLan();
 
 
 	//第一位波动区间
@@ -3197,6 +3199,63 @@ void CFormulaCenter::ExecShaDiLiuWei()
 	}
 }
 
+//新极限杀蓝
+void CFormulaCenter::ExecNewShaLan()
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=16;
+
+	int RealCount=0;
+
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		for(int i=0; i< MODE_COUNT; i++)
+		{
+			for(int j=0; j < QIU_XUN; j++)
+			{
+				TempData = (*DataList)[Index-1].m_HongQiu[j]+i;
+				if(TempData > MODE_COUNT) TempData = TempData%MODE_COUNT;
+				if(TempData == 0)
+					TempData=MODE_COUNT;
+
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+
+		}
+
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("杀蓝_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = FORMUAL_SHA_NEW_JIXIAN_LAN;
+		ToJiFormulaInfo(FormualList[i]);
+		int TempData=FormualList[i].m_ErrorCount+FormualList[i].m_TrueCount;
+		m_MapFormulaInfo[FORMUAL_SHA_NEW_JIXIAN_LAN].push_back(FormualList[i]);
+	}
+
+}
+
 //运行区间公式
 void CFormulaCenter::RunQuJianFormula(eFormulaType FormulaType)
 {
@@ -3344,4 +3403,20 @@ void CFormulaCenter::ExecDiWuBoDongQuJian()
 void CFormulaCenter::ExecDiLiuBoDongQuJian()
 {
 	RunQuJianFormula(FORMUAL_DI_LIU_HONG_QU_JIAN);
+}
+
+
+//记录数据
+void CFormulaCenter::RecordDataToFile()
+{
+	/*vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	for(int Index=FORMUAL_SHA_DI_YI_HONG; Index <= FORMUAL_SHA_DI_LIU_HONG; Index++)
+	{
+		vector<sFormulaInfo> TempFormulaInfo=GetFormulaInfoByType((eFormulaType)Index);
+		int MinBaiFenBi=1000;
+		for(int i=0; i < TempFormulaInfo.size(); i++)
+		{
+			TempFormulaInfo[i].
+		}
+	}*/
 }

@@ -53,6 +53,7 @@ enum eFormulaType
 	FORMUAL_SHA_DI_SI_HONG,          //杀第四位红
 	FORMUAL_SHA_DI_WU_HONG,          //杀第五位红
 	FORMUAL_SHA_DI_LIU_HONG,         //杀第六位红
+	FORMUAL_SHA_NEW_JIXIAN_LAN,          //新极限杀蓝
 
 	
 	FORMUAL_DI_YI_HONG_QU_JIAN,         //第一红波动区间
@@ -211,6 +212,9 @@ private:
 	//杀第六位
 	void ExecShaDiLiuWei();
 
+	//新极限杀蓝
+	void ExecNewShaLan();
+
 
 	//第一位波动区间
 	void ExecDiYiBoDongQuJian();
@@ -252,6 +256,8 @@ private:
 	//运行区间公式
 	void RunQuJianFormula(eFormulaType FormulaType);
 
+	//记录数据
+	void RecordDataToFile();
 
 	CFormulaCenter(void);
 

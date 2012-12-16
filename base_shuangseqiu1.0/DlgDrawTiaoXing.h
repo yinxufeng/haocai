@@ -31,6 +31,7 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedPrevBtn();
 	afx_msg void OnBnClickedNextBtn();
 	afx_msg void OnBnClickedFirstBtn();
@@ -40,7 +41,7 @@ public:
 public:
 
 	//设置绘制数据
-	void SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title);
+	void SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount);
 
 private:
 
@@ -59,11 +60,16 @@ private:
 	//通过位置获取文本
 	CString GetTextByPoint(CPoint Point);
 
+	//通过位置获取索引
+	int GetIndexByPoint(CPoint Point);
+
 	//创建内存设备环境
 	void CreateMemDC();
 
 	//绘制图形
 	void Draw();
+
+	
 
 
 private:
@@ -78,7 +84,11 @@ private:
 
 	CString                m_DrawText;     //绘制文本信息
 	CPoint                 m_TextPoint;    //绘制文本位置
-    
+	int                    m_TiaoXingCount; //条形数
+
+	bool                   m_IsDrawSingle;
+	int                    m_SingleDrawIndex; //绘制单个索引
+	CRect                  m_SingleRect;      //单个的矩形绘制区域
 
 
 	CDC MemDC;

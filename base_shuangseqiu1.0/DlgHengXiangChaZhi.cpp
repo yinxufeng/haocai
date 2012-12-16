@@ -18,6 +18,7 @@ CDlgHengXiangChaZhi::CDlgHengXiangChaZhi(CWnd* pParent /*=NULL*/)
 {
 	m_IsInitData = false;
 
+
 }
 
 CDlgHengXiangChaZhi::~CDlgHengXiangChaZhi()
@@ -35,6 +36,7 @@ BEGIN_MESSAGE_MAP(CDlgHengXiangChaZhi, CDialog)
 	ON_WM_SHOWWINDOW()
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_SEARCH_BTN, &CDlgHengXiangChaZhi::OnBnClickedSearchBtn)
+	ON_WM_LBUTTONDBLCLK()
 END_MESSAGE_MAP()
 
 //初始化列表头
@@ -371,4 +373,11 @@ COLORREF CDlgHengXiangChaZhi::GetColor(int Data)
 	default:
 		return RGB(248,183,173);
 	}
+}
+
+void CDlgHengXiangChaZhi::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CDialog::OnLButtonDblClk(nFlags, point);
 }
