@@ -214,7 +214,7 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 		it++;
 	}
 
-	m_ShaComboBox.InsertString(Count,"极限杀蓝");
+	//m_ShaComboBox.InsertString(Count,"极限杀蓝");
 	m_ShaComboBox.SetCurSel(0);
 
 	CenterWindow();
@@ -339,6 +339,7 @@ void CShuangSeQiuDlg::InitShaMap()
 	m_MapList["杀第四位"]=FORMUAL_SHA_DI_SI_HONG;
 	m_MapList["杀第五位"]=FORMUAL_SHA_DI_WU_HONG;
 	m_MapList["杀第六位"]=FORMUAL_SHA_DI_LIU_HONG;
+	m_MapList["极限杀蓝"]=FORMUAL_SHA_NEW_JIXIAN_LAN;
 	//m_MapList["第一位区间"]=FORMUAL_DI_YI_HONG_QU_JIAN;
 }
 
@@ -1161,12 +1162,12 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 		}
 	}
 
-	if(Text == _T("极限杀蓝"))
-	{
-		m_DlgJiXianWeiLan.ShowWindow(SW_SHOW);
+	//if(Text == _T("极限杀蓝"))
+	//{
+	//	m_DlgJiXianWeiLan.ShowWindow(SW_SHOW);
 
-	}
-	
+	//}
+	//
 	//this->m_DlgShiFaDingHong.ShowWindow(SW_SHOW);
 }
 

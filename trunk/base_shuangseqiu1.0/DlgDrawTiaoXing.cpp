@@ -14,6 +14,9 @@ CDlgDrawTiaoXing::CDlgDrawTiaoXing(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgDrawTiaoXing::IDD, pParent)
 {
 	m_DrawIndex = 0;
+	m_TiaoXingCount=33;
+	m_IsDrawSingle=false;
+	m_SingleDrawIndex=0;
 }
 
 CDlgDrawTiaoXing::~CDlgDrawTiaoXing()
@@ -31,6 +34,7 @@ BEGIN_MESSAGE_MAP(CDlgDrawTiaoXing, CDialog)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDBLCLK()
 	ON_BN_CLICKED(IDC_PREV_BTN, &CDlgDrawTiaoXing::OnBnClickedPrevBtn)
 	ON_BN_CLICKED(IDC_NEXT_BTN, &CDlgDrawTiaoXing::OnBnClickedNextBtn)
 	ON_BN_CLICKED(IDC_FIRST_BTN, &CDlgDrawTiaoXing::OnBnClickedFirstBtn)
@@ -119,12 +123,18 @@ void CDlgDrawTiaoXing::DrawTiaoXing(CDC* pDC,CRect Rect,int DataIndex)
 	pDC->DrawText(Text,TextRect,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 	
 	vector<CRect> RectList=GetTiaoXingRect(TempRect);
+
 	for(int Index = 0; Index < RectList.size(); Index++)
 	{
 		CString Text=m_DrawData[DataIndex].m_DrawDataList[Index].m_DrawText;
 		int Height=atoi(Text.GetBuffer());
 		CRect TempRect= RectList[Index];
-		TempRect.top = TempRect.bottom- m_TiaoXingHeight*Height;
+		if(Height < 50)
+			TempRect.top = TempRect.bottom- m_TiaoXingHeight*Height;
+		else
+		{
+			TempRect.top = TempRect.bottom- 2*m_TiaoXingHeight*(Height-50);
+		}
 		if(m_DrawData[DataIndex].m_DrawDataList[Index].m_IsTrue)
 			pDC->FillSolidRect(TempRect,ZISE);
 		else
@@ -181,6 +191,9 @@ vector<CRect> CDlgDrawTiaoXing::GetTiaoXingRect(CRect Rect)
 	vector<CRect> RectList;
 
 	int WidthCount=33;
+	if(m_TiaoXingCount)
+		WidthCount=m_TiaoXingCount;
+
 	int HeightCount=100;
 	Rect.left+=3;
 	Rect.right-=3;
@@ -206,45 +219,73 @@ vector<CRect> CDlgDrawTiaoXing::GetTiaoXingRect(CRect Rect)
 //通过位置获取文本
 CString CDlgDrawTiaoXing::GetTextByPoint(CPoint Point)
 {
-	for(int Index = 0; Index < m_RectList.size(); Index++)
+	vector<CRect> RectList;
+	int TempIndex =0;
+	if(! m_IsDrawSingle )
 	{
-		if(m_RectList[Index].PtInRect(Point))
+		for(int Index = 0; Index < m_RectList.size(); Index++)
 		{
-			vector<CRect> RectList = GetTiaoXingRect(m_RectList[Index]);
-			for(int i=0; i < RectList.size(); i++)
+			if(m_RectList[Index].PtInRect(Point))
 			{
-				if(RectList[i].PtInRect(Point))
-				{
-					CString Text;
-					CString Title;
-					GetWindowText(Title);
-					Text.Format("%s 球：%02d  ",Title,i+1);
-
-					int TempIndex =m_DrawIndex - Index;
-					if(TempIndex >= 0 && TempIndex < m_DrawData.size())
-					{
-						CString TempText;
-						TempText.Format("平均：%s  综合：",m_DrawData[TempIndex].m_DrawDataList[i].m_DrawText);
-						Text+=TempText;
-						Text=m_DrawData[TempIndex].m_QiShu+" ： "+Text;
-						for(int j=0; j < m_DrawData[TempIndex].m_DrawDataList[i].m_InfoList.size();j++)
-						{
-							CString TempText2;
-							TempText2.Format("  %s  ",m_DrawData[TempIndex].m_DrawDataList[i].m_InfoList[j]);
-							Text+=TempText2;
-
-						}
-					}
-					return Text;
-				}
+				RectList= GetTiaoXingRect(m_RectList[Index]);
+				TempIndex =m_DrawIndex - Index;
+				break;
+				
 			}
-
 		}
 	}
+	else
+	{
+		RectList = GetTiaoXingRect(m_SingleRect);
+		TempIndex =m_SingleDrawIndex;
+	}
+
+
+	for(int i=0; i < RectList.size(); i++)
+	{
+		if(RectList[i].PtInRect(Point))
+		{
+			CString Text;
+			CString Title;
+			GetWindowText(Title);
+			Text.Format("%s 球：%02d  ",Title,i+1);
+
+			
+			if(TempIndex >= 0 && TempIndex < m_DrawData.size())
+			{
+				CString TempText;
+				TempText.Format("平均：%s  综合：",m_DrawData[TempIndex].m_DrawDataList[i].m_DrawText);
+				Text+=TempText;
+				Text=m_DrawData[TempIndex].m_QiShu+" ： "+Text;
+				for(int j=0; j < m_DrawData[TempIndex].m_DrawDataList[i].m_InfoList.size();j++)
+				{
+					CString TempText2;
+					TempText2.Format("  %s  ",m_DrawData[TempIndex].m_DrawDataList[i].m_InfoList[j]);
+					Text+=TempText2;
+
+				}
+			}
+			return Text;
+		}
+	}
+
 
 	return "";
 }
 
+//通过位置获取索引
+int CDlgDrawTiaoXing::GetIndexByPoint(CPoint Point)
+{
+	for(int Index = 0; Index < m_RectList.size(); Index++)
+	{
+		if(m_RectList[Index].PtInRect(Point))
+		{
+			return m_DrawIndex-Index;
+		}
+	}
+
+	return -1;
+}
 
 BOOL CDlgDrawTiaoXing::OnInitDialog()
 {
@@ -292,6 +333,30 @@ void CDlgDrawTiaoXing::OnMouseMove(UINT nFlags, CPoint point)
 
 }
 
+void CDlgDrawTiaoXing::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+
+	if(!m_IsDrawSingle)
+	{
+		m_SingleDrawIndex=GetIndexByPoint(point);
+		if(m_SingleDrawIndex >= 0 && m_SingleDrawIndex < m_DrawData.size())
+		{
+			m_IsDrawSingle=true;
+			Draw();
+		}
+		
+	}
+	else
+	{
+		m_IsDrawSingle=false;
+		Draw();
+	}
+	
+	CDialog::OnLButtonDblClk(nFlags, point);
+
+
+}
+
 //创建内存设备环境
 void CDlgDrawTiaoXing::CreateMemDC()
 {
@@ -314,14 +379,29 @@ void CDlgDrawTiaoXing::Draw()
 	MemDC.FillSolidRect(Rect,WRITE);
 	
 
-	for(int Index = 0; Index < m_RectList.size(); Index++)
+	if(!m_IsDrawSingle)
 	{
-		int TempIndex= m_DrawIndex-Index;
-		if(TempIndex < 0 || TempIndex >= m_DrawData.size())
-			break;
+		for(int Index = 0; Index < m_RectList.size(); Index++)
+		{
+			int TempIndex= m_DrawIndex-Index;
+			if(TempIndex < 0 || TempIndex >= m_DrawData.size())
+				break;
 
-		DrawFrame(&MemDC,m_RectList[Index],WRITE);
-		DrawTiaoXing(&MemDC,m_RectList[Index],TempIndex);
+			//DrawFrame(&MemDC,m_RectList[Index],WRITE);
+			DrawTiaoXing(&MemDC,m_RectList[Index],TempIndex);
+		}
+	}
+	else
+	{
+		CRect TempRect=Rect;
+		
+		TempRect.top +=30;
+		TempRect.bottom-=100;
+		TempRect.left+=200;
+		TempRect.right-=200;
+		m_SingleRect=TempRect;
+
+		DrawTiaoXing(&MemDC,TempRect,m_SingleDrawIndex);
 	}
 
 
@@ -360,9 +440,10 @@ void CDlgDrawTiaoXing::Draw()
 }
 
 //设置绘制数据
-void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title)
+void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount)
 {
 	m_DrawData = DrawAllInfo;
+	m_TiaoXingCount=TiaoXingCount;
 	SetWindowText(Title);
 	m_DrawIndex=DrawAllInfo.size()-1;
 	Draw();
@@ -370,13 +451,24 @@ void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Ti
 }
 void CDlgDrawTiaoXing::OnBnClickedPrevBtn()
 {
-	m_DrawIndex+=m_RectList.size();
-	if(m_DrawIndex >= m_DrawData.size())
-		m_DrawIndex=m_DrawData.size()-1;
+	if(!m_IsDrawSingle)
+	{
+		m_DrawIndex+=m_RectList.size();
+		if(m_DrawIndex >= m_DrawData.size())
+			m_DrawIndex=m_DrawData.size()-1;
 
-	int Count = m_DrawIndex+m_RectList.size();
-	if(Count >=m_DrawData.size()-1)
-		Count=m_DrawData.size()-1;
+		int Count = m_DrawIndex+m_RectList.size();
+		if(Count >=m_DrawData.size()-1)
+			Count=m_DrawData.size()-1;
+	}
+	else
+	{
+		m_SingleDrawIndex++;
+		if(m_SingleDrawIndex >= m_DrawData.size())
+			m_SingleDrawIndex=m_DrawData.size()-1;
+
+	}
+
 	
 	UpdateBtnStatus();
 	Invalidate();
@@ -384,14 +476,24 @@ void CDlgDrawTiaoXing::OnBnClickedPrevBtn()
 
 void CDlgDrawTiaoXing::OnBnClickedNextBtn()
 {
-	int Count=0;
-	m_DrawIndex-=m_RectList.size();
-	if(m_DrawIndex < 0)
-		m_DrawIndex=0;
+	if(!m_IsDrawSingle)
+	{
+		int Count=0;
+		m_DrawIndex-=m_RectList.size();
+		if(m_DrawIndex < 0)
+			m_DrawIndex=0;
 
-	Count= m_DrawIndex+m_RectList.size();
-	if(Count > m_DrawData.size())
-		Count=m_DrawData.size()-1;
+		Count= m_DrawIndex+m_RectList.size();
+		if(Count > m_DrawData.size())
+			Count=m_DrawData.size()-1;
+	}
+	else
+	{
+		m_SingleDrawIndex--;
+		if(m_SingleDrawIndex < 0)
+			m_SingleDrawIndex=0;
+
+	}
 
 	UpdateBtnStatus();
 
@@ -400,9 +502,18 @@ void CDlgDrawTiaoXing::OnBnClickedNextBtn()
 
 void CDlgDrawTiaoXing::OnBnClickedFirstBtn()
 {
-	m_DrawIndex=m_DrawData.size()-1;
-	if(m_DrawIndex< 0)
-		m_DrawIndex=0;
+	if(!m_IsDrawSingle)
+	{
+		m_DrawIndex=m_DrawData.size()-1;
+		if(m_DrawIndex< 0)
+			m_DrawIndex=0;
+	}
+	else
+	{
+		m_SingleDrawIndex=m_DrawData.size()-1;
+		if(m_SingleDrawIndex< 0)
+			m_SingleDrawIndex=0;
+	}
 
 	Draw();
 }
@@ -415,14 +526,31 @@ void CDlgDrawTiaoXing::OnBnClickedCleanBtn()
 
 void CDlgDrawTiaoXing::UpdateBtnStatus()
 {
-	if(m_DrawIndex + m_RectList.size() < m_DrawData.size())
-		GetDlgItem(IDC_PREV_BTN)->EnableWindow(true);
-	else
-		GetDlgItem(IDC_PREV_BTN)->EnableWindow(false);
+	if(!m_IsDrawSingle)
+	{
+		if(m_DrawIndex + m_RectList.size() < m_DrawData.size())
+			GetDlgItem(IDC_PREV_BTN)->EnableWindow(true);
+		else
+			GetDlgItem(IDC_PREV_BTN)->EnableWindow(false);
 
-	if(m_DrawIndex - m_RectList.size() < 0)
-		GetDlgItem(IDC_NEXT_BTN)->EnableWindow(false);
+		if(m_DrawIndex - m_RectList.size() < 0)
+			GetDlgItem(IDC_NEXT_BTN)->EnableWindow(false);
+		else
+			GetDlgItem(IDC_NEXT_BTN)->EnableWindow(true);
+		
+	}
 	else
-		GetDlgItem(IDC_NEXT_BTN)->EnableWindow(true);
+	{
+		if(m_SingleDrawIndex+1 < m_DrawData.size())
+			GetDlgItem(IDC_PREV_BTN)->EnableWindow(true);
+		else
+			GetDlgItem(IDC_PREV_BTN)->EnableWindow(false);
+
+		if(m_SingleDrawIndex-1 < 0)
+			GetDlgItem(IDC_NEXT_BTN)->EnableWindow(false);
+		else
+			GetDlgItem(IDC_NEXT_BTN)->EnableWindow(true);
+		
+	}
 
 }
