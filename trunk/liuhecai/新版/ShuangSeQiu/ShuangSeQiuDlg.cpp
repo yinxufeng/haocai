@@ -304,6 +304,7 @@ void CShuangSeQiuDlg::OnBnClickedRedBallBtn()
 	//if(!m_ResultDataList.empty())
 	//	m_RedBallDlg.SetDataList(m_ResultDataList);
 	//else
+	m_RedBallDlg.CenterWindow();
 		m_RedBallDlg.SetDataList(*CDataManageCenter::GetInstance()->GetDataList());
 	m_RedBallDlg.ShowWindow(SW_SHOW);
 }
@@ -392,17 +393,18 @@ void CShuangSeQiuDlg::OnBnClickedSearchBtn2()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn2()
 {
+	m_DlgLianHaoLanQiu.CenterWindow();
 	m_DlgLianHaoLanQiu.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn4()
 {
-	m_DlgLianHaoHongQiu.ShowWindow(SW_SHOW);
+	//m_DlgLianHaoHongQiu.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn3()
 {
-	m_DlgHengXiangChaZhi.ShowWindow(SW_SHOW);
+	//m_DlgHengXiangChaZhi.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn6()
@@ -749,21 +751,35 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn()
 
 void CShuangSeQiuDlg::OnBnClickedButton13()
 {
-	this->m_DlgShiFaDingHong.ShowWindow(SW_SHOW);
+	m_DlgShiFaDingHong.CenterWindow();
+	m_DlgShiFaDingHong.ShowWindow(SW_SHOW);
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 {
 //	m_DlgZiDongFenXi.ShowWindow(SW_SHOW);
 	//m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
-	m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
+
+	static int Flag=0;
+	if(!Flag)
+	{
+		m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
+		return ;
+	}
+	
 
 	m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMUAL_SHA_NEW_JIXIAN_LAN);
+	if(m_FormulaInfoList.empty())
+		return;
+		
+
 	vector<sDrawInfoList> DrawAllInfo;
 	TongJiErrorInfo(DrawAllInfo);
 	int TiaoXingCount=48;
 	CString Title="自动特码分析";
 	m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount);
+	m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
+	Flag=1;
 
 }
 
