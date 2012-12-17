@@ -19,6 +19,7 @@
 #define IDD_WEIHONG_DLG                 138
 #define IDD_SHUANGSEQIU_DIALOG8         139
 #define IDD_SHUANGSEQIU_DIALOG9         140
+#define IDD_DRAW_TIAO_XING_DLG          144
 #define IDC_LIST1                       1000
 #define IDC_LOAD_DATA_BTN               1002
 #define IDC_RED_BALL_BTN                1003
@@ -102,6 +103,7 @@
 #define IDC_JINXUAN_BTN                 1056
 #define IDC_JINGXUAN_BTN                1057
 #define IDC_ZIDONG_BTN                  1058
+#define IDC_CLEAN_BTN                   1080
 
 // Next default values for new objects
 // 

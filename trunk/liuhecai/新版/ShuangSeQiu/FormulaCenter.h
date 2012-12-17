@@ -43,6 +43,8 @@ enum eFormulaType
 
 	FORMULA_DING_HONG_DIAN      ,    //平码点位
 	FORMULA_DING_HONG_WEI       ,    //定平码V
+	FORMUAL_SHA_NEW_JIXIAN_LAN  ,   //新极限杀特码
+
 };
 
 //公式描述数据
@@ -51,6 +53,7 @@ struct sFormulaData
 	CString m_Data;            //描述数据
 	bool    m_IsTrue;          //是否正确
 	CString m_QiShu;           //期数
+	CString m_TrueBaiFenBi;    //正确百分比
 
 	sFormulaData()
 	{
@@ -87,6 +90,7 @@ struct sFormulaInfo
 		 m_FormulaType     = FORMULA_NULL;
 	}
 };
+
 
 //m_ComboBox.InsertString(0,"正确率大于");
 //	m_ComboBox.InsertString(1,"正确率等于");
@@ -148,6 +152,9 @@ private:
 
 	//运行杀蓝V公式
 	void ExecShaLanVFormula();
+
+	//新极限杀蓝
+	void ExecNewShaLan();
 
 private:
 

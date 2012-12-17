@@ -15,6 +15,7 @@
 #include "DlgShiFaDingHong.h"
 #include "DlgZiDongFenXi.h"
 #include "DlgTeZongHeFenXi.h"
+#include "DlgDrawTiaoXing.h"
 #include "afxwin.h"
 
 class CShuangSeQiuDlg : public CDialog
@@ -68,6 +69,9 @@ private:
 	//初始化列表头
 	void InitListHeader();
 
+	//统计信息
+	void TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo);
+
 private:
 
 	CListCtrlEx m_ListCtrl;
@@ -78,6 +82,7 @@ private:
 	
 	CDlgHengXiangChaZhi  m_DlgHengXiangChaZhi;
 	CDlgZongXiangChaZhi  m_DlgZongXiangChaZhi;
+	CDlgDrawTiaoXing     m_DlgDrawTiaoXing;
 
 	CDlgTongJiJieGuo     m_DlgTongJiJieGuo;
 
@@ -92,6 +97,7 @@ private:
 	CButton m_CheckBtn;
 	CComboBox m_ComboBox;
 	bool      m_IsShowByChuQiu;
+	vector<sFormulaInfo> m_FormulaInfoList;
 public:
 	afx_msg void OnBnClickedBlueBallBtn();
 	afx_msg void OnBnClickedButton13();
