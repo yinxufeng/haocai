@@ -24,6 +24,8 @@
 #define IDD_SHUANGSEQIU_DIALOG11        143
 #define IDD_DLG_WEI_LAN                 143
 #define IDD_DRAW_TIAO_XING_DLG          144
+#define IDD_DRAW_TIAO_XING_DLG1         145
+#define IDD_DRAW_ZOU_SHI                145
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
