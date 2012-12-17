@@ -872,8 +872,9 @@ void CFormulaCenter::ToJiFormulaInfo(sFormulaInfo& Formula)
 			TempLianCuoCount=0;
 			TempLianDuiCount++;
 	
+			int AllCount=TrueCount+ErrorCount-1 > 0 ? TrueCount+ErrorCount-1:1;
 			CString TempStr;
-			TempStr.Format("%02d",(TrueCount*100)/(TrueCount+ErrorCount));
+			TempStr.Format("%02d",((TrueCount-1)*100)/(TrueCount+ErrorCount));
 			Formula.m_DataList[Index].m_TrueBaiFenBi=TempStr;
 		}
 		else
@@ -884,9 +885,10 @@ void CFormulaCenter::ToJiFormulaInfo(sFormulaInfo& Formula)
 			else if(MinLianDuiCount > TempLianDuiCount)
 				MinLianDuiCount = TempLianDuiCount;
 			TempLianDuiCount=0;
-
+			
+			int AllCount=TrueCount+ErrorCount-1 > 0 ? TrueCount+ErrorCount-1:1;
 			CString TempStr;
-			TempStr.Format("%02d",(TrueCount*100)/(TrueCount+ErrorCount));
+			TempStr.Format("%02d",((TrueCount-1)*100)/(AllCount));
 			Formula.m_DataList[Index].m_TrueBaiFenBi=TempStr;
 			TempLianDuiCount  = 0;
 			TempLianCuoCount++;
