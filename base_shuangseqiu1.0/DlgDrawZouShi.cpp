@@ -1,17 +1,17 @@
-// DlgDrawTiaoXing.cpp : 实现文件
+// DlgDrawZouShi.cpp : 实现文件
 //
 
 #include "stdafx.h"
 #include "ShuangSeQiu.h"
-#include "DlgDrawTiaoXing.h"
+#include "DlgDrawZouShi.h"
 
 
-// CDlgDrawTiaoXing 对话框
+// CDlgDrawZouShi 对话框
 
-IMPLEMENT_DYNAMIC(CDlgDrawTiaoXing, CDialog)
+IMPLEMENT_DYNAMIC(CDlgDrawZouShi, CDialog)
 
-CDlgDrawTiaoXing::CDlgDrawTiaoXing(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgDrawTiaoXing::IDD, pParent)
+CDlgDrawZouShi::CDlgDrawZouShi(CWnd* pParent /*=NULL*/)
+	: CDialog(CDlgDrawZouShi::IDD, pParent)
 {
 	m_DrawIndex = 0;
 	m_TiaoXingCount=33;
@@ -19,32 +19,30 @@ CDlgDrawTiaoXing::CDlgDrawTiaoXing(CWnd* pParent /*=NULL*/)
 	m_SingleDrawIndex=0;
 }
 
-CDlgDrawTiaoXing::~CDlgDrawTiaoXing()
+CDlgDrawZouShi::~CDlgDrawZouShi()
 {
 }
 
-void CDlgDrawTiaoXing::DoDataExchange(CDataExchange* pDX)
+void CDlgDrawZouShi::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgDrawTiaoXing, CDialog)
-	ON_WM_ERASEBKGND()
+BEGIN_MESSAGE_MAP(CDlgDrawZouShi, CDialog)
+    ON_WM_ERASEBKGND()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDBLCLK()
-	ON_BN_CLICKED(IDC_PREV_BTN, &CDlgDrawTiaoXing::OnBnClickedPrevBtn)
-	ON_BN_CLICKED(IDC_NEXT_BTN, &CDlgDrawTiaoXing::OnBnClickedNextBtn)
-	ON_BN_CLICKED(IDC_FIRST_BTN, &CDlgDrawTiaoXing::OnBnClickedFirstBtn)
-	ON_BN_CLICKED(IDC_CLEAN_BTN, &CDlgDrawTiaoXing::OnBnClickedCleanBtn)
+	ON_BN_CLICKED(IDC_PREV_BTN, &CDlgDrawZouShi::OnBnClickedPrevBtn)
+	ON_BN_CLICKED(IDC_NEXT_BTN, &CDlgDrawZouShi::OnBnClickedNextBtn)
+	ON_BN_CLICKED(IDC_FIRST_BTN, &CDlgDrawZouShi::OnBnClickedFirstBtn)
+	ON_BN_CLICKED(IDC_CLEAN_BTN, &CDlgDrawZouShi::OnBnClickedCleanBtn)
 END_MESSAGE_MAP()
 
 
-// CDlgDrawTiaoXing 消息处理程序
-
-BOOL CDlgDrawTiaoXing::OnEraseBkgnd(CDC* pDC)
+BOOL CDlgDrawZouShi::OnEraseBkgnd(CDC* pDC)
 {
 
 	CRect Rect;
@@ -54,7 +52,7 @@ BOOL CDlgDrawTiaoXing::OnEraseBkgnd(CDC* pDC)
 }
 
 //绘制条形
-void CDlgDrawTiaoXing::DrawTiaoXing(CDC* pDC,CRect Rect,int DataIndex)
+void CDlgDrawZouShi::DrawTiaoXing(CDC* pDC,CRect Rect,int DataIndex)
 {
 	if(DataIndex < 0 || DataIndex >=m_DrawData.size())
 		return;
@@ -114,7 +112,7 @@ void CDlgDrawTiaoXing::DrawTiaoXing(CDC* pDC,CRect Rect,int DataIndex)
 	
 }
 
-void CDlgDrawTiaoXing::DrawFrame(CDC* pDC,CRect TempRect,COLORREF Color,int FrameWidth)
+void CDlgDrawZouShi::DrawFrame(CDC* pDC,CRect TempRect,COLORREF Color,int FrameWidth)
 {
 	CPen pen(PS_SOLID,FrameWidth,Color);
 	pDC->SelectObject(&pen);
@@ -126,7 +124,7 @@ void CDlgDrawTiaoXing::DrawFrame(CDC* pDC,CRect TempRect,COLORREF Color,int Fram
 }
 
 //初始化条形区域
-void CDlgDrawTiaoXing::InitRect()
+void CDlgDrawZouShi::InitRect()
 {
 	CRect ClientRect;
 	GetClientRect(ClientRect);
@@ -156,7 +154,7 @@ void CDlgDrawTiaoXing::InitRect()
 }
 
 //获取条形区域
-vector<CRect> CDlgDrawTiaoXing::GetTiaoXingRect(CRect Rect)
+vector<CRect> CDlgDrawZouShi::GetTiaoXingRect(CRect Rect)
 {
 	vector<CRect> RectList;
 
@@ -187,7 +185,7 @@ vector<CRect> CDlgDrawTiaoXing::GetTiaoXingRect(CRect Rect)
 
 
 //通过位置获取文本
-CString CDlgDrawTiaoXing::GetTextByPoint(CPoint Point)
+CString CDlgDrawZouShi::GetTextByPoint(CPoint Point)
 {
 	vector<CRect> RectList;
 	int TempIndex =0;
@@ -244,7 +242,7 @@ CString CDlgDrawTiaoXing::GetTextByPoint(CPoint Point)
 }
 
 //通过位置获取索引
-int CDlgDrawTiaoXing::GetIndexByPoint(CPoint Point)
+int CDlgDrawZouShi::GetIndexByPoint(CPoint Point)
 {
 	for(int Index = 0; Index < m_RectList.size(); Index++)
 	{
@@ -257,7 +255,7 @@ int CDlgDrawTiaoXing::GetIndexByPoint(CPoint Point)
 	return -1;
 }
 
-BOOL CDlgDrawTiaoXing::OnInitDialog()
+BOOL CDlgDrawZouShi::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	InitRect();
@@ -267,14 +265,14 @@ BOOL CDlgDrawTiaoXing::OnInitDialog()
 	return TRUE; 
 }
 
-void CDlgDrawTiaoXing::OnLButtonDown(UINT nFlags, CPoint point)
+void CDlgDrawZouShi::OnLButtonDown(UINT nFlags, CPoint point)
 {
 
 	CDialog::OnLButtonDown(nFlags, point);
 	m_CurrentDrawLine.m_StartPoint = point;
 }
 
-void CDlgDrawTiaoXing::OnLButtonUp(UINT nFlags, CPoint point)
+void CDlgDrawZouShi::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	CDialog::OnLButtonUp(nFlags, point);
 	if(m_CurrentDrawLine.m_EndPoint != m_CurrentDrawLine.m_StartPoint)
@@ -287,7 +285,7 @@ void CDlgDrawTiaoXing::OnLButtonUp(UINT nFlags, CPoint point)
 	
 }
 
-void CDlgDrawTiaoXing::OnMouseMove(UINT nFlags, CPoint point)
+void CDlgDrawZouShi::OnMouseMove(UINT nFlags, CPoint point)
 {
 	if(m_TextPoint != point)
 	{
@@ -303,7 +301,7 @@ void CDlgDrawTiaoXing::OnMouseMove(UINT nFlags, CPoint point)
 
 }
 
-void CDlgDrawTiaoXing::OnLButtonDblClk(UINT nFlags, CPoint point)
+void CDlgDrawZouShi::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 
 	if(!m_IsDrawSingle)
@@ -328,7 +326,7 @@ void CDlgDrawTiaoXing::OnLButtonDblClk(UINT nFlags, CPoint point)
 }
 
 //创建内存设备环境
-void CDlgDrawTiaoXing::CreateMemDC()
+void CDlgDrawZouShi::CreateMemDC()
 {
 	CRect Rect;
 	GetClientRect(Rect);
@@ -342,7 +340,7 @@ void CDlgDrawTiaoXing::CreateMemDC()
 	ReleaseDC(pDC);
 }
 //绘制图形
-void CDlgDrawTiaoXing::Draw()
+void CDlgDrawZouShi::Draw()
 {
 	CRect Rect;
 	GetClientRect(Rect);
@@ -410,7 +408,7 @@ void CDlgDrawTiaoXing::Draw()
 }
 
 //设置绘制数据
-void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount)
+void CDlgDrawZouShi::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount)
 {
 	m_DrawData = DrawAllInfo;
 	m_TiaoXingCount=TiaoXingCount;
@@ -419,7 +417,7 @@ void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Ti
 	Draw();
 	
 }
-void CDlgDrawTiaoXing::OnBnClickedPrevBtn()
+void CDlgDrawZouShi::OnBnClickedPrevBtn()
 {
 	if(!m_IsDrawSingle)
 	{
@@ -444,7 +442,7 @@ void CDlgDrawTiaoXing::OnBnClickedPrevBtn()
 	Draw();
 }
 
-void CDlgDrawTiaoXing::OnBnClickedNextBtn()
+void CDlgDrawZouShi::OnBnClickedNextBtn()
 {
 	if(!m_IsDrawSingle)
 	{
@@ -470,7 +468,7 @@ void CDlgDrawTiaoXing::OnBnClickedNextBtn()
 	Draw();
 }
 
-void CDlgDrawTiaoXing::OnBnClickedFirstBtn()
+void CDlgDrawZouShi::OnBnClickedFirstBtn()
 {
 	if(!m_IsDrawSingle)
 	{
@@ -488,13 +486,13 @@ void CDlgDrawTiaoXing::OnBnClickedFirstBtn()
 	Draw();
 }
 
-void CDlgDrawTiaoXing::OnBnClickedCleanBtn()
+void CDlgDrawZouShi::OnBnClickedCleanBtn()
 {
 	m_DrawLineInfoList.clear();
 	Draw();
 }
 
-void CDlgDrawTiaoXing::UpdateBtnStatus()
+void CDlgDrawZouShi::UpdateBtnStatus()
 {
 	if(!m_IsDrawSingle)
 	{

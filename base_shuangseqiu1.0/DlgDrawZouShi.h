@@ -1,6 +1,5 @@
 #pragma once
 
-
 //线条绘制信息描述
 struct sDrawLineInfo
 {
@@ -8,22 +7,24 @@ struct sDrawLineInfo
 	CPoint m_EndPoint;
 };
 
-class CDlgDrawTiaoXing : public CDialog
+//走势图绘制
+
+class CDlgDrawZouShi : public CDialog
 {
-	DECLARE_DYNAMIC(CDlgDrawTiaoXing)
+	DECLARE_DYNAMIC(CDlgDrawZouShi)
 
 public:
-	CDlgDrawTiaoXing(CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CDlgDrawTiaoXing();
+	CDlgDrawZouShi(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CDlgDrawZouShi();
 
-	enum { IDD = IDD_DRAW_TIAO_XING_DLG };
+	enum { IDD = IDD_DRAW_ZOU_SHI };
 
 protected:
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-public:
+
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
