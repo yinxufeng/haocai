@@ -286,6 +286,8 @@ void CFormulaCenter::RunFormula()
 	ExecShaLanFormula();
 	ExecShaLanVFormula();
 
+	ExecNewShaLan();
+
 }
 
 
@@ -805,6 +807,10 @@ void CFormulaCenter::ToJiFormulaInfo(sFormulaInfo& Formula)
 				MinLianCuoCount = TempLianCuoCount;
 			TempLianCuoCount=0;
 			TempLianDuiCount++;
+	
+			CString TempStr;
+			TempStr.Format("%02d",(TrueCount*100)/(TrueCount+ErrorCount));
+			Formula.m_DataList[Index].m_TrueBaiFenBi=TempStr;
 		}
 		else
 		{
@@ -815,11 +821,14 @@ void CFormulaCenter::ToJiFormulaInfo(sFormulaInfo& Formula)
 				MinLianDuiCount = TempLianDuiCount;
 			TempLianDuiCount=0;
 
+			CString TempStr;
+			TempStr.Format("%02d",(TrueCount*100)/(TrueCount+ErrorCount));
+			Formula.m_DataList[Index].m_TrueBaiFenBi=TempStr;
 			TempLianDuiCount  = 0;
 			TempLianCuoCount++;
 		}
 
-		if(Index == Formula.m_DataList.size()-1)
+		if(Index == Formula.m_DataList.size()-2)
 			LastStatus = Formula.m_DataList[Index].m_IsTrue;
 	}
 
@@ -1822,5 +1831,62 @@ void CFormulaCenter::ExecShaLanVFormula()
 	}
 
 //	sort(m_MapFormulaInfo[FORMULA_SHA_LAN_WEI].begin(),m_MapFormulaInfo[FORMULA_SHA_LAN_WEI ].end(), SortByErrorCount);
+
+}
+
+//新极限杀蓝
+void CFormulaCenter::ExecNewShaLan()
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=48;
+
+	int RealCount=0;
+
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		for(int i=0; i< MODE_COUNT; i++)
+		{
+			for(int j=0; j < QIU_XUN; j++)
+			{
+				TempData = (*DataList)[Index-1].m_HongQiu[j]+i;
+				if(TempData > MODE_COUNT) TempData = TempData%MODE_COUNT;
+				if(TempData == 0)
+					TempData=MODE_COUNT;
+
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+
+		}
+
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("杀特_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = FORMUAL_SHA_NEW_JIXIAN_LAN;
+		ToJiFormulaInfo(FormualList[i]);
+		int TempData=FormualList[i].m_ErrorCount+FormualList[i].m_TrueCount;
+		m_MapFormulaInfo[FORMUAL_SHA_NEW_JIXIAN_LAN].push_back(FormualList[i]);
+	}
 
 }

@@ -171,7 +171,8 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgTeZongHeFenXi.Create(CDlgTeZongHeFenXi::IDD,this);
 	m_DlgTeZongHeFenXi.ShowWindow(SW_HIDE);
 
-
+	m_DlgDrawTiaoXing.Create(CDlgDrawTiaoXing::IDD,this);
+	m_DlgDrawTiaoXing.ShowWindow(SW_HIDE);
 	m_ComboBox.InsertString(0,_T("搜索平码"));
 	m_ComboBox.InsertString(1,_T("搜索特码"));
 	m_ComboBox.InsertString(2,_T("搜索龙头"));
@@ -754,5 +755,156 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 {
 //	m_DlgZiDongFenXi.ShowWindow(SW_SHOW);
-	m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
+	//m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
+	m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
+
+	m_FormulaInfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(FORMUAL_SHA_NEW_JIXIAN_LAN);
+	vector<sDrawInfoList> DrawAllInfo;
+	TongJiErrorInfo(DrawAllInfo);
+	int TiaoXingCount=48;
+	CString Title="自动特码分析";
+	m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount);
+
+}
+
+
+//统计错误信息
+void CShuangSeQiuDlg::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
+{
+
+	CString FilePath=GetAppCurrentPath()+_T("error_tongji.txt");
+	
+	DWORD Flag = CREATE_ALWAYS;
+	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle == INVALID_HANDLE_VALUE)
+		return;
+
+	CString FilePath2=GetAppCurrentPath()+_T("true_tongji.txt");
+	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(FileHandle2 == INVALID_HANDLE_VALUE)
+		return;
+
+	
+
+	CString Title;
+	GetWindowText(Title);
+	Title+=_T("\r\n");
+	DWORD WriteBytes=0;
+	::WriteFile(FileHandle,Title.GetBuffer(),Title.GetLength(),&WriteBytes,NULL);
+	Title.ReleaseBuffer();
+	::WriteFile(FileHandle2,Title.GetBuffer(),Title.GetLength(),&WriteBytes,NULL);
+	Title.ReleaseBuffer();
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+
+
+
+	int DataSize = DataList->size();
+
+	
+
+	for(int Index = 1; Index < DataSize+1; Index++)
+	{
+		CString WriteLine= Index + 1 > DataSize ? "下期               ":(*DataList)[Index].ToString()+_T("             ");
+		CString WriteLine2=Index + 1 > DataSize ? "下期                             ":(*DataList)[Index].ToString()+_T("     ");
+
+		map<CString,vector<CString>> MapData;
+
+		int ErrorCount=0;
+		int ErrorSize=0;
+		CString ErrorDataStr;
+
+
+		for(int i=0; i < m_FormulaInfoList.size(); i++)
+		{
+
+
+			if(!m_FormulaInfoList[i].m_DataList[Index-1].m_IsTrue && Index != DataSize)
+			{
+				CString Str;
+				Str.Format("%s ",m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi);
+
+				for(int j=Str.GetLength(); j < 10; j++)
+					Str+=_T(" ");
+
+				int Data=atoi(m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi.GetBuffer());
+				m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi.ReleaseBuffer();
+				ErrorCount+=Data;
+				ErrorSize++;
+				ErrorDataStr=m_FormulaInfoList[i].m_DataList[Index-1].m_Data;
+				WriteLine+=Str;
+
+			}
+			
+			
+			MapData[m_FormulaInfoList[i].m_DataList[Index-1].m_Data].push_back(m_FormulaInfoList[i].m_DataList[Index-1].m_TrueBaiFenBi);
+
+		}
+
+
+		sDrawInfoList DrawInfoList;
+		DrawInfoList.m_QiShu = Index + 1 > DataSize ? "下期 ":(*DataList)[Index].m_QiShu;
+		
+		map<CString,vector<CString>>::iterator it = MapData.begin(); 
+		for(it ; it != MapData.end(); it++)
+		{
+			sDrawDataInfo DrawData;
+
+			int AllData=0;
+			for(int k=0; k < it->second.size(); k++)
+			{
+				int Data=atoi(it->second[k].GetBuffer());
+				DrawData.m_InfoList.push_back(it->second[k]);
+				it->second[k].ReleaseBuffer();
+				AllData+=Data;
+			}
+
+			int ArgvData=AllData/it->second.size();
+			
+
+			
+
+			CString TempStr;
+			TempStr.Format("%02d",ArgvData);
+			DrawData.m_DrawText = TempStr;
+
+			if(it->first ==ErrorDataStr)
+				DrawData.m_IsTrue = false;
+			else
+				DrawData.m_IsTrue = true;
+
+			for(int i=TempStr.GetLength(); i < 4; i++)
+					TempStr+=_T(" ");
+
+			DrawInfoList.m_DrawDataList.push_back(DrawData);
+
+			WriteLine2+=TempStr;
+
+		}
+
+		DrawAllInfo.push_back(DrawInfoList);
+
+		CString ErrorStr;
+		if(ErrorSize > 0)
+			ErrorStr.Format("    %s ：%02d",ErrorDataStr,ErrorCount/ErrorSize);
+		else
+			ErrorStr.Format("   %s",ErrorDataStr);
+
+
+		WriteLine2+=ErrorStr+_T("\r\n");
+		WriteLine+=ErrorStr+_T("\r\n");
+
+	    WriteBytes=0;
+		::WriteFile(FileHandle,WriteLine.GetBuffer(),WriteLine.GetLength(),&WriteBytes,NULL);
+		WriteLine.ReleaseBuffer();
+		::WriteFile(FileHandle2,WriteLine2.GetBuffer(),WriteLine2.GetLength(),&WriteBytes,NULL);
+		WriteLine2.ReleaseBuffer();
+	}
+
+
+	CloseHandle(FileHandle);
+	CloseHandle(FileHandle2);
+
+	return ;
+	//ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
 }

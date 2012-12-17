@@ -42,7 +42,63 @@ struct sShuangSeQiu
 		memset(m_HongQiu,0,sizeof(DWORD)*QIU_XUN);
 		memset(m_QuJian,0,sizeof(DWORD)*3);
 	}
+
+public:
+
+	CString ToString()
+	{
+		int QiShu=atoi(m_QiShu.GetBuffer());
+		m_QiShu.ReleaseBuffer();
+		
+		CString RetStr;
+		RetStr.Format("%d",QiShu);
+		for(int i=0; i < QIU_XUN; i++)
+		{
+			CString Str;
+			Str.Format(" %02d",m_HongQiu[i]);
+			RetStr+=Str;
+		}
+
+		CString Lan;
+		Lan.Format("+%02d",m_LanQiu);
+		RetStr=RetStr+Lan;
+		return RetStr;
+		
+	}
+
+	CString ToLanString()
+	{
+	
+		int QiShu=atoi(m_QiShu.GetBuffer());
+		m_QiShu.ReleaseBuffer();
+		
+		CString RetStr;
+		RetStr.Format("%d",QiShu);
+		CString Lan;
+		Lan.Format(" %02d",m_LanQiu);
+		RetStr=RetStr+Lan;
+		return RetStr;
+	}
+
+	CString ToHongString()
+	{
+
+		int QiShu=atoi(m_QiShu.GetBuffer());
+		m_QiShu.ReleaseBuffer();
+		
+		CString RetStr;
+		RetStr.Format("%d",QiShu);
+		for(int i=0; i < QIU_XUN; i++)
+		{
+			CString Str;
+			Str.Format(" %02d",m_HongQiu[i]);
+			RetStr+=Str;
+		}
+
+		return RetStr;
+	}
 };
+
 
 struct sEqualShuangSeQiu          //相等平码数结构体定义
 {
@@ -71,3 +127,33 @@ struct sHengXiangChaZhi          //横向差值
 	DWORD m_LanQiuChaZhi;        //特码差值
 };
 
+/************************颜色值定义*********************/
+
+#define YELOW   RGB(255,192,0)                 //黄色
+#define ZISE    RGB(112,48,160)                //紫色
+#define WRITE   RGB(255,255,255)               //白色
+#define RED     RGB(255,0,0)                   //红色
+
+
+
+/*********************条形数据描述************************/
+
+//绘制数据
+struct sDrawDataInfo
+{
+	bool            m_IsTrue;         //是否正确
+	CString         m_DrawText;       //绘制文本
+	CString         m_Data;           //数据
+	vector<CString> m_InfoList;       //绘制详情
+};
+
+
+//绘制数据列表
+struct sDrawInfoList
+{
+	CString m_QiShu;                              //期数
+	vector<sDrawDataInfo>      m_DrawDataList;    //数据列表
+};
+
+
+/*********************条形数据描述************************/

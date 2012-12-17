@@ -56,7 +56,7 @@ void CDlgLianHaoHongQiu::InitListHeader()
 	m_ListCtrl.SetColumStyle(0,Style);
 
 	CString Array[PAGE_COUNT]={"尾值走势","合值走势","路数走势","大小走势","奇偶走势","横七走势","纵七走势"};
-	for(int Index = 1; Index <= PAGE_COUNT; Index++)
+	for(int Index = 1; Index <PAGE_COUNT; Index++)
 	{
 		CString Str;
 		Str=Array[Index];
