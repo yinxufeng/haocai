@@ -59,7 +59,7 @@ void CDlgLianHaoHongQiu::InitListHeader()
 	for(int Index = 1; Index <PAGE_COUNT; Index++)
 	{
 		CString Str;
-		Str=Array[Index];
+		Str=Array[Index-1];
 		m_ListCtrl.InsertColumn(Index,Str,    LVCFMT_CENTER,	nWidth);
 		m_ListCtrl.SetColumStyle(Index,Style);
 	}
@@ -92,6 +92,15 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 
 		m_ListCtrl.DeleteAllItems();
 	
+		sItemStyle Style;
+		Style.m_ItemType = TEXT_TYPE;
+		Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+		Style.m_DrawData.m_TextData.m_TextFont = NULL;
+		Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+		Style.m_DrawData.m_TextData.m_IsFillBG=true;
+		Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+		//Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+
 		vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
 		vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
 		for(int i=0; i < DataList->size(); i++)
@@ -109,6 +118,13 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 			TempData=(*DataList)[i].m_LanQiu%10;
 			TempStr.Format("%d",TempData);
 			m_ListCtrl.SetItemText(i,TempIndex,TempStr);
+			if(TempData < 5)
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+				
+		
+			m_ListCtrl.SetItemSpecialStyle(i,TempIndex+1,Style);
 			TempStr.Empty();
 			TempIndex++;
 		
@@ -118,6 +134,12 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 			TempData=TempData%10;
 			TempStr.Format("%d",TempData);
 			m_ListCtrl.SetItemText(i,TempIndex,TempStr);
+			if(TempData < 5)
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			else
+				Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+
+			m_ListCtrl.SetItemSpecialStyle(i,TempIndex+1,Style);
 			TempStr.Empty();
 			TempIndex++;
 
@@ -132,19 +154,32 @@ void CDlgLianHaoHongQiu::OnShowWindow(BOOL bShow, UINT nStatus)
 			//大小
 			TempData=(*DataList)[i].m_LanQiu;
 			if(TempData > QIU_COUNT/2)
+			{
 				TempStr="大";
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			}
 			else
+			{
 				TempStr="小";
-			m_ListCtrl.SetItemText(i,TempIndex,TempStr);
+			    Style.m_DrawData.m_TextData.m_BGColor = RGB(248,183,173);
+			}
+			m_ListCtrl.SetItemText(i,TempIndex+1,TempStr);
 			TempStr.Empty();
 			TempIndex++;
 
 			//奇偶
 			TempData=(*DataList)[i].m_LanQiu%2;
 			if(TempData > 0)
+			{
 				TempStr="奇";
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			}
 			else
+			{
 				TempStr="偶";
+				Style.m_DrawData.m_TextData.m_BGColor =RGB(205,250,213);
+			}
+			m_ListCtrl.SetItemText(i,TempIndex+1,TempStr);
 			m_ListCtrl.SetItemText(i,TempIndex,TempStr);
 			TempStr.Empty();
 			TempIndex++;
