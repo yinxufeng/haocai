@@ -761,7 +761,7 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 	//m_DlgTeZongHeFenXi.ShowWindow(SW_SHOW);
 
 	static int Flag=0;
-	if(!Flag)
+	if(Flag)
 	{
 		m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
 		return ;
