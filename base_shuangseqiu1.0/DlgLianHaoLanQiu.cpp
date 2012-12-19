@@ -836,10 +836,19 @@ void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 		vector<sDrawInfoList> DrawAllInfo;
 		TongJiErrorInfo(DrawAllInfo);
 		int TiaoXingCount=33;
+		bool IsZeore=false;
 		if(m_FormulaType == FORMUAL_SHA_NEW_JIXIAN_LAN)
 			TiaoXingCount=16;
+		else if(m_FormulaType>=FORMUAL_SHA_DI_YI_HONG_V &&  m_FormulaType <= FORMUAL_SHA_DI_LIU_HONG_V ||
+			m_FormulaType>=FORMUAL_SHA_DI_YI_HONG_HE &&  m_FormulaType <= FORMUAL_SHA_DI_LIU_HONG_HE ||
+			m_FormulaType>=FORMUAL_SHA_DI_YI_HONG_CHA &&  m_FormulaType <= FORMUAL_SHA_DI_LIU_HONG_CHA ||
+			m_FormulaType == FORMUAL_SHA_NEW_LAN_V)
+		{
+			TiaoXingCount=10;
+			IsZeore=true;
+		}
 
-		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount);
+		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount,IsZeore);
 		FormualType=m_FormulaType;
 	}
 

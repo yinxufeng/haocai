@@ -333,13 +333,40 @@ void CShuangSeQiuDlg::InitShaMap()
 	m_MapList["尾不同出"]=FORMULA_WEI_BU_TONG_CHU;
 	m_MapList["定红V"]=FORMULA_DING_HONG_WEI;
 	m_MapList["杀极距"]=FORMUAL_SHA_JI_JU;
+
 	m_MapList["杀第一位"]=FORMUAL_SHA_DI_YI_HONG;
+	m_MapList["杀第一位尾"]=FORMUAL_SHA_DI_YI_HONG_V;
+	m_MapList["杀第一位合"]=FORMUAL_SHA_DI_YI_HONG_HE;
+	m_MapList["杀第一位差"]=FORMUAL_SHA_DI_YI_HONG_CHA;
+
 	m_MapList["杀第二位"]=FORMUAL_SHA_DI_ER_HONG;
+	m_MapList["杀第二位尾"]=FORMUAL_SHA_DI_ER_HONG_V;
+	m_MapList["杀第二位合"]=FORMUAL_SHA_DI_ER_HONG_HE;
+	m_MapList["杀第二位差"]=FORMUAL_SHA_DI_ER_HONG_CHA;
+
 	m_MapList["杀第三位"]=FORMUAL_SHA_DI_SAN_HONG;
+	m_MapList["杀第三位尾"]=FORMUAL_SHA_DI_SAN_HONG_V;
+	m_MapList["杀第三位合"]=FORMUAL_SHA_DI_SAN_HONG_HE;
+	m_MapList["杀第三位差"]=FORMUAL_SHA_DI_SAN_HONG_CHA;
+
 	m_MapList["杀第四位"]=FORMUAL_SHA_DI_SI_HONG;
+	m_MapList["杀第四位尾"]=FORMUAL_SHA_DI_SI_HONG_V;
+	m_MapList["杀第四位合"]=FORMUAL_SHA_DI_SI_HONG_HE;
+	m_MapList["杀第四位差"]=FORMUAL_SHA_DI_SI_HONG_CHA;
+
 	m_MapList["杀第五位"]=FORMUAL_SHA_DI_WU_HONG;
+	m_MapList["杀第五位尾"]=FORMUAL_SHA_DI_WU_HONG_V;
+	m_MapList["杀第五位合"]=FORMUAL_SHA_DI_WU_HONG_HE;
+	m_MapList["杀第五位差"]=FORMUAL_SHA_DI_WU_HONG_CHA;
+
 	m_MapList["杀第六位"]=FORMUAL_SHA_DI_LIU_HONG;
+	m_MapList["杀第六位尾"]=FORMUAL_SHA_DI_LIU_HONG_V;
+	m_MapList["杀第六位合"]=FORMUAL_SHA_DI_LIU_HONG_HE;
+	m_MapList["杀第六位差"]=FORMUAL_SHA_DI_LIU_HONG_CHA;
+
 	m_MapList["极限杀蓝"]=FORMUAL_SHA_NEW_JIXIAN_LAN;
+	m_MapList["极限杀蓝尾"]=FORMUAL_SHA_NEW_LAN_V;
+
 	//m_MapList["第一位区间"]=FORMUAL_DI_YI_HONG_QU_JIAN;
 }
 

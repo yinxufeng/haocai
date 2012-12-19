@@ -295,8 +295,17 @@ void CFormulaCenter::RunFormula()
 	ExecDingHongVFormula();
 
 	
+	ExeShaLanV();
 	//杀极距
 	ExecShaJiJu();
+
+	for(int i=0; i < QIU_XUN; i++)
+	{
+		ExecShaWeiV(i);
+		ExecShaWeiHe(i);
+		ExecShaWeiCha(i);
+	
+	}
 
 	//杀第一位
 	ExecShaDiYiWei();
@@ -2878,6 +2887,214 @@ void CFormulaCenter::ExecShaJiJu()
 		FormualList[i].m_FormulaType = FORMUAL_SHA_JI_JU;
 		ToJiFormulaInfo(FormualList[i]);
 		m_MapFormulaInfo[FORMUAL_SHA_JI_JU].push_back(FormualList[i]);
+	}
+}
+
+//定位杀尾
+void CFormulaCenter::ExecShaWeiV(int Wei)
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=10;
+
+	int RealCount=0;
+
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		for(int i=0; i<  MODE_COUNT; i++)
+		{
+			for(int j=0; j < QIU_XUN; j++)
+			{
+				TempData = (*DataList)[Index-1].m_HongQiu[j]%10+i;
+				if(TempData >= MODE_COUNT) TempData = TempData%MODE_COUNT;
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,Wei,true):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+
+		}
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("杀位尾_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = (eFormulaType )(FORMUAL_SHA_DI_YI_HONG_V+Wei);
+		ToJiFormulaInfo(FormualList[i]);
+		m_MapFormulaInfo[(eFormulaType)(FORMUAL_SHA_DI_YI_HONG_V+Wei)].push_back(FormualList[i]);
+
+	}
+}
+
+//杀蓝尾
+void CFormulaCenter::ExeShaLanV()
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=10;
+
+	int RealCount=0;
+
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		for(int i=0; i<  MODE_COUNT; i++)
+		{
+			for(int j=0; j < QIU_XUN; j++)
+			{
+				TempData = (*DataList)[Index-1].m_LanQiu%10+i;
+				if(TempData >= MODE_COUNT) TempData = TempData%MODE_COUNT;
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsLanQiuInData((*DataList)[Index],TempData,true):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+
+		}
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("杀蓝尾_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = FORMUAL_SHA_NEW_LAN_V;
+		ToJiFormulaInfo(FormualList[i]);
+		m_MapFormulaInfo[FORMUAL_SHA_NEW_LAN_V].push_back(FormualList[i]);
+
+	}
+}
+
+//定位杀尾合
+void CFormulaCenter::ExecShaWeiHe(int Wei)
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=10;
+
+	int RealCount=0;
+
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		for(int i=0; i<  MODE_COUNT; i++)
+		{
+			for(int j=0; j < QIU_XUN; j++)
+			{
+				TempData = (*DataList)[Index-1].m_HongQiu[j]%10+(*DataList)[Index-1].m_HongQiu[j]/10+i;
+				if(TempData >= MODE_COUNT) TempData = TempData%MODE_COUNT;
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiHeData((*DataList)[Index],TempData,Wei,true):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+
+		}
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("杀位合_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = (eFormulaType )(FORMUAL_SHA_DI_YI_HONG_HE+Wei);
+		ToJiFormulaInfo(FormualList[i]);
+		m_MapFormulaInfo[(eFormulaType)(FORMUAL_SHA_DI_YI_HONG_HE+Wei)].push_back(FormualList[i]);
+
+	}
+}
+
+//定位杀尾差
+void CFormulaCenter::ExecShaWeiCha(int Wei)
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=10;
+
+	int RealCount=0;
+
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		for(int i=0; i<  MODE_COUNT; i++)
+		{
+			for(int j=0; j < QIU_XUN; j++)
+			{
+				TempData = (*DataList)[Index-1].m_HongQiu[j]%10+(*DataList)[Index-1].m_HongQiu[j]/10+i;
+				if(TempData >= MODE_COUNT) TempData = TempData%MODE_COUNT;
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiChaData((*DataList)[Index],TempData,Wei,true):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+
+		}
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("杀位差_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = (eFormulaType )(FORMUAL_SHA_DI_YI_HONG_CHA+Wei);
+		ToJiFormulaInfo(FormualList[i]);
+		m_MapFormulaInfo[(eFormulaType)(FORMUAL_SHA_DI_YI_HONG_CHA+Wei)].push_back(FormualList[i]);
+
 	}
 }
 

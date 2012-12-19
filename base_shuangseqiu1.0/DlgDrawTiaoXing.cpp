@@ -17,6 +17,7 @@ CDlgDrawTiaoXing::CDlgDrawTiaoXing(CWnd* pParent /*=NULL*/)
 	m_TiaoXingCount=33;
 	m_IsDrawSingle=false;
 	m_SingleDrawIndex=0;
+	m_IsStartZeore=false;
 }
 
 CDlgDrawTiaoXing::~CDlgDrawTiaoXing()
@@ -218,8 +219,10 @@ CString CDlgDrawTiaoXing::GetTextByPoint(CPoint Point)
 			CString Text;
 			CString Title;
 			GetWindowText(Title);
-			Text.Format("%s 球：%02d  ",Title,i+1);
-
+			if(!m_IsStartZeore)
+				Text.Format("%s 球：%02d  ",Title,i+1);
+			else
+				Text.Format("%s 球：%02d  ",Title,i);
 			
 			if(TempIndex >= 0 && TempIndex < m_DrawData.size())
 			{
@@ -410,13 +413,15 @@ void CDlgDrawTiaoXing::Draw()
 }
 
 //设置绘制数据
-void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount)
+void CDlgDrawTiaoXing::SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount,bool IsStartZero)
 {
+	m_IsStartZeore = IsStartZero;
 	m_DrawData = DrawAllInfo;
 	m_TiaoXingCount=TiaoXingCount;
 	SetWindowText(Title);
 	m_DrawIndex=DrawAllInfo.size()-1;
 	Draw();
+	
 	
 }
 void CDlgDrawTiaoXing::OnBnClickedPrevBtn()

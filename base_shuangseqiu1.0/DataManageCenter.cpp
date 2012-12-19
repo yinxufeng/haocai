@@ -2167,6 +2167,63 @@ bool CDataManageCenter::IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiSh
 	return Ret;
 }
 
+//球是否在位数和中
+bool CDataManageCenter::IsHongQiuWeiHeData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if(Index == WeiShu && (QiuData.m_HongQiu[Index]%10+QiuData.m_HongQiu[Index]/10) == Data )
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(Index == WeiShu && (QiuData.m_HongQiu[Index]%10+QiuData.m_HongQiu[Index]/10)%10 == Data  )
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+//球是否在位数差中
+bool CDataManageCenter::IsHongQiuWeiChaData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV)
+{
+	bool Ret=false;
+	for(int Index = 0; Index < QIU_XUN; Index++)
+	{
+		if(!IsV)
+		{
+			if(Index == WeiShu && (abs(QiuData.m_HongQiu[Index]%10-QiuData.m_HongQiu[Index])/10) == Data )
+			{
+				Ret = true;
+				break;
+			}
+		}
+		else
+		{
+			if(Index == WeiShu && (abs(QiuData.m_HongQiu[Index]%10-QiuData.m_HongQiu[Index])/10)%10 == Data  )
+			{
+				Ret = true;
+				break;
+			}
+
+		}
+	}
+
+	return Ret;
+}
+
+
 //球是否在红球区间中
 bool CDataManageCenter::IsHongQiuQuJianInData(sShuangSeQiu QiuData,int BeginData,int EndData,int WeiShu,bool IsV)
 {
