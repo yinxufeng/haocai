@@ -3070,7 +3070,7 @@ void CFormulaCenter::ExecShaWeiCha(int Wei)
 		{
 			for(int j=0; j < QIU_XUN; j++)
 			{
-				TempData = (*DataList)[Index-1].m_HongQiu[j]%10+(*DataList)[Index-1].m_HongQiu[j]/10+i;
+				TempData = abs((*DataList)[Index-1].m_HongQiu[j]%10-(*DataList)[Index-1].m_HongQiu[j]/10)+i;
 				if(TempData >= MODE_COUNT) TempData = TempData%MODE_COUNT;
 				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiChaData((*DataList)[Index],TempData,Wei,true):true;
 				FormulaData.m_Data   = DataToStr(TempData);

@@ -2203,7 +2203,7 @@ bool CDataManageCenter::IsHongQiuWeiChaData(sShuangSeQiu QiuData,int Data,int We
 	{
 		if(!IsV)
 		{
-			if(Index == WeiShu && (abs(QiuData.m_HongQiu[Index]%10-QiuData.m_HongQiu[Index])/10) == Data )
+			if(Index == WeiShu && (abs(QiuData.m_HongQiu[Index]%10-QiuData.m_HongQiu[Index]/10)) == Data )
 			{
 				Ret = true;
 				break;
@@ -2211,7 +2211,7 @@ bool CDataManageCenter::IsHongQiuWeiChaData(sShuangSeQiu QiuData,int Data,int We
 		}
 		else
 		{
-			if(Index == WeiShu && (abs(QiuData.m_HongQiu[Index]%10-QiuData.m_HongQiu[Index])/10)%10 == Data  )
+			if(Index == WeiShu && (abs(QiuData.m_HongQiu[Index]%10-QiuData.m_HongQiu[Index]/10))%10 == Data  )
 			{
 				Ret = true;
 				break;
