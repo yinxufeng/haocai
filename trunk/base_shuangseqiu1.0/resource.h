@@ -24,7 +24,6 @@
 #define IDD_SHUANGSEQIU_DIALOG11        143
 #define IDD_DLG_WEI_LAN                 143
 #define IDD_DRAW_TIAO_XING_DLG          144
-#define IDD_DRAW_TIAO_XING_DLG1         145
 #define IDD_DRAW_ZOU_SHI                145
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
@@ -61,6 +60,8 @@
 #define IDC_EDIT2                       1012
 #define IDC_STATIC5                     1012
 #define IDC_EDIT24                      1012
+#define IDC_CHASHU_SHUANGDAN_BTN2       1012
+#define IDC_CHASHU_SHUANGDAN_BTN6       1012
 #define IDC_SEARCH_BTN2                 1013
 #define IDC_STATIC6                     1013
 #define IDC_EDIT23                      1013
@@ -128,7 +129,9 @@
 #define IDC_WEISHU_SHUANGDAN_BTN        1064
 #define IDC_HESHU_SHUANGDAN_BTN         1065
 #define IDC_QIAN_SAN_WEI_BTN            1066
+#define IDC_WEISHU_SHUANGDAN_BTN6       2066
 #define IDC_HOU_SAN_WEI_BTN             1067
+#define IDC_HESHU_SHUANGDAN_BTN6        2067
 #define IDC_QIAN_SAN_HE_BTN             1068
 #define IDC_HOU_SAN_HE_BTN              1069
 #define IDC_HOU_SAN_HE_BTN2             1070

@@ -53,6 +53,30 @@ enum eFormulaType
 	FORMUAL_SHA_DI_SI_HONG,          //杀第四位红
 	FORMUAL_SHA_DI_WU_HONG,          //杀第五位红
 	FORMUAL_SHA_DI_LIU_HONG,         //杀第六位红
+
+	FORMUAL_SHA_DI_YI_HONG_V,        //杀第一位红尾
+	FORMUAL_SHA_DI_ER_HONG_V,        //杀第二位红尾
+	FORMUAL_SHA_DI_SAN_HONG_V,       //杀第三位红尾
+	FORMUAL_SHA_DI_SI_HONG_V,        //杀第四位红尾
+	FORMUAL_SHA_DI_WU_HONG_V,        //杀第五位红尾
+	FORMUAL_SHA_DI_LIU_HONG_V,       //杀第六位红尾
+
+	FORMUAL_SHA_DI_YI_HONG_HE,        //杀第一位红和
+	FORMUAL_SHA_DI_ER_HONG_HE,        //杀第二位红和
+	FORMUAL_SHA_DI_SAN_HONG_HE,       //杀第三位红和
+	FORMUAL_SHA_DI_SI_HONG_HE,        //杀第四位红和
+	FORMUAL_SHA_DI_WU_HONG_HE,        //杀第五位红和
+	FORMUAL_SHA_DI_LIU_HONG_HE,       //杀第六位红和
+
+	FORMUAL_SHA_DI_YI_HONG_CHA,        //杀第一位红差
+	FORMUAL_SHA_DI_ER_HONG_CHA,        //杀第二位红差
+	FORMUAL_SHA_DI_SAN_HONG_CHA,       //杀第三位红差
+	FORMUAL_SHA_DI_SI_HONG_CHA,        //杀第四位红差
+	FORMUAL_SHA_DI_WU_HONG_CHA,        //杀第五位红差
+	FORMUAL_SHA_DI_LIU_HONG_CHA,       //杀第六位红差
+
+	FORMUAL_SHA_NEW_LAN_V,             //杀蓝尾
+
 	FORMUAL_SHA_NEW_JIXIAN_LAN,          //新极限杀蓝
 
 	
@@ -193,6 +217,18 @@ private:
 
 	//杀极距
 	void ExecShaJiJu();
+
+	//定位杀尾
+	void ExecShaWeiV(int Wei);
+
+	//杀蓝尾
+	void ExeShaLanV();
+
+	//定位杀合
+	void ExecShaWeiHe(int Wei);
+
+	//定位杀差
+	void ExecShaWeiCha(int Wei);
 
 	//杀第一位
 	void ExecShaDiYiWei();

@@ -39,7 +39,7 @@ public:
 public:
 
 	//设置绘制数据
-	void SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount);
+	void SetDrawData(vector<sDrawInfoList>& DrawAllInfo,CString Title,int TiaoXingCount,bool IsStartZero=false);
 
 private:
 
@@ -87,6 +87,8 @@ private:
 	bool                   m_IsDrawSingle;
 	int                    m_SingleDrawIndex; //绘制单个索引
 	CRect                  m_SingleRect;      //单个的矩形绘制区域
+
+	bool                   m_IsStartZeore;   //是否从0开始
 
 
 	CDC MemDC;

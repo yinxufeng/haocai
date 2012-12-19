@@ -150,6 +150,12 @@ public:
 	//球是否在位数中
 	static bool IsHongQiuWeiData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV=false);
 
+	//球是否在位数和中
+	static bool IsHongQiuWeiHeData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV=false);
+
+	//球是否在位数差中
+	static bool IsHongQiuWeiChaData(sShuangSeQiu QiuData,int Data,int WeiShu,bool IsV=false);
+
 	//球是否在红球区间中
 	static bool IsHongQiuQuJianInData(sShuangSeQiu QiuData,int BeginData,int EndData,int WeiShu,bool IsV=false);
 

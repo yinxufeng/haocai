@@ -52,6 +52,9 @@ BEGIN_MESSAGE_MAP(CDlgLianHaoHongQiu, CDialog)
 	ON_BN_CLICKED(IDC_HOU_SAN_HE_BTN2, &CDlgLianHaoHongQiu::OnBnClickedHouSanHeBtn2)
 	ON_BN_CLICKED(IDC_EXEC_BTN, &CDlgLianHaoHongQiu::OnBnClickedExecBtn)
 	ON_BN_CLICKED(IDC_JIXIAN_BTN, &CDlgLianHaoHongQiu::OnBnClickedJixianBtn)
+	ON_BN_CLICKED(IDC_WEISHU_SHUANGDAN_BTN6, &CDlgLianHaoHongQiu::OnBnClickedWeishuShuangdanBtn2)
+	ON_BN_CLICKED(IDC_HESHU_SHUANGDAN_BTN6, &CDlgLianHaoHongQiu::OnBnClickedHeshuShuangdanBtn2)
+	ON_BN_CLICKED(IDC_CHASHU_SHUANGDAN_BTN6, &CDlgLianHaoHongQiu::OnBnClickedChashuShuangdanBtn2)
 END_MESSAGE_MAP()
 
 
@@ -3320,8 +3323,6 @@ void CDlgLianHaoHongQiu::FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShu
 //填充数据
 void CDlgLianHaoHongQiu::FillSanDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex)
 {
-	
-
 	int TempData=Data;
 	int TempData1=TempData/100;
 	int TempData2=TempData/10%10;
@@ -3377,9 +3378,19 @@ void CDlgLianHaoHongQiu::FillSanDanListData(CListCtrlEx& ListCtrl,vector<sShuang
 	Str.Empty();
 	CololIndex++;
 
-
-
 	return;
+}
+
+//填充数据
+void CDlgLianHaoHongQiu::FillSingleDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex,eYanType FillType)
+{
+	CString Str;
+	Str.Format("%d",Data);
+	ListCtrl.SetItemText(Index,CololIndex,Str);
+	sItemStyle Style=GetSingleDanItemStyle(FillType,DataList,Index,Data);
+	ListCtrl.SetItemSpecialStyle(Index,CololIndex,Style);
+	Str.Empty();
+	CololIndex++;
 }
 
 //获取三胆填充风格
@@ -3427,6 +3438,42 @@ sItemStyle CDlgLianHaoHongQiu::GetSanDanItemStyle(int FillType,vector<sShuangSeQ
 
 	return Style;
 }
+
+//获取单胆填充风格
+sItemStyle CDlgLianHaoHongQiu::GetSingleDanItemStyle(eYanType FillType,vector<sShuangSeQiu>* DataList,int Index,int Data)
+{
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+
+	bool IsTrue1=false;
+	if(FillType == TYPE_WEI)
+	{
+		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInData((*DataList)[Index+1],Data,true);
+	}
+	else if(FillType == TYPE_HE)
+	{
+		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInHeData((*DataList)[Index+1],Data,true);
+	}
+	else
+	{
+		IsTrue1 = Index+1 >= DataList->size() ? false:CDataManageCenter::IsHongQiuInChaData((*DataList)[Index+1],Data,true);
+		
+	}
+
+	if(IsTrue1)
+		Style.m_DrawData.m_TextData.m_BGColor=WRITE;
+	else 
+		Style.m_DrawData.m_TextData.m_BGColor=ZISE;
+
+
+	return Style;
+
+}
+
 
 //填充双胆尾数据
 void CDlgLianHaoHongQiu::FillShuangDanList(int FillType)
@@ -4729,4 +4776,72 @@ void CDlgLianHaoHongQiu::FillJiXianDataList(eYanDataType DataType)
 			it2++;
 		}
 	}
+}
+void CDlgLianHaoHongQiu::OnBnClickedWeishuShuangdanBtn2()
+{
+	m_YanType     = TYPE_WEI;
+	m_YanDataType = TYPE_WEI_SINGLE;
+	FillSingleDanDataByType(TYPE_WEI,TYPE_WEI_SINGLE);
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedHeshuShuangdanBtn2()
+{
+	m_YanType     = TYPE_HE;
+	m_YanDataType = TYPE_HE_SINGLE;
+	FillSingleDanDataByType(TYPE_HE,TYPE_HE_SINGLE);
+}
+
+void CDlgLianHaoHongQiu::OnBnClickedChashuShuangdanBtn2()
+{
+	m_YanType     = TYPE_CHA;
+	m_YanDataType = TYPE_CHA_SINGLE;
+	FillSingleDanDataByType(TYPE_CHA,TYPE_CHA_SINGLE);
+}
+
+
+
+//填充单胆尾
+void CDlgLianHaoHongQiu::FillSingleDanDataByType(eYanType YanType,eYanDataType DataType)
+{
+	/*m_ListCtrl.ShowWindow(SW_HIDE);
+	m_ListCtrl2.ShowWindow(SW_HIDE);
+	m_ListCtrl3.ShowWindow(SW_SHOW);
+	m_ListCtrl3.DeleteAllItems();
+	sItemStyle Style;
+	Style.m_ItemType = TEXT_TYPE;
+	Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+	Style.m_DrawData.m_TextData.m_TextFont = NULL;
+	Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+	Style.m_DrawData.m_TextData.m_IsFillBG=true;
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* QiuShun=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	for(int Index = 0; Index < (int)DataList->size(); Index++)
+	{
+		m_ListCtrl3.InsertItem(Index,"");
+		int TempArray[10];
+		memset(TempArray,0,10*sizeof(int));
+		int ListColIndex=1;
+
+		int TempData1=0;
+
+		for(int i=0; i < QIU_XUN-1; i++)
+		{
+			int TempData=0;
+
+			TempData= (*DataList)[Index].m_HongQiu[i]%10+(*DataList)[Index].m_HongQiu[i+1]%10;
+			TempData=TempData%10;
+			FillSingleDanListData(m_ListCtrl3,DataList,TempData,Index,ListColIndex,YanType);
+
+			TempData=abs((*DataList)[Index].m_HongQiu[i]%10-(*DataList)[Index].m_HongQiu[i+1]%10);
+			TempData=TempData%10;
+			FillSingleDanListData(m_ListCtrl3,DataList,TempData,Index,ListColIndex,YanType);
+
+			TempData=((*DataList)[Index].m_HongQiu[i]%10)*((*DataList)[Index].m_HongQiu[i+1]%10);
+			TempData=TempData%10;
+			FillSingleDanListData(m_ListCtrl3,DataList,TempData,Index,ListColIndex,YanType);
+
+		}
+	}*/
 }

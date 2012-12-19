@@ -14,11 +14,14 @@ struct sDataInfo
 enum eYanDataType
 {
 	TYPE_WEI_QIANSAN_HOUSAN,          //前三后三尾
-	TYPE_HE_QIANSAN_HOUSAN,            //前三后三合 
+	TYPE_HE_QIANSAN_HOUSAN,           //前三后三合 
 	TYPE_CHA_QIANSAN_HOUSAN,          //前三后三差
 	TYPE_WEI_SHUANG_DAN,              //双胆尾
 	TYPE_HE_SHUANG_DAN,               //双胆合
 	TYPE_CHA_SHUANG_DAN,              //双胆差
+	TYPE_WEI_SINGLE,                         //尾
+	TYPE_HE_SINGLE,                          //合
+	TYPE_CHA_SINGLE,                         //差
 };
 
 //定义数据总类型
@@ -88,14 +91,23 @@ private:
 	//填充三胆尾数据
 	void FillSanDanDataByType(int FillType,bool FillWay,int& List2Index);
 
+	//填充单胆尾
+	void FillSingleDanDataByType(eYanType YanType,eYanDataType DataType);
+
 	//填充数据
 	void FillShuangDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex);
 
 	//填充数据
 	void FillSanDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex);
 
+	//填充数据
+	void FillSingleDanListData(CListCtrlEx& ListCtrl,vector<sShuangSeQiu>* DataList,int Data,int Index, int& CololIndex,eYanType FillType);
+
 	//获取三胆填充风格
 	sItemStyle GetSanDanItemStyle(int FillType,vector<sShuangSeQiu>* DataList,int Index,int Data);
+
+	//获取单胆填充风格
+	sItemStyle GetSingleDanItemStyle(eYanType FillType,vector<sShuangSeQiu>* DataList,int Index,int Data);
 
 private:
 	CListCtrlEx m_ListCtrl;         //显示前三后三
@@ -106,6 +118,8 @@ private:
 	int       m_CompareSanDanType;    //三胆尾比较方式
 	int       m_ParamData;            //参数
 	CComboBox m_ComboBox;
+    eYanType           m_YanType;              //数据类型
+	eYanDataType       m_YanDataType;          //数据子类型
 
 public:
 	afx_msg void OnBnClickedSearchBtn();
@@ -158,4 +172,8 @@ public:
 private:
 	map<int,map<int,vector<sDataInfo>>>  m_AllData;       //自动搜索极限数据
 	int                                  m_Flag;            
+public:
+	afx_msg void OnBnClickedWeishuShuangdanBtn2();
+	afx_msg void OnBnClickedHeshuShuangdanBtn2();
+	afx_msg void OnBnClickedChashuShuangdanBtn2();
 };
