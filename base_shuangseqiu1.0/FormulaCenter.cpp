@@ -2909,8 +2909,33 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 		sFormulaData FormulaData;
 		int TempData = 0;
 		bool IsTrue = false;
+		int Count=50;
 
-		for(int i=0; i<  MODE_COUNT; i++)
+		for(int i=0; i<  Count; i++)
+		{
+			if(Index <= Count)
+			{
+				FormulaData.m_Data   = "";
+				FormulaData.m_IsTrue = true;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+			else
+			{
+				TempData = (*DataList)[Index-1].m_HongQiu[Wei]%10+(*DataList)[Index-1-i].m_HongQiu[Wei]%10;
+				if(TempData >= MODE_COUNT) TempData = TempData%MODE_COUNT;
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,Wei,true):true;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+		
+		}
+		
+		/*for(int i=0; i<  MODE_COUNT; i++)
 		{
 			for(int j=0; j < QIU_XUN; j++)
 			{
@@ -2924,11 +2949,13 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 				FormualIndex++;
 			}
 
-		}
+		}*/
 
-		if(Index == 1)
+		if(Index == Count+1)
 			RealCount+=FormualIndex;
 	}
+
+
 
 	for(int i = 0; i < RealCount; i++)
 	{

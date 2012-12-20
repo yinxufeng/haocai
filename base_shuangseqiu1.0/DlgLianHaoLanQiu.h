@@ -3,7 +3,12 @@
 #include "DlgDrawTiaoXing.h"
 #include "afxwin.h"
 
-// CDlgLianHaoLanQiu 对话框
+//统计类型
+enum eTongJiType
+{
+	TONG_JI_BAI_FEN_BI,             //统计百分比
+	TONG_JI_SHA_HAO_CI_SHU,         //统计杀号次数
+};
 
 class CDlgLianHaoLanQiu : public CDialog
 {
@@ -42,7 +47,7 @@ protected:
 	vector<sFormulaInfo> AutoFindJiXian(vector<sFormulaInfo>& FormulList);
 
 	//统计错误信息
-	void TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo);
+	void TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo,eTongJiType Type,int Count,int StartCount=1);
 
 
 	//获取颜色值
