@@ -674,6 +674,7 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 		int ErrorCount=0;
 		int ErrorSize=0;
 		CString ErrorDataStr;
+		vector<CString> ErrorList;
 
 
 		for(int i=0; i < m_FormulaInfoList.size(); i++)
@@ -693,6 +694,7 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 				ErrorCount+=Data;
 				ErrorSize++;
 				ErrorDataStr=m_FormulaInfoList[i].m_DataList[Index-1].m_Data;
+				ErrorList.push_back(ErrorDataStr);
 				WriteLine+=Str;
 
 			}
@@ -728,11 +730,16 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 			CString TempStr;
 			TempStr.Format("%02d",ArgvData);
 			DrawData.m_DrawText = TempStr;
+			DrawData.m_IsTrue = true;
 
-			if(it->first ==ErrorDataStr)
-				DrawData.m_IsTrue = false;
-			else
-				DrawData.m_IsTrue = true;
+			for(int i=0; i < ErrorList.size(); i++)
+			{
+				if(it->first ==ErrorList[i])
+				{
+					DrawData.m_IsTrue = false;
+					break;
+				}
+			}
 
 			for(int i=TempStr.GetLength(); i < 4; i++)
 					TempStr+=_T(" ");

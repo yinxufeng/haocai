@@ -367,6 +367,9 @@ void CShuangSeQiuDlg::InitShaMap()
 	m_MapList["极限杀蓝"]=FORMUAL_SHA_NEW_JIXIAN_LAN;
 	m_MapList["极限杀蓝尾"]=FORMUAL_SHA_NEW_LAN_V;
 
+	m_MapList["杀全红"]=FORMUAL_SHA_QUAN_HONG;
+
+	
 	//m_MapList["第一位区间"]=FORMUAL_DI_YI_HONG_QU_JIAN;
 }
 

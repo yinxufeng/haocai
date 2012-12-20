@@ -77,6 +77,7 @@ enum eFormulaType
 
 	FORMUAL_SHA_NEW_LAN_V,             //杀蓝尾
 
+	FORMUAL_SHA_QUAN_HONG,
 	FORMUAL_SHA_NEW_JIXIAN_LAN,          //新极限杀蓝
 
 	
@@ -247,6 +248,10 @@ private:
 
 	//杀第六位
 	void ExecShaDiLiuWei();
+
+	//杀全位
+	void ExecShaQuanWei();
+
 
 	//新极限杀蓝
 	void ExecNewShaLan();
