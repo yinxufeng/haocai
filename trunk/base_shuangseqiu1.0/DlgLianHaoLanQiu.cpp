@@ -630,45 +630,14 @@ vector<sFormulaInfo> CDlgLianHaoLanQiu::AutoFindJiXian(vector<sFormulaInfo>& For
 }
 
 //统计错误信息
-void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
+void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo,eTongJiType Type,int Count,int StartCount)
 {
 
-	CString FilePath=GetAppCurrentPath()+_T("error_tongji.txt");
-	
-	DWORD Flag = CREATE_ALWAYS;
-	HANDLE FileHandle=CreateFile(FilePath,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
-	if(FileHandle == INVALID_HANDLE_VALUE)
-		return;
-
-	CString FilePath2=GetAppCurrentPath()+_T("true_tongji.txt");
-	HANDLE FileHandle2=CreateFile(FilePath2,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,Flag,FILE_ATTRIBUTE_NORMAL,NULL);
-	if(FileHandle2 == INVALID_HANDLE_VALUE)
-		return;
-
-	
-
-	CString Title;
-	GetWindowText(Title);
-	Title+=_T("\r\n");
-	DWORD WriteBytes=0;
-	::WriteFile(FileHandle,Title.GetBuffer(),Title.GetLength(),&WriteBytes,NULL);
-	Title.ReleaseBuffer();
-	::WriteFile(FileHandle2,Title.GetBuffer(),Title.GetLength(),&WriteBytes,NULL);
-	Title.ReleaseBuffer();
-
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
-
-
-
 	int DataSize = DataList->size();
-
-	
 
 	for(int Index = 1; Index < DataSize+1; Index++)
 	{
-		CString WriteLine= Index + 1 > DataSize ? "下期               ":(*DataList)[Index].ToString()+_T("             ");
-		CString WriteLine2=Index + 1 > DataSize ? "下期                             ":(*DataList)[Index].ToString()+_T("     ");
-
 		map<CString,vector<CString>> MapData;
 
 		int ErrorCount=0;
@@ -695,7 +664,7 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 				ErrorSize++;
 				ErrorDataStr=m_FormulaInfoList[i].m_DataList[Index-1].m_Data;
 				ErrorList.push_back(ErrorDataStr);
-				WriteLine+=Str;
+				
 
 			}
 			
@@ -708,25 +677,30 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 		sDrawInfoList DrawInfoList;
 		DrawInfoList.m_QiShu = Index + 1 > DataSize ? "下期 ":(*DataList)[Index].m_QiShu;
 		
-		map<CString,vector<CString>>::iterator it = MapData.begin(); 
-		for(it ; it != MapData.end(); it++)
-		{
-			sDrawDataInfo DrawData;
 
+		int EndCount= StartCount == 0 ? Count-1:Count;
+		for(int i = StartCount; i <= EndCount; i++)
+		{
+		
+			CString DataStr;
+			DataStr.Format("%02d",i);
+
+			sDrawDataInfo DrawData;
 			int AllData=0;
-			for(int k=0; k < it->second.size(); k++)
+			for(int k=0; k < MapData[DataStr].size(); k++)
 			{
-				int Data=atoi(it->second[k].GetBuffer());
-				DrawData.m_InfoList.push_back(it->second[k]);
-				it->second[k].ReleaseBuffer();
+				int Data=atoi(MapData[DataStr][k].GetBuffer());
+				DrawData.m_InfoList.push_back(MapData[DataStr][k]);
+				MapData[DataStr][k].ReleaseBuffer();
 				AllData+=Data;
 			}
 
-			int ArgvData=AllData/it->second.size();
+			int AllCount=MapData[DataStr].size();
+			if(AllCount == 0)
+				AllCount=1;
+			int ArgvData=AllData/AllCount;
 			
-
-			
-
+			 ArgvData=AllCount;
 			CString TempStr;
 			TempStr.Format("%02d",ArgvData);
 			DrawData.m_DrawText = TempStr;
@@ -734,7 +708,7 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 
 			for(int i=0; i < ErrorList.size(); i++)
 			{
-				if(it->first ==ErrorList[i])
+				if(DataStr ==ErrorList[i])
 				{
 					DrawData.m_IsTrue = false;
 					break;
@@ -746,35 +720,17 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo)
 
 			DrawInfoList.m_DrawDataList.push_back(DrawData);
 
-			WriteLine2+=TempStr;
+			
 
 		}
 
 		DrawAllInfo.push_back(DrawInfoList);
 
-		CString ErrorStr;
-		if(ErrorSize > 0)
-			ErrorStr.Format("    %s ：%02d",ErrorDataStr,ErrorCount/ErrorSize);
-		else
-			ErrorStr.Format("   %s",ErrorDataStr);
-
-
-		WriteLine2+=ErrorStr+_T("\r\n");
-		WriteLine+=ErrorStr+_T("\r\n");
-
-	    WriteBytes=0;
-		::WriteFile(FileHandle,WriteLine.GetBuffer(),WriteLine.GetLength(),&WriteBytes,NULL);
-		WriteLine.ReleaseBuffer();
-		::WriteFile(FileHandle2,WriteLine2.GetBuffer(),WriteLine2.GetLength(),&WriteBytes,NULL);
-		WriteLine2.ReleaseBuffer();
 	}
 
 
-	CloseHandle(FileHandle);
-	CloseHandle(FileHandle2);
-
 	return ;
-	//ShellExecute(NULL, "open",FilePath2, NULL, NULL, SW_SHOWNORMAL);
+	
 }
 
 ////统计公式信息
@@ -841,7 +797,7 @@ void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 	if(FormualType != m_FormulaType)
 	{
 		vector<sDrawInfoList> DrawAllInfo;
-		TongJiErrorInfo(DrawAllInfo);
+	
 		int TiaoXingCount=33;
 		bool IsZeore=false;
 		if(m_FormulaType == FORMUAL_SHA_NEW_JIXIAN_LAN)
@@ -855,6 +811,7 @@ void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 			IsZeore=true;
 		}
 
+		TongJiErrorInfo(DrawAllInfo,TONG_JI_BAI_FEN_BI,TiaoXingCount);
 		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount,IsZeore);
 		FormualType=m_FormulaType;
 	}
