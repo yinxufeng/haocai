@@ -32,6 +32,16 @@ struct sShuangSeQiuInfo
 };
 
 
+//显示杀号类型
+enum eShowShaType
+{
+	TYPE_SHA_BAI_WEI,       //杀百位图
+	TYPE_SHA_SHI_WEI,       //杀十位图
+	TYPE_SHA_GE_WEI,        //杀个位图
+	TYPE_SHA_HE_WEI,        //杀和尾图
+	TYPE_SHA_KUA_WEI,       //杀跨位图
+};
+
 
 class CShuangSeQiuDlg : public CDialog
 {
@@ -84,6 +94,11 @@ public:
 	//插入和设置文本
 	void InsertAndSetText3(int Row,sShuangSeQiu& ShuangSeQiu,int* pCount=NULL);
 
+
+	//填充数据
+	void FillShowData(eShowShaType Type);
+
+
 	afx_msg void OnBnClickedButton11();
 
 private:
@@ -97,6 +112,8 @@ private:
 	//导入网络分析数据
 	void LoadNetData();
 
+	//显示列表
+	void ShowListCtrl(int ShowIndex);
 
 private:
 

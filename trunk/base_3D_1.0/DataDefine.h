@@ -9,8 +9,8 @@
 using std::vector;
 using std::map;
 
-#define QIU_COUNT 33
-#define QIU_XUN   6
+#define QIU_COUNT 10
+#define QIU_XUN   3
 
 enum eSuanFaType                 //预测算法类型
 {
@@ -38,16 +38,18 @@ struct sShuangSeQiu
 {
 	DWORD   m_QiShuID;            //期数ID程序自动分配 
 	CString m_QiShu;              //期数
-	int   m_HongQiu[QIU_XUN];         //红球
-	int   m_LanQiu;             //篮球
-	int   m_HongQiuSum;         //红球之和
-	int   m_QuJian[3];          //区间
+	int   m_HongQiu[QIU_XUN];     //红球
+	int   m_LanQiu;               //篮球
+	int   m_HongQiuSum;           //红球之和
+	int   m_HongQiuKua;           //红球跨值
+	int   m_QuJian[3];            //区间
 	sShuangSeQiu()
 	{
 		m_QiShuID=0;
 		m_QiShu=_T("未知");
 		m_LanQiu = 0;
 		m_HongQiuSum=0;
+		m_HongQiuKua=0;
 		memset(m_HongQiu,0,sizeof(DWORD)*QIU_XUN);
 		memset(m_QuJian,0,sizeof(DWORD)*3);
 	}
@@ -106,6 +108,7 @@ public:
 
 		return RetStr;
 	}
+
 };
 
 struct sEqualShuangSeQiu          //相等红球数结构体定义
