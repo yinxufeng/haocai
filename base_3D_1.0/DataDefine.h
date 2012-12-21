@@ -192,6 +192,29 @@ public:
 };
 
 
+//网易3D数据描述
+struct sWangYi3DInfo
+{
+	CString         m_QiShu;        //期数
+	vector<CString> m_DataList;     //数据列表
+
+public:
+	CString ToString()
+	{
+		CString Temp=m_QiShu;
+		Temp+=" ";
+		for(int Index =0; Index < m_DataList.size(); Index++)
+		{
+			Temp+=m_DataList[Index]+" ";
+		}
+
+		Temp+=";\r\n";
+		return Temp;
+
+		
+	}
+};
+
 /*********************中彩数据描述************************/
 #define ZHONG_CAI_FILE_NAME  "net_zhongcai.txt"
 //中彩数据类型

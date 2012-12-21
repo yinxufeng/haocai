@@ -182,6 +182,9 @@ public:
 	static bool PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info);
 	static bool PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info,CString ParseFlag);
 
+	//解析网页3D数据
+	static bool ParseWangYi3DInfo(CString& Txt,vector<sWangYi3DInfo>& DataList);
+
 	//解析中彩擂台数据
 	static bool PaseZhongCaiInfo(CString& Txt,vector<sZhongCaiDataInfo>& Info,int QiShuInt);
 	static bool PaseZhongCaiInfo(CString& Txt,sZhongCaiDataInfo& Info,CString ParseFlag);
