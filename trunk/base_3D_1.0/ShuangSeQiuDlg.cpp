@@ -295,6 +295,8 @@ void CShuangSeQiuDlg::InitShaMap()
 
 	m_MapList["杀全位"]=FORMUAL_SHA_QUAN_HONG;
 
+	m_MapList["新杀百位"]=FORMUAL_SHA_NEW_DI_YI_HONG;
+
 	
 	//m_MapList["第一位区间"]=FORMUAL_DI_YI_HONG_QU_JIAN;
 }
@@ -906,7 +908,8 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 
 void CShuangSeQiuDlg::OnBnClickedLoadDataBtn2()
 {
-	ShowListCtrl(2);
+	//ShowListCtrl(2);
+	//::CreateThread(NULL,0,RequestDataInfoThread,this,0,NULL);
 }
 
 
@@ -915,111 +918,29 @@ DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
     CShuangSeQiuDlg* Self=(CShuangSeQiuDlg*)lpVoid;
 
 	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(false);
+	CString Url;
+	Url=_T("http://zx.caipiao.163.com/trend/x3d_basic.html?periodNumber=400");
+	CString Txt=GetHttpData(Url);
 
-	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
-	int StartQiShu=0;
-	if(DataList->empty())
-	{
-		__time32_t aa=time(NULL);
-		COleDateTime TempTime(aa);
-		StartQiShu=TempTime.GetYear();
-		StartQiShu=StartQiShu*1000;
-		StartQiShu++;
-	}
-	else
-	{
-		int TempIndex=DataList->size()-1;
-		CString QiShu=(*DataList)[TempIndex].m_QiShu;
-		StartQiShu=atoi(QiShu.GetBuffer());
-		QiShu.ReleaseBuffer();
-		StartQiShu++;
-	}
+	vector<sWangYi3DInfo> InfoList;
+	ParseWangYi3DInfo(Txt,InfoList);
 
-	vector<sShuangSeQiuInfo> InfoList;
-	while(true)
+	if(!InfoList.empty())
 	{
-		CString Url;
-		CString QiHao;
-		QiHao.Format(_T("%d"),StartQiShu);
-		Url.Format(_T("http://kaijiang.cjcp.com.cn/ssq/%d.html"),StartQiShu);
-		CHttpFile* File= NULL;
-		try
+		CString FileName=GetAppCurrentPath()+_T("Data.txt");
+		HANDLE FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+		if(FileHandle == INVALID_HANDLE_VALUE)
 		{
-			//获取服务器列表文件
-			CInternetSession Session;
-			File=(CHttpFile*)Session.OpenURL(Url);
-			if(NULL == File) 
-				return -1;
-
-			DWORD Len=0;
-			DWORD   Status; 
-			DWORD   StatusSize   =   sizeof(Status); 
-			DWORD   ContentLen=0,   ContentLenSize   =   sizeof(ContentLenSize); 
-			if(File->QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_STATUS_CODE,  &Status,   &StatusSize,   NULL) &&   Status   ==   HTTP_STATUS_OK) 
-				File-> QueryInfo(HTTP_QUERY_FLAG_NUMBER   |   HTTP_QUERY_CONTENT_LENGTH,   &Len,   &ContentLenSize);	
-
-			char Buffer[10*1024+1];
-			memset(Buffer,0,10*1024+1);
-			DWORD AllLen = 0;
-			CString Txt;
-			while(true)
-			{
-				char Buffer[1024*10+1]={0};
-				memset(Buffer,0,1024*10+1);
-				DWORD ReadLen= Len - AllLen > 10*1024 ? 10*1024 : Len - AllLen;
-				DWORD ReadBytes=File->Read(Buffer,ReadLen);
-				if(ReadBytes == -1)
-					break;
-				AllLen += ReadBytes;
-				CString TempTxt=CString(Buffer);
-				Txt+=TempTxt;
-
-				if(AllLen == Len )
-					break;
-				
-
-			}
-
-			if(Txt.Find("对不起没有找到该页面") !=-1)
-			{
-				File->Close();
-				delete File; File = NULL;
-				break;
-			}
-			sShuangSeQiuInfo Info;
-			Info.m_QiHao = QiHao;
-			PaseInfo(Txt,Info);
-			InfoList.push_back(Info);
-			File->Close();
-			delete File; File = NULL;
-		}catch(...)
-		{
-			if(File)
-			{
-				File->Close();
-				delete File; File = NULL;
-			}
-
-			break;
-		
+			FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 		}
-
-		StartQiShu++;
+		::SetFilePointer(FileHandle,0,0,FILE_BEGIN);
+		for(int i = 0; i < InfoList.size(); i++)
+		{
+			DWORD WriteByte=0;
+			::WriteFile(FileHandle,InfoList[i].ToString().GetBuffer(),InfoList[i].ToString().GetLength(),&WriteByte,NULL);
+		}
+		CloseHandle(FileHandle);
 	}
-
-	CString FileName=GetAppCurrentPath()+_T("Data.txt");
-	HANDLE FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-	if(FileHandle == INVALID_HANDLE_VALUE)
-	{
-		FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
-	}
-	::SetFilePointer(FileHandle,0,0,FILE_END);
-	for(int i = 0; i < InfoList.size(); i++)
-	{
-		DWORD WriteByte=0;
-		::WriteFile(FileHandle,InfoList[i].m_ChuQiuShuanXu.GetBuffer(),InfoList[i].m_ChuQiuShuanXu.GetLength(),&WriteByte,NULL);
-	}
-	CloseHandle(FileHandle);
 
 	Self->GetDlgItem(IDC_LOAD_DATA_BTN2)->EnableWindow(true);
 
@@ -1251,6 +1172,94 @@ bool CShuangSeQiuDlg::PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info,CString 
 
 	return true;
 }
+
+//解析网页3D数据
+bool CShuangSeQiuDlg::ParseWangYi3DInfo(CString& Txt,vector<sWangYi3DInfo>& DataList)
+{
+
+	bool Ret=false;
+
+	int StartPos=0;
+	int EndPos=0;
+	CString TempStr;
+
+	
+	CString FindStr;
+	
+	FindStr=_T("<tbody id=\"cpdata\">");
+	StartPos=Txt.Find(FindStr,0);
+	EndPos=Txt.Find("</tbody>",StartPos+1);
+	Txt=Txt.Mid(StartPos,EndPos-StartPos);
+
+	if(!Txt.IsEmpty())
+	{
+		int TempStartPos=0;
+		int TempEndPos =0;
+		while(true)
+		{
+			TempStartPos=Txt.Find("<tr>",TempEndPos);
+			if(TempStartPos == -1)
+				break;
+
+			TempEndPos= Txt.Find("</tr>",TempStartPos);
+			if(TempEndPos == -1)
+				break;
+
+			CString TempStr=Txt.Mid(TempStartPos,TempEndPos-TempStartPos-4);
+			if(!TempStr.IsEmpty())
+			{
+				int TempStartPos2=0;
+				int TempEndPos2=0;
+				CString TempStr2;
+				CString TempFindStr="<td class=\"br01\"></td>";
+				TempStartPos2=TempStr.Find(TempFindStr);
+
+				TempStartPos2=TempStr.Find("<td>",TempStartPos2+TempFindStr.GetLength());
+				TempEndPos2=TempStr.Find("</td>",TempStartPos2+1);
+				TempStr2=TempStr.Mid(TempStartPos2+4,TempEndPos2-TempStartPos2-4);
+				sWangYi3DInfo Info;
+				Info.m_QiShu = TempStr2;
+
+
+				TempStartPos2=TempStr.Find(TempFindStr,TempStartPos2);
+				TempEndPos2=TempStr.Find(TempFindStr,TempStartPos2+TempFindStr.GetLength());
+				TempStr2=TempStr.Mid(TempStartPos2+TempFindStr.GetLength(),TempEndPos2-TempStartPos2-TempFindStr.GetLength());
+
+				int TempStartPos3=0;
+				int TempEndPos3=0;
+
+				while(true)
+				{
+					CString TempStr3;
+					CString TempFind3Str="<td class=\"chartBall01\">";
+					TempStartPos3=TempStr2.Find(TempFind3Str,TempStartPos3);
+					if(TempStartPos3 == -1)
+						break;
+
+					TempEndPos3=TempStr2.Find("</td>",TempStartPos3+TempFind3Str.GetLength());
+					if(TempEndPos3 == -1)
+						break;
+
+					TempStr3=TempStr2.Mid(TempStartPos3+TempFind3Str.GetLength(),TempEndPos3-TempStartPos3-TempFind3Str.GetLength());
+					Info.m_DataList.push_back(TempStr3);
+
+					TempStartPos3=TempEndPos3+1;
+
+				}
+
+
+				DataList.push_back(Info);
+
+			}
+
+			TempEndPos=TempStartPos+1;
+		}
+	}
+
+	return Ret;
+
+}
+
 
 bool CShuangSeQiuDlg::PaseWangYiInfo(CString& Txt,sWangYiDataInfo& Info)
 {

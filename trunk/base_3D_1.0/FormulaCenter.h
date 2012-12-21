@@ -46,6 +46,13 @@ enum eFormulaType
 
 	FORMULA_WEI_BU_TONG_CHU     ,    //尾不同出
 
+	FORMUAL_SHA_NEW_DI_YI_HONG,      //杀第一位红        
+	FORMUAL_SHA_NEW_DI_ER_HONG,      //杀第二位红
+	FORMUAL_SHA_NEW_DI_SAN_HONG,     //杀第三位红
+	FORMUAL_SHA_NEW_DI_SI_HONG,      //杀第四位红
+	FORMUAL_SHA_NEW_DI_WU_HONG,      //杀第五位红
+	FORMUAL_SHA_NEW_DI_LIU_HONG,     //杀第六位红
+
 	FORMUAL_SHA_JI_JU,               //杀极距
 	FORMUAL_SHA_DI_YI_HONG,          //杀第一位红
 	FORMUAL_SHA_DI_ER_HONG,          //杀第二位红

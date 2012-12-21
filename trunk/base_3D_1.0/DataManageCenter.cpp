@@ -989,10 +989,14 @@ void CDataManageCenter::InitLianHaoLanQiu(vector<sShuangSeQiu>& ShuangSeQiuList)
 //从文件加载数据
 bool  CDataManageCenter::LoadDataFromFile(CString FilePath,bool IsChuHaoXunXu,bool IsClean)
 {
+
+	m_ShuangSeQiuChuHaoList.clear();
+	m_ShuangSeQiuList.clear();
+
 	if(!IsChuHaoXunXu)
 	{
-		if(IsClean)
-			m_ShuangSeQiuList.clear();
+		/*if(IsClean)
+			m_ShuangSeQiuList.clear();*/
 
 		LoadDataFromFile(FilePath,m_ShuangSeQiuList);
 
@@ -1004,8 +1008,8 @@ bool  CDataManageCenter::LoadDataFromFile(CString FilePath,bool IsChuHaoXunXu,bo
 	}
 	else
 	{
-		if(IsClean)
-			m_ShuangSeQiuChuHaoList.clear();
+	/*	if(IsClean)
+			m_ShuangSeQiuChuHaoList.clear();*/
 
 		LoadDataFromFile(FilePath,m_ShuangSeQiuChuHaoList);
 
@@ -1303,6 +1307,8 @@ sShuangSeQiu CDataManageCenter::GetShuangSeQiuByStr(CString& StrData)
 	ShuangSeQiu.m_HongQiuSum = Count;
 	sShuangSeQiu ShuangSeQiu2=ShuangSeQiu;
 	
+	int Max=0;
+	int Min=1000;
 
 	for(int i = 0; i < QIU_XUN; i++)
 	{
@@ -1318,8 +1324,6 @@ sShuangSeQiu CDataManageCenter::GetShuangSeQiuByStr(CString& StrData)
 	}
 
 
-	int Max=0;
-	int Min=ShuangSeQiu2.m_HongQiu[0];
 	for(int i = 0; i < QIU_XUN; i++)
 	{
 		if(ShuangSeQiu2.m_HongQiu[i] > Max)
@@ -1330,6 +1334,7 @@ sShuangSeQiu CDataManageCenter::GetShuangSeQiuByStr(CString& StrData)
 	}
 	
 	ShuangSeQiu2.m_HongQiuKua = Max-Min;
+	ShuangSeQiu.m_HongQiuKua = Max-Min;
 	m_ShuangSeQiuChuHaoList.push_back(ShuangSeQiu2);
 
 	return ShuangSeQiu;
