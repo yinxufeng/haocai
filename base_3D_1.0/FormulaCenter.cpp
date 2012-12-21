@@ -282,71 +282,71 @@ vector<sFormulaInfo> CFormulaCenter::GetFormulaInfoByName(eFormulaType Type,vect
 //公式运算
 void CFormulaCenter::RunFormula()
 {
-	ExecShaHongFormula();
-	ExecShaLanFormula();
-	ExecShaLanVFormula();
-	ExecDingHongFormula();
-	ExecShaLongTouFormula();
-	ExecWeiBuTongChuFormula();
+	//ExecShaHongFormula();
+	//ExecShaLanFormula();
+	//ExecShaLanVFormula();
+	//ExecDingHongFormula();
+	//ExecShaLongTouFormula();
+	//ExecWeiBuTongChuFormula();
 
-	//运行杀凤尾公式
-	ExecShaFengWeiFormula();
+	////运行杀凤尾公式
+	//ExecShaFengWeiFormula();
 
-	ExecDingHongVFormula();
+	//ExecDingHongVFormula();
 
-	ExecShaQuanWei();
-	ExeShaLanV();
-	//杀极距
-	ExecShaJiJu();
+	//ExecShaQuanWei();
+	//ExeShaLanV();
+	////杀极距
+	//ExecShaJiJu();
 
 	for(int i=0; i < QIU_XUN; i++)
 	{
 		ExecShaWeiV(i);
-		ExecShaWeiHe(i);
-		ExecShaWeiCha(i);
+		//ExecShaWeiHe(i);
+		//ExecShaWeiCha(i);
 	
 	}
 
-	//杀第一位
-	ExecShaDiYiWei();
+	////杀第一位
+	//ExecShaDiYiWei();
 
-	//杀第二位
-	ExecShaDiErWei();
+	////杀第二位
+	//ExecShaDiErWei();
 
-	//杀第三位
-	ExecShaDiSanWei();
+	////杀第三位
+	//ExecShaDiSanWei();
 
-	//杀第四位
-	ExecShaDiSiWei();
+	////杀第四位
+	//ExecShaDiSiWei();
 
-	//杀第五位
-	ExecShaDiWuWei();
+	////杀第五位
+	//ExecShaDiWuWei();
 
-	//杀第六位
-	ExecShaDiLiuWei();
-
-
-	//新极限杀蓝
-	ExecNewShaLan();
+	////杀第六位
+	//ExecShaDiLiuWei();
 
 
-	//第一位波动区间
-	ExecDiYiBoDongQuJian();
+	////新极限杀蓝
+	//ExecNewShaLan();
 
-	//第二位波动区间
-	ExecDiErBoDongQuJian();
 
-	//第三位波动区间
-	ExecDiSanBoDongQuJian();
+	////第一位波动区间
+	//ExecDiYiBoDongQuJian();
 
-	//第四位波动区间
-	ExecDiSiBoDongQuJian();
+	////第二位波动区间
+	//ExecDiErBoDongQuJian();
 
-	//第五位波动区间
-	ExecDiWuBoDongQuJian();
+	////第三位波动区间
+	//ExecDiSanBoDongQuJian();
 
-	//第六位波动区间
-	ExecDiLiuBoDongQuJian();
+	////第四位波动区间
+	//ExecDiSiBoDongQuJian();
+
+	////第五位波动区间
+	//ExecDiWuBoDongQuJian();
+
+	////第六位波动区间
+	//ExecDiLiuBoDongQuJian();
 
 }
 
@@ -2909,7 +2909,7 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 		sFormulaData FormulaData;
 		int TempData = 0;
 		bool IsTrue = false;
-		int Count=50;
+		/*int Count=50;
 
 		for(int i=0; i<  Count; i++)
 		{
@@ -2933,9 +2933,9 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 				FormualIndex++;
 			}
 		
-		}
+		}*/
 		
-		/*for(int i=0; i<  MODE_COUNT; i++)
+		for(int i=0; i<  MODE_COUNT; i++)
 		{
 			for(int j=0; j < QIU_XUN; j++)
 			{
@@ -2949,9 +2949,9 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 				FormualIndex++;
 			}
 
-		}*/
+		}
 
-		if(Index == Count+1)
+		if(Index == 1)
 			RealCount+=FormualIndex;
 	}
 
@@ -2960,11 +2960,11 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 	for(int i = 0; i < RealCount; i++)
 	{
 		CString Name;
-		Name.Format(_T("杀位尾_%02d"),i);
+		Name.Format(_T("杀位_%02d"),i);
 		FormualList[i].m_FormulaName = Name;
-		FormualList[i].m_FormulaType = (eFormulaType )(FORMUAL_SHA_DI_YI_HONG_V+Wei);
+		FormualList[i].m_FormulaType = (eFormulaType )(FORMUAL_SHA_DI_YI_HONG+Wei);
 		ToJiFormulaInfo(FormualList[i]);
-		m_MapFormulaInfo[(eFormulaType)(FORMUAL_SHA_DI_YI_HONG_V+Wei)].push_back(FormualList[i]);
+		m_MapFormulaInfo[(eFormulaType)(FORMUAL_SHA_DI_YI_HONG+Wei)].push_back(FormualList[i]);
 
 	}
 }
@@ -3150,7 +3150,7 @@ void CFormulaCenter::ExecShaDiYiWei()
 			for(int j=0; j < QIU_XUN; j++)
 			{
 				TempData = (*DataList)[Index-1].m_HongQiu[j]+i;
-				if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
+				if(TempData >= QIU_COUNT) TempData = TempData%QIU_COUNT;
 				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,0):true;
 				FormulaData.m_Data   = DataToStr(TempData);
 				FormulaData.m_IsTrue = !IsTrue;
@@ -3202,7 +3202,7 @@ void CFormulaCenter::ExecShaDiErWei()
 			for(int j=0; j < QIU_XUN; j++)
 			{
 				TempData = (*DataList)[Index-1].m_HongQiu[j]+i;
-				if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
+				if(TempData >= QIU_COUNT) TempData = TempData%QIU_COUNT;
 				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,1):true;
 				FormulaData.m_Data   = DataToStr(TempData);
 				FormulaData.m_IsTrue = !IsTrue;
@@ -3253,7 +3253,7 @@ void CFormulaCenter::ExecShaDiSanWei()
 			for(int j=0; j < QIU_XUN; j++)
 			{
 				TempData = (*DataList)[Index-1].m_HongQiu[j]+i;
-				if(TempData > QIU_COUNT) TempData = TempData%QIU_COUNT;
+				if(TempData >= QIU_COUNT) TempData = TempData%QIU_COUNT;
 				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,2):true;
 				FormulaData.m_Data   = DataToStr(TempData);
 				FormulaData.m_IsTrue = !IsTrue;

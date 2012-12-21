@@ -41,17 +41,6 @@ CDataManageCenter* CDataManageCenter::GetInstance()
 //获取双色球列表
 vector<sShuangSeQiu>* CDataManageCenter::GetDataList()
 {
-	//初始化横向差值
-	InitHengXiangChaZhi(m_ShuangSeQiuList);
-
-	//初始化纵向差值
-	InitZongXiangChaZhi(m_ShuangSeQiuList);
-
-	//初始化连号红球
-	InitLianHaoHongQiu(m_ShuangSeQiuList);
-
-	//初始化连号篮球
-	InitLianHaoLanQiu(m_ShuangSeQiuList);
 
 	return &m_ShuangSeQiuList;
 }
@@ -1008,10 +997,10 @@ bool  CDataManageCenter::LoadDataFromFile(CString FilePath,bool IsChuHaoXunXu,bo
 		LoadDataFromFile(FilePath,m_ShuangSeQiuList);
 
 		//保存统计数据到csv文件中
-		SaveDataToCSVFile();
+	//	SaveDataToCSVFile();
 
 		//保存统计五期以内和五期以外数据到txt文件中
-		SaveFiveDataToTxtFile();
+	//	SaveFiveDataToTxtFile();
 	}
 	else
 	{
@@ -1312,7 +1301,9 @@ sShuangSeQiu CDataManageCenter::GetShuangSeQiuByStr(CString& StrData)
 	}
 
 	ShuangSeQiu.m_HongQiuSum = Count;
-	m_ShuangSeQiuChuHaoList.push_back(ShuangSeQiu);
+	sShuangSeQiu ShuangSeQiu2=ShuangSeQiu;
+	
+
 	for(int i = 0; i < QIU_XUN; i++)
 	{
 		for(int Index = 0 ; Index < QIU_XUN; Index++)
@@ -1325,6 +1316,21 @@ sShuangSeQiu CDataManageCenter::GetShuangSeQiuByStr(CString& StrData)
 			}	
 		}
 	}
+
+
+	int Max=0;
+	int Min=ShuangSeQiu2.m_HongQiu[0];
+	for(int i = 0; i < QIU_XUN; i++)
+	{
+		if(ShuangSeQiu2.m_HongQiu[i] > Max)
+			Max=ShuangSeQiu2.m_HongQiu[i];
+		
+		if(ShuangSeQiu2.m_HongQiu[i] < Min)
+			Min=ShuangSeQiu2.m_HongQiu[i];
+	}
+	
+	ShuangSeQiu2.m_HongQiuKua = Max-Min;
+	m_ShuangSeQiuChuHaoList.push_back(ShuangSeQiu2);
 
 	return ShuangSeQiu;
 }
