@@ -504,11 +504,35 @@ void CDlgLianHaoLanQiu::OnBnClickedJingxuanBtn()
 
 void CDlgLianHaoLanQiu::OnBnClickedZidongBtn()
 {
+	static eFormulaType  FormualType=(eFormulaType)-1;
+	CString Title;
+	GetWindowText(Title);
+
+	if(FormualType != m_FormulaType)
+	{
+		vector<sDrawInfoList> DrawAllInfo;
 	
-	m_CurrentIndex=0;
-	m_FormulaInfoList=AutoFindJiXian(m_FormulaInfoList);
-	FillData(m_FormulaInfoList);
-	UpdateBtnStatus();
+		int TiaoXingCount=33;
+		int StartCount=1;
+		bool IsZeore=false;
+		if(m_FormulaType == FORMUAL_SHA_NEW_JIXIAN_LAN)
+			TiaoXingCount=16;
+		else if(m_FormulaType>=FORMUAL_SHA_DI_YI_HONG_V &&  m_FormulaType <= FORMUAL_SHA_DI_LIU_HONG_V ||
+			m_FormulaType>=FORMUAL_SHA_DI_YI_HONG_HE &&  m_FormulaType <= FORMUAL_SHA_DI_LIU_HONG_HE ||
+			m_FormulaType>=FORMUAL_SHA_DI_YI_HONG_CHA &&  m_FormulaType <= FORMUAL_SHA_DI_LIU_HONG_CHA ||
+			m_FormulaType == FORMUAL_SHA_NEW_LAN_V)
+		{
+			TiaoXingCount=10;
+			IsZeore=true;
+			StartCount=0;
+		}
+
+		TongJiErrorInfo(DrawAllInfo,TONG_JI_SHA_HAO_CI_SHU,TiaoXingCount,StartCount);
+		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount,IsZeore);
+		FormualType=m_FormulaType;
+	}
+
+	m_DlgDrawTiaoXing.ShowWindow(SW_SHOW);
 }
 
 //设置窗口标题
@@ -698,9 +722,17 @@ void CDlgLianHaoLanQiu::TongJiErrorInfo(vector<sDrawInfoList>& DrawAllInfo,eTong
 			int AllCount=MapData[DataStr].size();
 			if(AllCount == 0)
 				AllCount=1;
-			int ArgvData=AllData/AllCount;
-			
-			 ArgvData=AllCount;
+
+			int ArgvData=1;
+			if(Type == TONG_JI_BAI_FEN_BI)
+			{
+				ArgvData=AllData/AllCount;
+				if(ArgvData == 0)
+					ArgvData=1;
+			}
+			else
+				ArgvData=AllCount;
+
 			CString TempStr;
 			TempStr.Format("%02d",ArgvData);
 			DrawData.m_DrawText = TempStr;
@@ -799,6 +831,7 @@ void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 		vector<sDrawInfoList> DrawAllInfo;
 	
 		int TiaoXingCount=33;
+		int StartCount=1;
 		bool IsZeore=false;
 		if(m_FormulaType == FORMUAL_SHA_NEW_JIXIAN_LAN)
 			TiaoXingCount=16;
@@ -809,9 +842,10 @@ void CDlgLianHaoLanQiu::OnBnClickedTongjiBtn()
 		{
 			TiaoXingCount=10;
 			IsZeore=true;
+			StartCount=0;
 		}
 
-		TongJiErrorInfo(DrawAllInfo,TONG_JI_BAI_FEN_BI,TiaoXingCount);
+		TongJiErrorInfo(DrawAllInfo,TONG_JI_BAI_FEN_BI,TiaoXingCount,StartCount);
 		m_DlgDrawTiaoXing.SetDrawData(DrawAllInfo,Title,TiaoXingCount,IsZeore);
 		FormualType=m_FormulaType;
 	}
