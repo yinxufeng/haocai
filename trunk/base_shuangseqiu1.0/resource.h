@@ -25,6 +25,8 @@
 #define IDD_DLG_WEI_LAN                 143
 #define IDD_DRAW_TIAO_XING_DLG          144
 #define IDD_DRAW_ZOU_SHI                145
+#define IDD_SHUANGSEQIU_DIALOG12        146
+#define IDD_YAN_RAN_SHA_WEI_DLG         146
 #define IDC_LIST1                       1000
 #define IDC_LIST2                       1001
 #define IDC_LOAD_DATA_BTN               1002
@@ -129,9 +131,7 @@
 #define IDC_WEISHU_SHUANGDAN_BTN        1064
 #define IDC_HESHU_SHUANGDAN_BTN         1065
 #define IDC_QIAN_SAN_WEI_BTN            1066
-#define IDC_WEISHU_SHUANGDAN_BTN6       2066
 #define IDC_HOU_SAN_WEI_BTN             1067
-#define IDC_HESHU_SHUANGDAN_BTN6        2067
 #define IDC_QIAN_SAN_HE_BTN             1068
 #define IDC_HOU_SAN_HE_BTN              1069
 #define IDC_HOU_SAN_HE_BTN2             1070
@@ -144,6 +144,8 @@
 #define IDC_JIXIAN_BTN                  1078
 #define IDC_TONGJI_BTN                  1079
 #define IDC_CLEAN_BTN                   1080
+#define IDC_WEISHU_SHUANGDAN_BTN6       2066
+#define IDC_HESHU_SHUANGDAN_BTN6        2067
 
 // Next default values for new objects
 // 

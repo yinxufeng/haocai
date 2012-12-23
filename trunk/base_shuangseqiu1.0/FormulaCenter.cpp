@@ -34,6 +34,7 @@ vector<sFormulaInfo> CFormulaCenter::GetFormulaInfoByType(eFormulaType Type)
 	return InfoList;
 }
 
+
 //搜索公式信息
 vector<sFormulaInfo>  CFormulaCenter::SearchFormulaInfoByType(eFormulaType Type,eSearchVType SearchType,int Data,int Data2)
 {
@@ -304,6 +305,18 @@ void CFormulaCenter::RunFormula()
 		ExecShaWeiV(i);
 		ExecShaWeiHe(i);
 		ExecShaWeiCha(i);
+
+		////妍杀位
+		//ExecYanShaWei(i);
+
+		////妍儿杀位尾算法
+		//ExecYanShaWeiV(i);
+		//
+		////妍儿杀位和算法
+	 //   ExecYanShaWeiHe(i);
+
+	 //   //妍儿杀位差算法
+	 //   ExecYanShaWeiCha(i);
 	
 	}
 

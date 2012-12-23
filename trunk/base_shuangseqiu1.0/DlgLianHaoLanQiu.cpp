@@ -512,7 +512,7 @@ void CDlgLianHaoLanQiu::OnBnClickedZidongBtn()
 	{
 		vector<sDrawInfoList> DrawAllInfo;
 	
-		int TiaoXingCount=33;
+		int TiaoXingCount=QIU_COUNT;
 		int StartCount=1;
 		bool IsZeore=false;
 		if(m_FormulaType == FORMUAL_SHA_NEW_JIXIAN_LAN)
