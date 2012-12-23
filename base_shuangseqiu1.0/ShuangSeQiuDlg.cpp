@@ -193,6 +193,9 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	m_DlgJiXianWeiLan.Create(CDlgJiXianWeiLan::IDD,this);
 	m_DlgJiXianWeiLan.ShowWindow(SW_HIDE);
 
+	m_DlgYanShaWei.Create(CDlgYanShaWei::IDD,this);
+	m_DlgYanShaWei.ShowWindow(SW_HIDE);
+
 	m_ListCtrl.ShowWindow(SW_SHOW);
 	m_ListCtrl2.ShowWindow(SW_HIDE);
 	m_ListCtrl3.ShowWindow(SW_HIDE);
@@ -588,7 +591,8 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn4()
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn3()
 {
-	ShellExecute(NULL, "open","http://www.haocai188.com", NULL, NULL, SW_SHOWNORMAL);
+	m_DlgYanShaWei.ShowWindow(SW_SHOW);
+	//ShellExecute(NULL, "open","http://www.haocai188.com", NULL, NULL, SW_SHOWNORMAL);
 //	m_DlgHengXiangChaZhi.ShowWindow(SW_SHOW);
 }
 

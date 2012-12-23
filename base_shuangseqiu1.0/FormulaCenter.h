@@ -80,15 +80,50 @@ enum eFormulaType
 	FORMUAL_SHA_QUAN_HONG,
 	FORMUAL_SHA_NEW_JIXIAN_LAN,          //新极限杀蓝
 
+
 	
-	FORMUAL_DI_YI_HONG_QU_JIAN,         //第一红波动区间
-	FORMUAL_DI_ER_HONG_QU_JIAN,         //第二红波动区间
-	FORMUAL_DI_SAN_HONG_QU_JIAN,        //第三红波动区间
+	
+	FORMUAL_DI_YI_HONG_QU_JIAN,            //第一红波动区间
+	FORMUAL_DI_ER_HONG_QU_JIAN,            //第二红波动区间
+	FORMUAL_DI_SAN_HONG_QU_JIAN,           //第三红波动区间
 	FORMUAL_DI_SI_HONG_QU_JIAN,         //第四红波动区间
 	FORMUAL_DI_WU_HONG_QU_JIAN,         //第五红波动区间
 	FORMUAL_DI_LIU_HONG_QU_JIAN,        //第六红波动区间
 
 };
+
+enum eYanFormulaType
+{
+	FORMUAL_YAN_SHA_DI_YI_HONG,          //妍杀第一位红
+	FORMUAL_YAN_SHA_DI_ER_HONG,          //妍杀第二位红
+	FORMUAL_YAN_SHA_DI_SAN_HONG,             //妍杀第三位红
+	FORMUAL_YAN_SHA_DI_SI_HONG,              //妍杀第四位红
+	FORMUAL_YAN_SHA_DI_WU_HONG,              //妍杀第五位红
+	FORMUAL_YAN_SHA_DI_LIU_HONG,             //妍杀第六位红
+
+	FORMUAL_YAN_SHA_DI_YI_HONG_V,            //妍杀第一位红尾
+	FORMUAL_YAN_SHA_DI_ER_HONG_V,            //妍杀第二位红尾
+	FORMUAL_YAN_SHA_DI_SAN_HONG_V,           //妍杀第三位红尾
+	FORMUAL_YAN_SHA_DI_SI_HONG_V,            //妍杀第四位红尾
+	FORMUAL_YAN_SHA_DI_WU_HONG_V,            //妍杀第五位红尾
+	FORMUAL_YAN_SHA_DI_LIU_HONG_V,           //妍杀第六位红尾
+
+	FORMUAL_YAN_SHA_DI_YI_HONG_HE,        //妍杀第一位红和
+	FORMUAL_YAN_SHA_DI_ER_HONG_HE,        //妍杀第二位红和
+	FORMUAL_YAN_SHA_DI_SAN_HONG_HE,       //妍杀第三位红和
+	FORMUAL_YAN_SHA_DI_SI_HONG_HE,        //妍杀第四位红和
+	FORMUAL_YAN_SHA_DI_WU_HONG_HE,        //妍杀第五位红和
+	FORMUAL_YAN_SHA_DI_LIU_HONG_HE,       //妍杀第六位红和
+
+	FORMUAL_YAN_SHA_DI_YI_HONG_CHA,        //妍杀第一位红差
+	FORMUAL_YAN_SHA_DI_ER_HONG_CHA,        //妍杀第二位红差
+	FORMUAL_YAN_SHA_DI_SAN_HONG_CHA,       //妍杀第三位红差
+	FORMUAL_YAN_SHA_DI_SI_HONG_CHA,        //妍杀第四位红差
+	FORMUAL_YAN_SHA_DI_WU_HONG_CHA,        //妍杀第五位红差
+	FORMUAL_YAN_SHA_DI_LIU_HONG_CHA,       //妍杀第六位红差
+
+};
+
 
 //公式描述数据
 struct sFormulaData
@@ -175,6 +210,9 @@ public:
 	//获取公式信息
 	vector<sFormulaInfo> GetFormulaInfoByType(eFormulaType Type);
 
+	//获取妍数据
+	vector<map<int,vector<int>>> GetYanFormulaInfoByType(eYanFormulaType Type);
+
 	//搜索公式信息
 	vector<sFormulaInfo> SearchFormulaInfoByType(eFormulaType Type,eSearchVType SearchType,int Data,int Data2);
 
@@ -183,6 +221,12 @@ public:
 	
 	//获取算法个数
 	int GetFormulaCount(eFormulaType Type);
+
+	//临时解决方案
+public:
+
+	//运行妍算法
+	void RunYanFormula();
 
 private:
 
@@ -256,6 +300,21 @@ private:
 	//新极限杀蓝
 	void ExecNewShaLan();
 
+	//妍儿杀位算法
+	void ExecYanShaWei(int Wei);
+
+	//妍儿杀位尾算法
+	void ExecYanShaWeiV(int Wei);
+
+	//妍儿杀位和算法
+	void ExecYanShaWeiHe(int Wei);
+
+	//妍儿杀位差算法
+	void ExecYanShaWeiCha(int Wei);
+
+	//妍儿杀蓝算法
+	void ExecYanShaLan();
+
 
 	//第一位波动区间
 	void ExecDiYiBoDongQuJian();
@@ -279,6 +338,15 @@ private:
 
 private:
 
+	//遗传统计类型
+	enum eYiChuanTongJiType 
+	{
+		TYPE_TONG_JI_WEI,            //统计位
+		TYPE_TONG_JI_WEI_V,          //统计位尾
+		TYPE_TONG_JI_HE,             //统计合
+		TYPE_TONG_JI_CHA,            //统计差
+	};
+
 	//整形转化到字符串
 	CString DataToStr(int Data);
 
@@ -300,6 +368,9 @@ private:
 	//记录数据
 	void RecordDataToFile();
 
+	//统计遗传
+	void TongJiYiChuan(eYiChuanTongJiType Type,int Wei,int Offset, map<int,vector<int>>& ResultData);
+
 	CFormulaCenter(void);
 
 	~CFormulaCenter(void);
@@ -310,4 +381,6 @@ private:
 private:
 
 	map<eFormulaType,vector<sFormulaInfo>> m_MapFormulaInfo;   //公式数据缓存
+
+	map<eYanFormulaType,vector<map<int,vector<int>>>> m_YanMapFormulaInfo;  //妍数据缓存
 };

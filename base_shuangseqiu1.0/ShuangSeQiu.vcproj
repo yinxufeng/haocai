@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgYanShaWei.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DlgZiDongFenXi.cpp"
 				>
 			</File>
@@ -306,6 +310,10 @@
 				RelativePath=".\ThreeEqualDlg.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\YanFormulaCenter.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -366,6 +374,10 @@
 			</File>
 			<File
 				RelativePath=".\DlgTongJiJieGuo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DlgYanShaWei.h"
 				>
 			</File>
 			<File

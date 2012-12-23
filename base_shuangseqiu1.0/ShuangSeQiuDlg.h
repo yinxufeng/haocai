@@ -18,6 +18,7 @@
 #include "DlgDingHongWei.h"
 #include "DlgNetDataParse.h"
 #include "DlgJiXianWeiLan.h"
+#include "DlgYanShaWei.h"
 #include "afxwin.h"
 
 
@@ -121,6 +122,8 @@ private:
 	CDlgTeZongHeFenXi    m_DlgTeZongHeFenXi;
 	CDlgNetDataParse     m_DlgNetDataParse;
 	CDlgJiXianWeiLan     m_DlgJiXianWeiLan;
+
+	CDlgYanShaWei        m_DlgYanShaWei;
 
 	vector<sShuangSeQiu> m_ResultDataList;
 

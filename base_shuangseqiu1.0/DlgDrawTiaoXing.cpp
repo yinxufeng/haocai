@@ -92,10 +92,14 @@ void CDlgDrawTiaoXing::DrawTiaoXing(CDC* pDC,CRect Rect,int DataIndex)
 
 	for(int Index = 0; Index < RectList.size(); Index++)
 	{
-		CString Text=m_DrawData[DataIndex].m_DrawDataList[Index].m_DrawText;
+		Text.Empty();
+		if(m_DrawData[DataIndex].m_DrawDataList[Index].m_Data.IsEmpty())
+			Text=m_DrawData[DataIndex].m_DrawDataList[Index].m_DrawText;
+		else
+			Text=m_DrawData[DataIndex].m_DrawDataList[Index].m_Data;
 		int Height=atoi(Text.GetBuffer());
 		CRect TempRect= RectList[Index];
-		if(Height < 50)
+		if(Min < 50 || Height < 50)
 			TempRect.top = TempRect.bottom- m_TiaoXingHeight*Height;
 		else
 		{
