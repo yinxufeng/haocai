@@ -71,6 +71,7 @@ END_MESSAGE_MAP()
 CShuangSeQiuDlg::CShuangSeQiuDlg(CWnd* pParent /*=NULL*/)
 : CDialog(CShuangSeQiuDlg::IDD, pParent)
 {
+	m_ShowShaType=TYPE_SHOW_NULL;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -114,6 +115,10 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO2, &CShuangSeQiuDlg::OnCbnSelchangeCombo2)
 	ON_BN_CLICKED(IDC_BUTTON17, &CShuangSeQiuDlg::OnBnClickedButton17)
 	ON_BN_CLICKED(IDC_BUTTON18, &CShuangSeQiuDlg::OnBnClickedButton18)
+	ON_BN_CLICKED(IDC_PREV_BTN, &CShuangSeQiuDlg::OnBnClickedPrevBtn)
+	ON_BN_CLICKED(IDC_NEXT_BTN, &CShuangSeQiuDlg::OnBnClickedNextBtn)
+	ON_BN_CLICKED(IDC_FIRST_BTN, &CShuangSeQiuDlg::OnBnClickedFirstBtn)
+	ON_BN_CLICKED(IDC_AUTO_BTN, &CShuangSeQiuDlg::OnBnClickedAutoBtn)
 END_MESSAGE_MAP()
 
 
@@ -144,6 +149,7 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 	}
 
 	m_IsShowByChuQiu = false;
+	m_StartPageCount=0;
 
 	InitListHeader();
 	// 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
@@ -515,6 +521,7 @@ void CShuangSeQiuDlg::OnBnClickedBlueBallBtn6()
 {
 
 	ShowListCtrl(2);
+	m_ShowShaType=TYPE_SHA_SHI_WEI;
 	FillShowData(TYPE_SHA_SHI_WEI);
 }
 
@@ -613,6 +620,7 @@ void CShuangSeQiuDlg::OnBnClickedButton10()
 void CShuangSeQiuDlg::OnBnClickedButton8()
 {
 	ShowListCtrl(2);
+	m_ShowShaType=TYPE_SHA_BAI_WEI;
 	FillShowData(TYPE_SHA_BAI_WEI);
 }
 
@@ -855,6 +863,7 @@ void CShuangSeQiuDlg::InsertAndSetText3(int Row,sShuangSeQiu& ShuangSeQiu,int* p
 
 void CShuangSeQiuDlg::OnBnClickedButton11()
 {
+	m_ShowShaType=TYPE_SHOW_NULL;
 	ShowListCtrl(1);
 }
 
@@ -867,6 +876,7 @@ void CShuangSeQiuDlg::OnCbnSelchangeCombo1()
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn()
 {
 	ShowListCtrl(2);
+	m_ShowShaType=TYPE_SHA_HE_WEI;
 	FillShowData(TYPE_SHA_HE_WEI);
 }
 
@@ -903,6 +913,7 @@ void CShuangSeQiuDlg::OnBnClickedButton13()
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn5()
 {
 	ShowListCtrl(2);
+	m_ShowShaType=TYPE_SHA_GE_WEI;
 	FillShowData(TYPE_SHA_GE_WEI);
 }
 
@@ -928,7 +939,7 @@ DWORD CShuangSeQiuDlg::RequestDataInfoThread(LPVOID lpVoid)
 	if(!InfoList.empty())
 	{
 		CString FileName=GetAppCurrentPath()+_T("Data.txt");
-		HANDLE FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+		HANDLE FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 		if(FileHandle == INVALID_HANDLE_VALUE)
 		{
 			FileHandle=::CreateFile(FileName,GENERIC_WRITE|GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
@@ -2316,6 +2327,7 @@ CString CShuangSeQiuDlg::GetHttpData(CString Url)
 void CShuangSeQiuDlg::OnBnClickedButton18()
 {
 	ShowListCtrl(2);
+	m_ShowShaType=TYPE_SHA_KUA_WEI;
 	FillShowData(TYPE_SHA_KUA_WEI);
 }
 
@@ -2351,74 +2363,24 @@ void CShuangSeQiuDlg::ShowListCtrl(int ShowIndex)
 }
 
 //填充数据
-void CShuangSeQiuDlg::FillShowData(eShowShaType Type)
+void CShuangSeQiuDlg::FillShowData(eShowShaType Type,bool LastError)
 {
 	m_ListCtrl2.DeleteAllItems();
 	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
 	m_ListCtrl2.InsertItem(0,"");
 	m_ListCtrl2.InsertItem(1,"");
 	int DataSize=DataList->size();
-	for(int Index = 2; Index <= DataSize; Index++)
+	vector<int> ErrorList;
+	if(LastError)
 	{
-		m_ListCtrl2.InsertItem(Index,"");
-		int ListIndex=0;
-
-		CString QiShu="下期";
-		if(Index < DataSize)
-		{
-			int TempData=0;
-
-			switch(Type)
-			{
-			case TYPE_SHA_BAI_WEI:
-				{
-					TempData = (*DataList)[Index].m_HongQiu[0];
-					break;
-				}
-			case TYPE_SHA_SHI_WEI:
-				{
-					TempData = (*DataList)[Index].m_HongQiu[1];
-					break;
-				}
-			case TYPE_SHA_GE_WEI:
-				{
-					TempData = (*DataList)[Index].m_HongQiu[2];
-					break;
-				}
-			case TYPE_SHA_HE_WEI:
-				{
-					TempData = (*DataList)[Index].m_HongQiuSum%10;
-					break;
-				}
-			case TYPE_SHA_KUA_WEI:
-				{
-					TempData = (*DataList)[Index].m_HongQiuKua;
-					break;
-				}
-			}
-
-
-			CString TempDataStr;
-			TempDataStr.Format("%d",TempData);
-			QiShu=(*DataList)[Index].m_QiShu+" "+TempDataStr;
-			
-		}
-
-		m_ListCtrl2.SetItemText(Index,0,QiShu);
-
-		ListIndex++;
-		
-		int Count = PAGE_COUNT;
-
-		for(int i=0; i < Count; i++)
+		int Index = DataList->size()-1;
+		for(int i=0; i <DataList->size(); i++)
 		{
 			if(Index - i-1 < 0 )
 				break;
-
-
+		
+			int TempData=0;
 			bool IsTrue=true;
-			int TempData=-1;
-
 			switch(Type)
 			{
 			case TYPE_SHA_BAI_WEI:
@@ -2472,6 +2434,133 @@ void CShuangSeQiuDlg::FillShowData(eShowShaType Type)
 				}
 			}
 
+			if(!IsTrue)
+				ErrorList.push_back(i);
+		}
+	}
+
+	for(int Index = 2; Index <= DataSize; Index++)
+	{
+		m_ListCtrl2.InsertItem(Index,"");
+		int ListIndex=0;
+
+		CString QiShu="下期";
+		if(Index < DataSize)
+		{
+			int TempData=0;
+			switch(Type)
+			{
+			case TYPE_SHA_BAI_WEI:
+				{
+					TempData = (*DataList)[Index].m_HongQiu[0];
+					break;
+				}
+			case TYPE_SHA_SHI_WEI:
+				{
+					TempData = (*DataList)[Index].m_HongQiu[1];
+					break;
+				}
+			case TYPE_SHA_GE_WEI:
+				{
+					TempData = (*DataList)[Index].m_HongQiu[2];
+					break;
+				}
+			case TYPE_SHA_HE_WEI:
+				{
+					TempData = (*DataList)[Index].m_HongQiuSum%10;
+					break;
+				}
+			case TYPE_SHA_KUA_WEI:
+				{
+					TempData = (*DataList)[Index].m_HongQiuKua;
+					break;
+				}
+			}
+
+
+			CString TempDataStr;
+			TempDataStr.Format("%d",TempData);
+			QiShu=(*DataList)[Index].m_QiShu+" "+TempDataStr;
+			
+		}
+
+		m_ListCtrl2.SetItemText(Index,0,QiShu);
+
+		ListIndex++;
+		
+		int Count = PAGE_COUNT;
+
+		if(LastError)
+		{
+			Count=ErrorList.size();
+		}
+
+		for(int i=m_StartPageCount; i <m_StartPageCount+ Count; i++)
+		{
+			int k=i;
+			if(LastError && i < ErrorList.size())
+				k=ErrorList[i];
+
+			if(Index - k-1 < 0 )
+				break;
+
+
+			bool IsTrue=true;
+			int TempData=-1;
+
+			switch(Type)
+			{
+			case TYPE_SHA_BAI_WEI:
+				{
+					TempData=(*DataList)[Index-1].m_HongQiu[0]+(*DataList)[Index-1-k].m_HongQiu[0];
+					if(TempData >= QIU_COUNT)
+						TempData=TempData%QIU_COUNT;
+					if(Index < DataSize && TempData == (*DataList)[Index].m_HongQiu[0])
+						IsTrue=false;
+					break;
+				}
+			case TYPE_SHA_SHI_WEI:
+				{
+					TempData=(*DataList)[Index-1].m_HongQiu[1]+(*DataList)[Index-1-k].m_HongQiu[1];
+					if(TempData >= QIU_COUNT)
+						TempData=TempData%QIU_COUNT;
+					if(Index < DataSize && TempData == (*DataList)[Index].m_HongQiu[1])
+						IsTrue=false;
+					break;
+				}
+			case TYPE_SHA_GE_WEI:
+				{
+					TempData=(*DataList)[Index-1].m_HongQiu[2]+(*DataList)[Index-1-k].m_HongQiu[2];
+					if(TempData >= QIU_COUNT)
+						TempData=TempData%QIU_COUNT;
+					if(Index < DataSize && TempData == (*DataList)[Index].m_HongQiu[2])
+						IsTrue=false;
+
+					break;
+				}
+			case TYPE_SHA_HE_WEI:
+				{
+					TempData=(*DataList)[Index-1].m_HongQiuSum%10+(*DataList)[Index-1-k].m_HongQiuSum%10;
+					if(TempData >= 10)
+						TempData=TempData%10;
+
+					if(Index < DataSize && TempData == (*DataList)[Index].m_HongQiuSum%10)
+						IsTrue=false;
+					break;
+				}
+			case TYPE_SHA_KUA_WEI:
+				{
+					TempData=(*DataList)[Index-1].m_HongQiuKua+(*DataList)[Index-1-k].m_HongQiuKua;
+					if(TempData > 9)
+						TempData=TempData%10;
+
+					if(Index < DataSize && TempData == (*DataList)[Index].m_HongQiuKua)
+						IsTrue=false;
+
+					break;
+				}
+			}
+
 			if(TempData != -1)
 			{
 				CString Text;
@@ -2493,12 +2582,65 @@ void CShuangSeQiuDlg::FillShowData(eShowShaType Type)
 					Style.m_DrawData.m_TextData.m_BGColor = WRITE;
 					
 				}
-				m_ListCtrl2.SetItemSpecialStyle(Index,ListIndex,Style);
 
+				m_ListCtrl2.SetItemSpecialStyle(Index,ListIndex,Style);
+				ListIndex++;
 
 			}
 
-			ListIndex++;
+			
 		}
 	}
+}
+
+void CShuangSeQiuDlg::OnBnClickedPrevBtn()
+{
+	if(m_ShowShaType==TYPE_SHOW_NULL)
+		return ;
+
+	m_StartPageCount-=PAGE_COUNT;
+	if(m_StartPageCount < 0)
+	{
+		m_StartPageCount=0;
+		return;
+	}
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	
+
+	FillShowData(m_ShowShaType);
+
+}
+
+void CShuangSeQiuDlg::OnBnClickedNextBtn()
+{
+	if(m_ShowShaType==TYPE_SHOW_NULL)
+		return ;
+
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	m_StartPageCount+=PAGE_COUNT;
+	if(m_StartPageCount > DataList->size())
+	{
+		m_StartPageCount=DataList->size()-1;
+		return;
+	}
+
+	
+
+	FillShowData(m_ShowShaType);
+}
+
+void CShuangSeQiuDlg::OnBnClickedFirstBtn()
+{
+	if(m_ShowShaType==TYPE_SHOW_NULL)
+		return ;
+
+	m_StartPageCount=0;
+	FillShowData(m_ShowShaType);
+}
+
+void CShuangSeQiuDlg::OnBnClickedAutoBtn()
+{
+    m_StartPageCount=0;
+	FillShowData(m_ShowShaType,true);
 }

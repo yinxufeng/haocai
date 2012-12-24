@@ -35,11 +35,13 @@ struct sShuangSeQiuInfo
 //显示杀号类型
 enum eShowShaType
 {
+	TYPE_SHOW_NULL,         //空
 	TYPE_SHA_BAI_WEI,       //杀百位图
 	TYPE_SHA_SHI_WEI,       //杀十位图
 	TYPE_SHA_GE_WEI,        //杀个位图
 	TYPE_SHA_HE_WEI,        //杀和尾图
 	TYPE_SHA_KUA_WEI,       //杀跨位图
+	
 };
 
 
@@ -96,7 +98,7 @@ public:
 
 
 	//填充数据
-	void FillShowData(eShowShaType Type);
+	void FillShowData(eShowShaType Type,bool LastError=false);
 
 
 	afx_msg void OnBnClickedButton11();
@@ -147,12 +149,25 @@ private:
 	CComboBox m_ShaComboBox;
 	map<CString,int> m_MapList;
 
+	int          m_StartPageCount;
+
+	eShowShaType m_ShowShaType;
+
 
 public:
 	afx_msg void OnBnClickedBlueBallBtn();
 	afx_msg void OnBnClickedButton13();
 	afx_msg void OnBnClickedBlueBallBtn5();
 	afx_msg void OnBnClickedLoadDataBtn2();
+
+	afx_msg void OnCbnSelchangeCombo2();
+	afx_msg void OnBnClickedButton17();
+	afx_msg void OnBnClickedButton18();
+	afx_msg void OnBnClickedPrevBtn();
+	afx_msg void OnBnClickedNextBtn();
+	afx_msg void OnBnClickedFirstBtn();
+	afx_msg void OnBnClickedAutoBtn();
+
 
 	static DWORD WINAPI RequestDataInfoThread(LPVOID lpVoid);
 
@@ -203,7 +218,8 @@ public:
 	//组合数据
 	static void Combine(map<CString,vector<int>> MapData);
 	
-	afx_msg void OnCbnSelchangeCombo2();
-	afx_msg void OnBnClickedButton17();
-	afx_msg void OnBnClickedButton18();
+	
+
+
+
 };
