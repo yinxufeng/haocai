@@ -440,12 +440,12 @@ BEGIN
         BLOCK "080403a8"
         BEGIN
             VALUE "CompanyName", "潇离"
-            VALUE "FileDescription", "潇离之双色球分析"
+            VALUE "FileDescription", "潇离之3D分析"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "潇离之双色球分析.exe"
+            VALUE "InternalName", "潇离之3D分析.exe"
             VALUE "LegalCopyright", "潇离: (C) 保留所有权利。"
-            VALUE "OriginalFilename", "潇离之双色球分析.exe"
-            VALUE "ProductName", "潇离之双色球分析"
+            VALUE "OriginalFilename", "潇离之3D分析.exe"
+            VALUE "ProductName", "潇离之3D分析"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END
