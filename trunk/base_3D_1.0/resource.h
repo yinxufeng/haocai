@@ -38,7 +38,7 @@
 #define IDC_BUTTON3                     1007
 #define IDC_SEARCH_BTN                  1007
 #define IDC_EDIT25                      1007
-#define IDC_FIRST_BTN                   1007
+#define IDC_FIRST_BTN                   5007
 #define IDC_EDIT8                       1007
 #define IDC_BUTTON4                     1008
 #define IDC_BLUE_BALL_BTN3              1008
@@ -111,9 +111,9 @@
 #define IDC_BUTTON14                    1051
 #define IDC_EDIT20                      1052
 #define IDC_BUTTON15                    1052
-#define IDC_PREV_BTN                    1053
+#define IDC_PREV_BTN                    5053
 #define IDC_BUTTON16                    1053
-#define IDC_NEXT_BTN                    1054
+#define IDC_NEXT_BTN                    5054
 #define IDC_BUTTON17                    1054
 #define IDC_RESULT                      1055
 #define IDC_BUTTON18                    1055
@@ -129,9 +129,7 @@
 #define IDC_WEISHU_SHUANGDAN_BTN        1064
 #define IDC_HESHU_SHUANGDAN_BTN         1065
 #define IDC_QIAN_SAN_WEI_BTN            1066
-#define IDC_WEISHU_SHUANGDAN_BTN6       2066
 #define IDC_HOU_SAN_WEI_BTN             1067
-#define IDC_HESHU_SHUANGDAN_BTN6        2067
 #define IDC_QIAN_SAN_HE_BTN             1068
 #define IDC_HOU_SAN_HE_BTN              1069
 #define IDC_HOU_SAN_HE_BTN2             1070
@@ -144,6 +142,9 @@
 #define IDC_JIXIAN_BTN                  1078
 #define IDC_TONGJI_BTN                  1079
 #define IDC_CLEAN_BTN                   1080
+#define IDC_AUTO_BTN                    1081
+#define IDC_WEISHU_SHUANGDAN_BTN6       2066
+#define IDC_HESHU_SHUANGDAN_BTN6        2067
 
 // Next default values for new objects
 // 
@@ -151,7 +152,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1081
+#define _APS_NEXT_CONTROL_VALUE         1082
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
