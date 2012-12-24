@@ -2922,7 +2922,7 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 		sFormulaData FormulaData;
 		int TempData = 0;
 		bool IsTrue = false;
-		int Count=50;
+		/*int Count=50;
 
 		for(int i=0; i<  Count; i++)
 		{
@@ -2947,8 +2947,8 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 			}
 		
 		}
-		
-		/*for(int i=0; i<  MODE_COUNT; i++)
+		*/
+		for(int i=0; i<  MODE_COUNT; i++)
 		{
 			for(int j=0; j < QIU_XUN; j++)
 			{
@@ -2962,9 +2962,9 @@ void CFormulaCenter::ExecShaWeiV(int Wei)
 				FormualIndex++;
 			}
 
-		}*/
+		}
 
-		if(Index == Count+1)
+		if(Index == 1)
 			RealCount+=FormualIndex;
 	}
 
