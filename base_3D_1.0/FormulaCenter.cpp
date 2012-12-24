@@ -304,6 +304,7 @@ void CFormulaCenter::RunFormula()
 		ExecShaWeiV(i);
 		//ExecShaWeiHe(i);
 		//ExecShaWeiCha(i);
+		ExecYiChuanDingDan(i);
 	
 	}
 
@@ -3823,4 +3824,144 @@ void CFormulaCenter::RecordDataToFile()
 			TempFormulaInfo[i].
 		}
 	}*/
+}
+
+//遗传定胆
+void CFormulaCenter::ExecYiChuanDingDan(int Wei)
+{
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();//CDataManageCenter::GetInstance()->GetDataList();
+	vector<sShuangSeQiu>* ShunXuDataList = CDataManageCenter::GetInstance()->GetDataListByChuHao();
+
+	const int  FormualCount = 1000;   //定义公式个数
+	const int  MODE_COUNT=16;
+
+	int RealCount=0;
+	sFormulaInfo FormualList[FormualCount];
+
+	for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	{
+    	int FormualIndex=0;
+		sFormulaData FormulaData;
+		int TempData = 0;
+		bool IsTrue = false;
+
+		
+		for(int i=1; i < DataList->size(); i++)
+		{
+			if(Index - i > 0)
+			{
+				int TempIndex=Index-i;
+				int TempData1=(*DataList)[TempIndex].m_HongQiu[Wei];
+				int TempWei=0;
+				if(Wei+1 < QIU_XUN)
+					TempWei=Wei+1;
+
+				int TempData2=(*DataList)[TempIndex].m_HongQiu[TempWei];
+
+				IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData1,Wei):false;
+				if(!IsTrue)
+					IsTrue= Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData2,Wei):false;
+
+				TempData=TempData1*10+TempData2;
+				FormulaData.m_Data   = DataToStr(TempData);
+				FormulaData.m_IsTrue = !IsTrue;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+			else
+			{
+	
+				FormulaData.m_Data   = "";
+				FormulaData.m_IsTrue = true;
+				FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+				FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+				FormualIndex++;
+			}
+		}
+
+		//TempData = (*DataList)[Index-1].m_HongQiuSum/((*DataList)[Index-1].m_HongQiu[0] != 0 ? (*DataList)[Index-1].m_HongQiu[0]:3);
+	/*	TempData=0;
+		if(TempData >= QIU_COUNT) TempData = TempData%QIU_COUNT;
+		IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,0):true;
+		FormulaData.m_Data   = DataToStr(TempData);
+		FormulaData.m_IsTrue = !IsTrue;
+		FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+		FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+		FormualIndex++;*/
+
+		if(Index == 1)
+			RealCount+=FormualIndex;
+	}
+
+	for(int i = 0; i < RealCount; i++)
+	{
+		CString Name;
+		Name.Format(_T("传_%02d"),i);
+		FormualList[i].m_FormulaName = Name;
+		FormualList[i].m_FormulaType = (eFormulaType)(FORMUAL_YICHUAN_DI_YI_HONG+Wei);
+		ToJiFormulaInfo(FormualList[i]);
+		m_MapFormulaInfo[(eFormulaType)(FORMUAL_YICHUAN_DI_YI_HONG+Wei)].push_back(FormualList[i]);
+
+	}
+}
+
+//运行前三算法
+void CFormulaCenter::ExecQianSan()
+{
+	//vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataList();
+	//const int  FormualCount = 1000;   //定义公式个数
+	//const int  MODE_COUNT=16;
+
+	//int RealCount=0;
+	//sFormulaInfo FormualList[FormualCount];
+
+	//for(int Index = 1; Index < (int)DataList->size()+1; Index++)
+	//{
+ //   	int FormualIndex=0;
+	//	sFormulaData FormulaData;
+	//	int TempData = 0;
+	//	bool IsTrue = false;
+
+
+	//	for(int i=0; i < DataList->size(); i++)
+	//	{
+	//		if(Index - i >= 0)
+	//		{
+	//			int TempIndex=Index-i;
+	//			TempData=(*DataList)[TempIndex]
+	//			IsTrue = Index < DataList->size() ? CDataManageCenter::IsHongQiuWeiData((*DataList)[Index],TempData,0):true;
+	//			FormulaData.m_Data   = DataToStr(TempData);
+	//			FormulaData.m_IsTrue = !IsTrue;
+	//			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+	//			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+	//			FormualIndex++;
+	//		}
+	//		else
+	//		{
+	//
+	//			FormulaData.m_Data   = "";
+	//			FormulaData.m_IsTrue = true;
+	//			FormulaData.m_QiShu = Index < DataList->size() ? (*DataList)[Index].m_QiShu:_T("下期预测");
+	//			FormualList[FormualIndex].m_DataList.push_back(FormulaData);
+	//			FormualIndex++;
+	//		}
+	//	}
+
+	//
+
+	//	if(Index == 1)
+	//		RealCount+=FormualIndex;
+	//}
+
+	//for(int i = 0; i < RealCount; i++)
+	//{
+	//	CString Name;
+	//	Name.Format(_T("定_%02d"),i);
+	//	FormualList[i].m_FormulaName = Name;
+	//	FormualList[i].m_FormulaType = FORMUAL_SHA_NEW_DI_YI_HONG;
+	//	ToJiFormulaInfo(FormualList[i]);
+	//	m_MapFormulaInfo[FORMUAL_SHA_NEW_DI_YI_HONG].push_back(FormualList[i]);
+
+	//}
 }

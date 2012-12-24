@@ -3499,8 +3499,8 @@ void CDlgLianHaoHongQiu::FillShuangDanList(int FillType)
 
 	int ListInsertPos=0;
 	FillDataByType(0,true,ListInsertPos);
-	FillDataByType(1,false,ListInsertPos);
-	FillDataByType(2,false,ListInsertPos);
+//	FillDataByType(1,false,ListInsertPos);
+//	FillDataByType(2,false,ListInsertPos);
 }
 
 //填充三胆尾数据
@@ -3558,7 +3558,7 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 			int TempArray[10];
 			memset(TempArray,0,10*sizeof(int));
 
-			for(int i=0; i < 6; i++)
+			for(int i=0; i < QIU_XUN; i++)
 			{
 				int V=0;
 				int V2=0;
@@ -3628,7 +3628,7 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 					else
 						ShunVCSV+=","+StrV2;
 				}
-				else
+			/*	else
 				{
 					QiuHouV+=StrV;
 					HouV+=StrV2;
@@ -3645,7 +3645,7 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 					else
 						HouVCSV+=","+StrV2;
 
-				}
+				}*/
 			}
 
 
@@ -3683,11 +3683,11 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 					TempData=TransDataByInt(ShunV,618,8);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-					TempData=TransDataByInt(HouV,314,8);
+				/*	TempData=TransDataByInt(HouV,314,8);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
 					TempData=TransDataByInt(HouV,618,8);
-					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);*/
 
 					TempData=TransDataByInt(QiuV,314,8);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
@@ -3695,25 +3695,25 @@ void CDlgLianHaoHongQiu::FillDataByType(int FillType,bool FillWay,int& ColoumnIn
 					TempData=TransDataByInt(QiuV,618,8);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-					TempData=TransDataByInt(QiuHouV,314,8);
+				/*	TempData=TransDataByInt(QiuHouV,314,8);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
 					TempData=TransDataByInt(QiuHouV,618,8);
-					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);*/
 
 
 					//只乘0.8
 					TempData=TransDataByInt(ShunV,8,0);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-					TempData=TransDataByInt(HouV,8,0);
-					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+				/*	TempData=TransDataByInt(HouV,8,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);*/
 
 					TempData=TransDataByInt(QiuV,8,0);
 					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
 
-					TempData=TransDataByInt(QiuHouV,8,0);
-					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);
+				/*	TempData=TransDataByInt(QiuHouV,8,0);
+					FillShuangDanListData(m_ListCtrl3,DataList,TempData,InsertPos,List2Index);*/
 				}
 
 				if(m_CompareShuangDanType > 4)
@@ -4229,7 +4229,7 @@ void CDlgLianHaoHongQiu::FillMapData(map<int,vector<sDataInfo>>& MapData,int Sta
 			int TempArray[10];
 			memset(TempArray,0,10*sizeof(int));
 
-			for(int i=0; i < 6; i++)
+			for(int i=0; i < QIU_XUN; i++)
 			{
 				int V=0;
 				int V2=0;
@@ -4357,11 +4357,11 @@ void CDlgLianHaoHongQiu::FillMapData(map<int,vector<sDataInfo>>& MapData,int Sta
 				MapData[TempOffsetPos].push_back(Info);
 				TempOffsetPos++;
 
-				TempData=TransDataByInt(ShunV,Param,1);
+			/*	TempData=TransDataByInt(ShunV,Param,1);
 				Info.m_Data = TempData/10;
 				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
 				MapData[TempOffsetPos].push_back(Info);
-				TempOffsetPos++;
+				TempOffsetPos++;*/
 
 				TempData=TransDataByInt(QiuV,Param,1);
 				Info.m_Data = TempData;
@@ -4369,11 +4369,11 @@ void CDlgLianHaoHongQiu::FillMapData(map<int,vector<sDataInfo>>& MapData,int Sta
 				MapData[TempOffsetPos].push_back(Info);
 				TempOffsetPos++;
 
-				TempData=TransDataByInt(QiuHouV,Param,1);
+			/*	TempData=TransDataByInt(QiuHouV,Param,1);
 				Info.m_Data = TempData;
 				Info.m_Color = Index+1 >= DataList->size() ? WRITE:GetDataColor(DataType,(*DataList)[Index+1],Info.m_Data,true);
 				MapData[TempOffsetPos].push_back(Info);
-				TempOffsetPos++;
+				TempOffsetPos++;*/
 
 			}
 	}

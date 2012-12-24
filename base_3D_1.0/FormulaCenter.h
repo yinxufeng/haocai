@@ -95,6 +95,19 @@ enum eFormulaType
 	FORMUAL_DI_WU_HONG_QU_JIAN,         //第五红波动区间
 	FORMUAL_DI_LIU_HONG_QU_JIAN,        //第六红波动区间
 
+
+
+	FORMUAL_YICHUAN_DI_YI_HONG,        //遗传定胆第一红
+	FORMUAL_YICHUAN_DI_ER_HONG,        //遗传定胆第一红
+	FORMUAL_YICHUAN_DI_SAN_HONG,        //遗传定胆第一红
+	FORMUAL_YICHUAN_DI_SI_HONG,        //遗传定胆第一红
+	FORMUAL_YICHUAN_DI_WU_HONG,        //遗传定胆第一红
+	FORMUAL_YICHUAN_DI_LIU_HONG,        //遗传定胆第一红
+
+
+	FORMUAL_QIAN_SAN_WEI,
+
+
 };
 
 //公式描述数据
@@ -282,6 +295,12 @@ private:
 	//第六位波动区间
 	void ExecDiLiuBoDongQuJian();
 
+
+	//遗传定胆
+	void ExecYiChuanDingDan(int Wei);
+
+	//运行前三算法
+	void ExecQianSan();
 
 
 private:
