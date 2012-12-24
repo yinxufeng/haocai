@@ -82,6 +82,7 @@ void CShuangSeQiuDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST2, m_ListCtrl2);
 	DDX_Control(pDX, IDC_LIST3, m_ListCtrl3);
 	DDX_Control(pDX, IDC_COMBO2, m_ShaComboBox);
+	DDX_Control(pDX, IDC_COMBO1, m_YiComboBox);
 }
 
 BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
@@ -119,6 +120,7 @@ BEGIN_MESSAGE_MAP(CShuangSeQiuDlg, CDialog)
 	ON_BN_CLICKED(IDC_NEXT_BTN, &CShuangSeQiuDlg::OnBnClickedNextBtn)
 	ON_BN_CLICKED(IDC_FIRST_BTN, &CShuangSeQiuDlg::OnBnClickedFirstBtn)
 	ON_BN_CLICKED(IDC_AUTO_BTN, &CShuangSeQiuDlg::OnBnClickedAutoBtn)
+	ON_BN_CLICKED(IDC_YI_CHUAN_DING_DAN, &CShuangSeQiuDlg::OnBnClickedYiChuanDingDan)
 END_MESSAGE_MAP()
 
 
@@ -216,6 +218,10 @@ BOOL CShuangSeQiuDlg::OnInitDialog()
 
 	//m_ShaComboBox.InsertString(Count,"极限杀蓝");
 	m_ShaComboBox.SetCurSel(0);
+
+	m_YiComboBox.InsertString(0,"百位遗传定胆");
+	m_YiComboBox.InsertString(1,"十位遗传定胆");
+	m_YiComboBox.InsertString(2,"个位遗传定胆");
 
 	CenterWindow();
 
@@ -870,7 +876,7 @@ void CShuangSeQiuDlg::OnBnClickedButton11()
 void CShuangSeQiuDlg::OnCbnSelchangeCombo1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	OnBnClickedButton9();
+//	OnBnClickedButton9();
 }
 
 void CShuangSeQiuDlg::OnBnClickedBlueBallBtn()
@@ -2587,8 +2593,6 @@ void CShuangSeQiuDlg::FillShowData(eShowShaType Type,bool LastError)
 				ListIndex++;
 
 			}
-
-			
 		}
 	}
 }
@@ -2625,9 +2629,11 @@ void CShuangSeQiuDlg::OnBnClickedNextBtn()
 		return;
 	}
 
-	
 
-	FillShowData(m_ShowShaType);
+	if(m_ShowShaType <= TYPE_SHA_KUA_WEI)
+		FillShowData(m_ShowShaType);
+	else
+		FillYiChuanDataList(m_ShowShaType);
 }
 
 void CShuangSeQiuDlg::OnBnClickedFirstBtn()
@@ -2636,11 +2642,146 @@ void CShuangSeQiuDlg::OnBnClickedFirstBtn()
 		return ;
 
 	m_StartPageCount=0;
-	FillShowData(m_ShowShaType);
+	if(m_ShowShaType <= TYPE_SHA_KUA_WEI)
+		FillShowData(m_ShowShaType);
+	else
+		FillYiChuanDataList(m_ShowShaType);
 }
 
 void CShuangSeQiuDlg::OnBnClickedAutoBtn()
 {
     m_StartPageCount=0;
-	FillShowData(m_ShowShaType,true);
+	if(m_ShowShaType <= TYPE_SHA_KUA_WEI)
+		FillShowData(m_ShowShaType,true);
+	else
+		FillYiChuanDataList(m_ShowShaType,true);
+}
+
+void CShuangSeQiuDlg::OnBnClickedYiChuanDingDan()
+{
+	CString Text;
+	m_YiComboBox.GetWindowText(Text);
+	if(Text.IsEmpty())
+		return ;
+
+	ShowListCtrl(2);
+	
+	if(Text == "百位遗传定胆")
+	{
+		m_ShowShaType=TYPE_YI_CHUAN_DING_YI_DAN;
+		FillYiChuanDataList(m_ShowShaType);
+	}
+	else if(Text == "十位遗传定胆")
+	{
+		m_ShowShaType=TYPE_YI_CHUAN_DING_ER_DAN;
+		FillYiChuanDataList(m_ShowShaType);
+	}
+	else if(Text == "个位遗传定胆")
+	{
+		m_ShowShaType=TYPE_YI_CHUAN_DING_SAN_DAN;
+		FillYiChuanDataList(m_ShowShaType);
+	}
+
+}
+
+//填充遗传数据
+void CShuangSeQiuDlg::FillYiChuanDataList(eShowShaType Type,bool LastError)
+{
+	int Wei=0;
+	switch(Type)
+	{
+	case TYPE_YI_CHUAN_DING_YI_DAN:
+		Wei=0;
+		break;
+		//遗传定一胆
+	case TYPE_YI_CHUAN_DING_ER_DAN: //遗传定二胆
+		Wei=1;
+		break;
+	case TYPE_YI_CHUAN_DING_SAN_DAN:      //遗传定三胆
+		Wei=2;
+		break;
+
+	}
+	m_ListCtrl2.DeleteAllItems();
+	vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	m_ListCtrl2.InsertItem(0,"");
+	int DataSize=DataList->size();
+
+	vector<sFormulaInfo> InfoList=CFormulaCenter::GetInstance()->GetFormulaInfoByType(eFormulaType(FORMUAL_YICHUAN_DI_YI_HONG+Wei));
+	
+	int InsertPos=1;
+	for(int Index = 0; Index < DataList->size(); Index++)
+	{
+		m_ListCtrl2.InsertItem(InsertPos,_T(""));
+
+		CString QiShu=Index+1 < DataList->size() ? (*DataList)[Index+1].m_QiShu:"下期";
+		int TempData=Index+1 < DataList->size() ? (*DataList)[Index+1].m_HongQiu[Wei]:-1;
+		
+
+		CString TempDataStr;
+		if(TempData != -1)
+			TempDataStr.Format("%d",TempData);
+
+		QiShu=QiShu+" "+TempDataStr;
+		int ListIndex=0;
+		m_ListCtrl2.SetItemText(InsertPos,ListIndex,QiShu);
+		ListIndex++;
+
+		int Count = PAGE_COUNT;
+
+		if(LastError)
+		{
+			Count=InfoList.size();
+		}
+
+		for(int i=m_StartPageCount; i < m_StartPageCount+Count; i++)
+		{
+			if(i >= InfoList.size())
+				break;
+
+			if(LastError)
+			{
+				int TempSize=DataList->size()-2;
+				if(InfoList[i].m_DataList[TempSize].m_IsTrue || InfoList[i].m_DataList[TempSize-1].m_IsTrue)
+					continue;
+					
+			}
+		
+
+			m_ListCtrl2.SetItemText(InsertPos,ListIndex,InfoList[i].m_DataList[Index].m_Data);
+			sItemStyle Style;
+			Style.m_ItemType = TEXT_TYPE;
+			Style.m_DrawData.m_TextData.m_TextColor=RGB(0,0,0);
+			Style.m_DrawData.m_TextData.m_TextFont = NULL;
+			Style.m_DrawData.m_TextData.m_TextFormat=DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS;
+			if(!InfoList[i].m_DataList[Index].m_IsTrue)
+			{
+				Style.m_DrawData.m_TextData.m_BGColor = RED;
+			
+			}
+			else
+			{
+				Style.m_DrawData.m_TextData.m_BGColor = WRITE;
+				
+			}
+
+			m_ListCtrl2.SetItemSpecialStyle(InsertPos,ListIndex,Style);
+			ListIndex++;
+		}
+
+		InsertPos++;
+
+	}
+	
+	
+}
+
+//填充前三算法数据
+void CShuangSeQiuDlg::FillQianSanData()
+{
+	//m_ListCtrl2.DeleteAllItems();
+	//vector<sShuangSeQiu>* DataList=CDataManageCenter::GetInstance()->GetDataListByChuHao();
+	//m_ListCtrl2.InsertItem(0,"");
+	//m_ListCtrl2.InsertItem(1,"");
+	//int DataSize=DataList->size();
 }

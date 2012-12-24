@@ -35,12 +35,15 @@ struct sShuangSeQiuInfo
 //显示杀号类型
 enum eShowShaType
 {
-	TYPE_SHOW_NULL,         //空
-	TYPE_SHA_BAI_WEI,       //杀百位图
-	TYPE_SHA_SHI_WEI,       //杀十位图
-	TYPE_SHA_GE_WEI,        //杀个位图
-	TYPE_SHA_HE_WEI,        //杀和尾图
-	TYPE_SHA_KUA_WEI,       //杀跨位图
+	TYPE_SHOW_NULL,                  //空
+	TYPE_SHA_BAI_WEI,                //杀百位图
+	TYPE_SHA_SHI_WEI,                //杀十位图
+	TYPE_SHA_GE_WEI,                 //杀个位图
+	TYPE_SHA_HE_WEI,                 //杀和尾图
+	TYPE_SHA_KUA_WEI,                //杀跨位图
+	TYPE_YI_CHUAN_DING_YI_DAN,       //遗传定一胆
+	TYPE_YI_CHUAN_DING_ER_DAN,       //遗传定二胆
+	TYPE_YI_CHUAN_DING_SAN_DAN,      //遗传定三胆
 	
 };
 
@@ -100,6 +103,9 @@ public:
 	//填充数据
 	void FillShowData(eShowShaType Type,bool LastError=false);
 
+	//填充遗传数据
+	void FillYiChuanDataList(eShowShaType Type,bool LastError=false);
+
 
 	afx_msg void OnBnClickedButton11();
 
@@ -148,6 +154,7 @@ private:
 	bool      m_IsShowByChuQiu;
 	CComboBox m_ShaComboBox;
 	map<CString,int> m_MapList;
+	CComboBox m_YiComboBox;
 
 	int          m_StartPageCount;
 
@@ -207,7 +214,7 @@ public:
 	afx_msg void OnBnClickedButton14();
 	afx_msg void OnBnClickedButton15();
 	afx_msg void OnBnClickedButton16();
-
+	afx_msg void OnBnClickedYiChuanDingDan();
 
 	//解析数据
 	static void ParseData(CString& StrData,map<CString,vector<int>>& MapData);
@@ -217,9 +224,14 @@ public:
 
 	//组合数据
 	static void Combine(map<CString,vector<int>> MapData);
+
+
+public:
+
+
+
+	//填充前三算法数据
+	void FillQianSanData();
+
 	
-	
-
-
-
 };
