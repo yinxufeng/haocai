@@ -41,5 +41,10 @@ public:
 
 	//组合数据
 	void Combine(map<CString,vector<int>> MapData);
+
+	//组合数据
+	void Combine3D(map<CString,vector<int>> MapData);
+
 	afx_msg void OnBnClickedOk2();
+	afx_msg void OnBnClickedOk5();
 };
